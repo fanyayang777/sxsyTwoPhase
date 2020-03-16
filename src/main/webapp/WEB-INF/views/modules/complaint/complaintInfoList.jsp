@@ -214,7 +214,7 @@
                         ${complaintInfo.createBy.name}
                 </td>
 				<shiro:hasPermission name="complaint:complaintInfo:edit"><td>
-					<c:if test="${complaintInfo.handleWay ne 2 and complaintInfo.createBy.id eq fns:getUser().id}">
+					<c:if test="${empty complaintInfo.complaintMain.act.procInsId and complaintInfo.createBy.id eq fns:getUser().id}">
 						<a href="${ctx}/complaint/complaintInfo/form?id=${complaintInfo.complaintId}">处理</a>
 						<a href="${ctx}/complaint/complaintInfo/delete?id=${complaintInfo.complaintId}" onclick="return confirmx('确认要删除该投诉接待吗？', this.href)">删除</a>
 					</c:if>

@@ -346,12 +346,25 @@
     </table>
 </br>
     <table class="table-form">
-        <div class="control-group">
-            <label class="control-label">回复内容:</label>
-            <div class="controls">
-                <form:textarea path="complaintMain.act.comment" htmlEscape="false" rows="4" maxlength="200" class="required input-xxlarge"/>
+        <c:if test="${node eq 'sjy' }">
+            <div class="control-group">
+                <label class="control-label">回复内容:</label>
+                <div class="controls">
+                    <form:textarea path="complaintMain.act.comment" htmlEscape="false" rows="4" maxlength="200" class="required input-xxlarge"/>
+                </div>
             </div>
-        </div>
+        </c:if>
+        <c:if test="${node eq 'fpy' }">
+            <div class="control-group">
+                <label class="control-label">调解员:</label>
+                <div class="controls">
+                    <sys:treeselect id="nextLinkMan" name="nextLinkMan" value="${complaintInfo.nextLinkMan}" labelName="link.name" labelValue="${complaintInfo.link.name}"
+                                    title="用户" url="/sys/office/treeData?type=3&officeType=1"  cssClass="required" dataMsgRequired="请选择下一环节处理人" allowClear="true" notAllowSelectParent="true"/>
+                </div>
+            </div>
+            </c:if>
+
+
     </table>
 </fieldset>
 
@@ -360,6 +373,9 @@
             <c:if test="${node eq 'sjy' }">
                 <input id="btnSubmit" class="btn btn-success" type="submit" value="通 过" onclick="$('#status').val('0')"/>&nbsp;
                 <input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#status').val('1')"/>&nbsp;
+            </c:if>
+            <c:if test="${node eq 'fpy' }">
+                <input id="btnSubmit" class="btn btn-success" type="submit" value="通 过" onclick="$('#status').val('0')"/>&nbsp;
             </c:if>
             <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
         </div>

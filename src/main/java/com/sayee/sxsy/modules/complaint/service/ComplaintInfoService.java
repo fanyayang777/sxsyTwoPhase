@@ -91,6 +91,7 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
     public Page<ComplaintInfo> findPage(Page<ComplaintInfo> page, ComplaintInfo complaintInfo) {
         String officeType=UserUtils.getUser().getCompany().getOfficeType();//查看当前人 属于医院 还是 医调委  还是 卫健委
         //如果当前人员角色 是 医调委主任 则看全部数据
+        User u=UserUtils.getUser();
         if ("1".equals(officeType)){//医调委
             List<String> aa=ObjectUtils.convert(UserUtils.getRoleList().toArray(),"enname",true);
             if (aa.contains("commission")){//韩主任 医调委主任 看全部数据
@@ -106,32 +107,32 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
                 if (list.size()>0){
                     complaintInfo.setList(list);
                 }else {
-                    list.add(UserUtils.getUser().getId());
+                    list.add(u.getId());
                     complaintInfo.setList(list);
                 }
             }else if(aa.contains("DepartmentDeputyDirector")){
                 //风险管控部 部门副主任 看自己部门所有数据
                 List<String> list=new ArrayList<String>();
 
-                List<User> listUser=UserUtils.getUserByOffice(UserUtils.getUser().getOffice().getId());
+                List<User> listUser=UserUtils.getUserByOffice(u.getOffice().getId());
                 for (User user:listUser) {
                     list.add(user.getId());
                 }
                 if (list.size()>0){
                     complaintInfo.setList(list);
                 }else {
-                    list.add(UserUtils.getUser().getId());
+                    list.add(u.getId());
                     complaintInfo.setList(list);
                 }
             }else{
-                complaintInfo.setUser(UserUtils.getUser());
+                complaintInfo.setUser(u);
             }
         }else if("2".equals(officeType)){
-            complaintInfo.setInvolveHospital(UserUtils.getUser().getCompany().getId());
+            complaintInfo.setInvolveHospital(u.getCompany().getId());
         }else {
 
         }
-
+        complaintInfo.setAssignee(u.getLoginName());
         return super.findPage(page, complaintInfo);
     }
 
@@ -158,8 +159,26 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
         //保存附件
         this.savefj(request,complaintInfo);
 
+        //如果是点击的下一步  则对医调委的报案登记进行新增  新增子表
+        ReportRegistration reportRegistration = complaintInfo.getReportRegistration();
+        if(StringUtils.isBlank(reportRegistration.getCreateBy().getId())){
+
+            reportRegistration.preInsert();
+            reportRegistration.setReportRegistrationId(reportRegistration.getId());//主键
+            reportRegistration.setComplaintMainId(complaintInfo.getComplaintMainId());//主表主键
+            //将主键ID设为UUID
+            reportRegistrationDao.insert(reportRegistration);
+
+        }else{//如果不为空进行更新
+            //修改报案登记表
+            reportRegistration.preUpdate();
+            reportRegistrationDao.update(reportRegistration);
+
+        }
+
+
         String flag = request.getParameter("flag");
-        if ("yes".equals(flag) || "2".equals(complaintInfo.getHandleWay())) {
+        if ("yes".equals(flag) && "2".equals(complaintInfo.getHandleWay())) {
             //如果是点击的下一步  则对医调委的投诉接待进行新增  新增子表
 //            ComplaintMainDetail complaintMainDetail = new ComplaintMainDetail();
 //            complaintMainDetail.preInsert();
@@ -184,22 +203,6 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
 
 
             //2020年3月15日 14:27:43 现在是 投诉接待 为一体，现在应该在保存一次 报案登记的信息
-            //如果是点击的下一步  则对医调委的报案登记进行新增  新增子表
-            ReportRegistration reportRegistration = complaintInfo.getReportRegistration();
-            if(StringUtils.isBlank(reportRegistration.getCreateBy().getId())){
-
-                reportRegistration.preInsert();
-                reportRegistration.setReportRegistrationId(reportRegistration.getId());//主键
-                reportRegistration.setComplaintMainId(complaintInfo.getComplaintMainId());//主表主键
-                //将主键ID设为UUID
-                reportRegistrationDao.insert(reportRegistration);
-
-            }else{//如果不为空进行更新
-                //修改报案登记表
-                reportRegistration.preUpdate();
-                reportRegistrationDao.update(reportRegistration);
-
-            }
 
             //保存主表了 证明是 医调委处理
             Map<String,Object> var=new HashMap<String, Object>();
@@ -269,6 +272,7 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
                 complaintMain1.setInvolveHospital(complaintInfo.getInvolveHospital());        //涉及医院
                 complaintMain1.setInvolveDepartment(complaintInfo.getInvolveDepartment());        //涉及科室
                 complaintMain1.setInvolveEmployee(complaintInfo.getInvolveEmployee());        //涉及人员
+                complaintMain.setPatientCard(complaintInfo.getComplaintMain().getPatientCard());    //患者身份证
                 complaintMain1.setSource("2");        //信息来源
                 complaintInfo.setComplaintMain(complaintMain1);
                 complaintMainService.insert(complaintInfo.getComplaintMain());            //保存主表
@@ -283,6 +287,7 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
             complaintMain.setInvolveHospital(complaintInfo.getInvolveHospital());        //涉及医院
             complaintMain.setInvolveDepartment(complaintInfo.getInvolveDepartment());        //涉及科室
             complaintMain.setInvolveEmployee(complaintInfo.getInvolveEmployee());        //涉及人员
+            complaintMain.setPatientCard(complaintInfo.getComplaintMain().getPatientCard());    //患者身份证
             complaintInfo.setComplaintMain(complaintMain);
             complaintMainService.update(complaintInfo.getComplaintMain());            //保存主表
         }

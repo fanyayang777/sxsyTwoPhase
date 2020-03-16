@@ -50,6 +50,10 @@
 		r.next_link AS "reportRegistration.nextLink",
 		r.patient_relation AS "reportRegistration.patientRelation",
 		r.doctor_risk AS "reportRegistration.doctorRisk",
+		r.create_by AS "reportRegistration.createBy.id",
+		r.create_date AS "reportRegistration.createDate",
+		r.update_by AS "reportRegistration.updateBy.id",
+		r.update_date AS "reportRegistration.updateDate",
 		u3.name AS "createBy.name",
 		u3.login_name AS "createBy.loginName",
 		o1.name AS "hospitalName",
@@ -122,6 +126,9 @@
 			</if>
 			<if test="node != null and node != '' and node=='fpy'">
 				AND tt.TASK_DEF_KEY_='allocation' AND tt.ASSIGNEE_ LIKE CONCAT('%', #{assignee}, '%')
+			</if>
+			<if test="node == null or node == '' ">
+				OR (tt.TASK_DEF_KEY_='enrollment' AND tt.ASSIGNEE_ LIKE CONCAT('%', #{assignee}, '%'))
 			</if>
 			<if test="caseNumber != null and caseNumber != ''">
 				AND a.case_number LIKE 

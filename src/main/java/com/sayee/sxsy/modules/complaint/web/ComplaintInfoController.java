@@ -18,6 +18,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -116,7 +117,7 @@ public class ComplaintInfoController extends BaseController {
 			addMessage(model, "案件编号 "+complaintInfo.getCaseNumber()+" 重复");
 			return form(request,complaintInfo, model);
 		}else {
-			addMessage(redirectAttributes, "流程启动成功！");
+			addMessage(redirectAttributes, StringUtils.isNotBlank(act.getProcInsId())?"流程启动成功":"保存成功！");
 			return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage";
 		}
 	}
@@ -172,9 +173,11 @@ public class ComplaintInfoController extends BaseController {
 	}
 
 	@RequestMapping(value = "audit")
+	@Transactional(readOnly = false)
 	public String audit(ComplaintInfo complaintInfo, Model model, RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		String node=request.getParameter("node");
 		String status=request.getParameter("status");
+		model.addAttribute("node",node);
 		try {
 			complaintInfoService.audit(complaintInfo,request);
 			if (StringUtils.isNotBlank(status)){
