@@ -115,7 +115,7 @@
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="investigateEvidence" varStatus="num">
-			<tr ${not empty investigateEvidence.complaintMain.isMajor ? "style='background-color: red;'" : ""}>
+			<tr ${not empty investigateEvidence.complaintMain.isMajor ? "style='background-color: rgb(157,211,250);'" : ""}>
 				<td style="text-align: center;"><a href="${ctx}/nestigateeividence/investigateEvidence/form?id=${investigateEvidence.investigateEvidenceId}&type=view">
 						${investigateEvidence.complaintMain.caseNumber}
 				</a>

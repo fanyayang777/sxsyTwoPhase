@@ -44,6 +44,7 @@ public class ReportRegistration extends DataEntity<ReportRegistration> {
 	private String patientAsk;		// 患方要求
 	private String nextLink;		// 下一处理环节（审核人）
 	private String nextLinkMan;		// 下一环节处理人
+	private String doctorRisk;		// 是否医责险报案
     private Dict dict;  //
 	private String doctorMobile;//医方联系方式
 	private String policyNumber;//保单号
@@ -54,6 +55,14 @@ public class ReportRegistration extends DataEntity<ReportRegistration> {
 
 	public String getCreateUser() {
 		return createUser;
+	}
+
+	public String getDoctorRisk() {
+		return doctorRisk;
+	}
+
+	public void setDoctorRisk(String doctorRisk) {
+		this.doctorRisk = doctorRisk;
 	}
 
 	public void setCreateUser(String createUser) {

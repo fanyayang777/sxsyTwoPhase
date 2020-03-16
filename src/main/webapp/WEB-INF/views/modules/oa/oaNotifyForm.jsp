@@ -22,7 +22,25 @@
 					}
 				}
 			});
+			sendTo();
 		});
+
+		function sendTo() {
+			var send=$("#send").val();
+			if(send !=null && send !=undefined && send!=''){
+				if(send.indexOf("0") != -1){//包含 0  显示接受人 ，且为必填
+					$("#jsr").attr("style","display:block;");//显示div
+
+					$('#oaNotifyRecord').addClass('required');
+				}else{
+					$("#jsr").attr("style","display:none;");//隐藏div
+
+					$('#oaNotifyRecord').removeClass('required');
+
+				}
+			}
+
+		}
 	</script>
 </head>
 <body>
@@ -32,7 +50,8 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="oaNotify" action="${ctx}/oa/oaNotify/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>	
+		<sys:message content="${message}"/>
+		<c:if test="${oaNotify.status ne '1'}">
 		<div class="control-group">
 			<label class="control-label">类型：</label>
 			<div class="controls">
@@ -42,8 +61,19 @@
 				</form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
-		</div>	
-		<div class="control-group">
+		</div>
+			<div class="control-group">
+				<label class="control-label">发往：</label>
+				<div class="controls">
+					<form:select path="send" class="input-xlarge required" multiple="true" onchange="sendTo()" >
+						<form:option value="0">平台</form:option>
+						<form:option value="1">小程序</form:option>
+						<form:option value="2">网站</form:option>
+					</form:select>
+					<span class="help-inline"><font color="red">*</font> </span>
+				</div>
+			</div>
+			<div class="control-group">
 			<label class="control-label">标题：</label>
 			<div class="controls">
 				<form:input path="title" htmlEscape="false" maxlength="200" class="input-xlarge required"/>
@@ -57,6 +87,7 @@
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
+		</c:if>
 		<div class="control-group">
 			<label class="control-label">内容：</label>
 			<div class="controls">
@@ -80,11 +111,11 @@
 					<span class="help-inline"><font color="red">*</font> 发布后不能进行操作。</span>
 				</div>
 			</div>
-			<div class="control-group">
+			<div id="jsr" class="control-group">
 				<label class="control-label">接受人：</label>
 				<div class="controls">
 	                <sys:treeselect id="oaNotifyRecord" name="oaNotifyRecordIds" value="${oaNotify.oaNotifyRecordIds}" labelName="oaNotifyRecordNames" labelValue="${oaNotify.oaNotifyRecordNames}"
-						title="用户" url="/sys/office/treeData?type=3&officeType=1" cssClass="input-xxlarge required" notAllowSelectParent="true" checked="true"/>
+						title="用户" url="/sys/office/treeData?type=3&officeType=1&officeTypes=3" cssClass="input-xxlarge required" dataMsgRequired="请选择接受人" notAllowSelectParent="true" checked="true"/>
 					<span class="help-inline"><font color="red">*</font> </span>
 				</div>
 			</div>
@@ -97,7 +128,7 @@
 					<sys:ckfinder input="files" type="files" uploadPath="/oa/notify" selectMultiple="true" readonly="true" />
 				</div>
 			</div>
-			<div class="control-group">
+			<%--<div class="control-group">
 				<label class="control-label">接受人：</label>
 				<div class="controls">
 					<table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -130,7 +161,7 @@
 					</table>
 					已查阅：${oaNotify.readNum} &nbsp; 未查阅：${oaNotify.unReadNum} &nbsp; 总共：${oaNotify.readNum + oaNotify.unReadNum}
 				</div>
-			</div>
+			</div>--%>
 		</c:if>
 		<div class="form-actions">
 			<c:if test="${oaNotify.status ne '1'}">

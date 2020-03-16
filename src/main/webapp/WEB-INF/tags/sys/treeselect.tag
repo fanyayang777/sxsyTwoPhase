@@ -1,5 +1,6 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<%@ attribute name="onchange" type="java.lang.String" required="false" description="onchange事件"%>``
 <%@ attribute name="id" type="java.lang.String" required="true" description="编号"%>
 <%@ attribute name="pid" type="java.lang.String" required="false" description="父级编号"%>
 <%@ attribute name="role" type="java.lang.String" required="false" description="角色编码，查找人员是过滤"%>

@@ -34,6 +34,7 @@ import com.sayee.sxsy.modules.sys.utils.UserUtils;
 
 import com.sayee.sxsy.modules.typeinfo.entity.TypeInfo;
 import com.sayee.sxsy.modules.typeinfo.service.TypeInfoService;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -517,7 +518,8 @@ public class AssessAppraisalService extends CrudService<AssessAppraisalDao, Asse
 			savaPath +="/userfiles/assessAppraisal/"+num+"submissions.docx";
 			pdfPath +="/userfiles/assessAppraisal/"+num+"submissions.pdf";
 			returnPath="/userfiles/assessAppraisal/"+num+"submissions.pdf";
-			newFileName = "意见书.docx";
+
+			newFileName = MapUtils.getString(params,"pName","")+ (StringUtils.isNotBlank(MapUtils.getString(params,"pName")) ? "与" :"" )+MapUtils.getString(params,"hName","")+"意见书.docx";
 		}
 		//导出程序
 		if("assess".equals(export)){

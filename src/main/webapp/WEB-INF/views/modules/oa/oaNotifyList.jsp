@@ -70,7 +70,14 @@
 						${fns:getDictLabel(oaNotify.readFlag, 'oa_notify_read', '')}
 					</c:if>
 					<c:if test="${!requestScope.oaNotify.self}">
-						${oaNotify.readNum} / ${oaNotify.readNum + oaNotify.unReadNum}
+						<c:choose >
+							<c:when test="${empty oaNotify.readNum}">
+								无
+							</c:when>
+							<c:otherwise>
+								${oaNotify.readNum} /${oaNotify.readNum + oaNotify.unReadNum}
+							</c:otherwise>
+						</c:choose>
 					</c:if>
 				</td>
 				<td>

@@ -1230,7 +1230,7 @@
 					<table class="table-form">
 						<tr>
 							<td colspan="3">
-								<form:textarea path="proposal.treatmentSummary" htmlEscape="false" rows="10" maxlength="500" class="input-xxlarge required" cssStyle="width: 1374px;"/>
+								<form:textarea path="proposal.treatmentSummary" htmlEscape="false" rows="10"  class="input-xxlarge required" cssStyle="width: 1374px;"/>
 							</td>
 						</tr>
 					</table>

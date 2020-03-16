@@ -113,7 +113,7 @@
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="summaryInfo" varStatus="num">
-			<tr ${not empty summaryInfo.complaintMain.isMajor ? "style='background-color: red;'" : ""}>
+			<tr ${not empty summaryInfo.complaintMain.isMajor ? "style='background-color: rgb(157,211,250);'" : ""}>
 				<td style="text-align: center;">
 					<a href="${ctx}/summaryinfo/summaryInfo/form?id=${summaryInfo.summaryId}&type=view">
 							${summaryInfo.complaintMain.caseNumber}
@@ -137,14 +137,14 @@
 
 				<td style="text-align: center;">
                     <c:choose>
-                        <c:when test="${summaryInfo.mediateResult eq 1}">
-                            成功
+                        <c:when test="${summaryInfo.mediateResult eq 3}">
+							销案
                         </c:when>
                         <c:when test="${summaryInfo.mediateResult eq 2}">
                             终止
                         </c:when>
                         <c:otherwise>
-                            销案
+							成功
                         </c:otherwise>
                     </c:choose>
 

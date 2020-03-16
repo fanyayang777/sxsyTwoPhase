@@ -6,10 +6,18 @@ package com.sayee.sxsy.modules.complaintmain.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.collect.Lists;
 import com.sayee.sxsy.common.utils.*;
+import com.sayee.sxsy.modules.complaintmain.dao.ComplaintMainDao;
+import com.sayee.sxsy.modules.machine.dao.MachineAccountDao;
+import com.sayee.sxsy.modules.machine.entity.MachineAccount;
+import com.sayee.sxsy.modules.oa.entity.OaNotify;
+import com.sayee.sxsy.modules.oa.service.OaNotifyService;
 import com.sayee.sxsy.modules.registration.entity.ReportRegistration;
 import com.sayee.sxsy.modules.sys.entity.User;
 import com.sayee.sxsy.modules.sys.utils.UserUtils;
+import com.sayee.sxsy.test.dao.TestTreeDao;
+import com.sayee.sxsy.test.entity.TestTree;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -29,6 +37,7 @@ import com.sayee.sxsy.common.web.BaseController;
 import com.sayee.sxsy.modules.complaintmain.entity.ComplaintMain;
 import com.sayee.sxsy.modules.complaintmain.service.ComplaintMainService;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 /**
@@ -39,10 +48,18 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "${adminPath}/complaintmain/complaintMain")
 public class ComplaintMainController extends BaseController {
+    @Autowired
+    private OaNotifyService oaNotifyService;
+
+	@Autowired
+	private TestTreeDao testTreeDao;
+
+    @Autowired
+    private ComplaintMainDao complaintMainDao;
 
 	@Autowired
 	private ComplaintMainService complaintMainService;
-	
+
 	@ModelAttribute
 	public ComplaintMain get(@RequestParam(required=false) String id) {
 		ComplaintMain entity = null;
@@ -114,6 +131,47 @@ public class ComplaintMainController extends BaseController {
 		}
 
 	}
+	/*
+	 * 后台首页
+	 *
+	 * */
+	@RequestMapping(value = "index")
+	public String index(OaNotify oaNotify,ComplaintMain complaintMain, HttpServletRequest request, HttpServletResponse response, Model model) {
+		List<ComplaintMain> list=complaintMainDao.selfList(UserUtils.getUser().getLoginName());
+		complaintMainService.format(list);
+		model.addAttribute("listSize", list.size());
+		List<ComplaintMain> ywcList=complaintMainService.getMyDone(UserUtils.getUser().getLoginName());
+		int ywc=0;
+		for (ComplaintMain complaintMain1 : ywcList) {
+			if ("assess".equals(complaintMain1.getTaskDefKey()) || "feedback".equals(complaintMain1.getTaskDefKey())){
+				ywc++;
+			}
+		}
+		model.addAttribute("sum", list.size()+ywc);
+		model.addAttribute("list", list.size()>10 ? list.subList(0,10) : list);
+		List<String> aa=ObjectUtils.convert(UserUtils.getRoleList().toArray(),"enname",true);
+		if (  (  aa.contains("director") ||aa.contains("accounting") || aa.contains("InformationDirector") || aa.contains("deputyDirector")|| aa.contains("OfficeSupervisor")|| aa.contains("deputyDirectorOfOffice")|| aa.contains("MedicalExpert")|| aa.contains("commission")|| aa.contains("y_dept")
+				|| aa.contains("complaint") || aa.contains("    wjwgzzry") || aa.contains("logisticsDepartment") || aa.contains("Staff") || aa.contains("data_clerk") || aa.contains("DirectorOfMediation") || aa.contains("DepartmentHead") || aa.contains("DepartmentDeputyDirector") || aa.contains("zwjw")) && list.isEmpty()){
+			int year=Integer.valueOf(DateUtils.getYear())+1;
+			List newList=complaintMainDao.getMachine(DateUtils.getYear(),String.valueOf(year));
+			complaintMainService.format(newList);
+			model.addAttribute("list", newList.size()>10 ? newList.subList(0,10) : newList);
+		}
+		oaNotify.setSelf(true);
+		long notifyCount=oaNotifyService.findCount(oaNotify);
+		oaNotify.setReadFlag("0");
+		model.addAttribute("notifyPageSize", oaNotifyService.findCount(oaNotify));
+		Page<OaNotify> notifyPage = oaNotifyService.find(new Page<OaNotify>(request, response), oaNotify);
+		if (notifyPage.getList().isEmpty()){
+			oaNotify=new OaNotify();
+			notifyPage = oaNotifyService.find(new Page<OaNotify>(request, response), oaNotify);
+		}
+		notifyPage.setList(notifyPage.getList().size()>10 ? notifyPage.getList().subList(0,10) : notifyPage.getList());
+		model.addAttribute("notifyPage", notifyPage);
+		model.addAttribute("notifyCount", notifyCount);
+		return "modules/home/index";
+	}
+
 
 	/**
 	 * 我的待办列表
@@ -173,45 +231,114 @@ public class ComplaintMainController extends BaseController {
         model.addAttribute("endMonthDate", endMonthDate );
 		if (StringUtils.isNotBlank(newType)){
 		    if ("duty".equals(newType)){//责任度
-                List<Map<String,Object>> list=complaintMainService.findDuty(user,year,beginMonthDate,endMonthDate,type);
-//                Map<String,Object> map=new HashMap<>();
-//                map.put("name","无责"); map.put("value","21");
-//                Map<String,Object> map1=new HashMap<>();
-//                map1.put("name","轻微责任");map1.put("value","45");
-//                Map<String,Object> map2=new HashMap<>();
-//                map2.put("name","次要责任");map2.put("value","78");
-//                Map<String,Object> map3=new HashMap<>();
-//                map3.put("name","对等责任");map3.put("value","12");
-//                Map<String,Object> map4=new HashMap<>();
-//                map4.put("name","主要责任");map4.put("value","34");
-//                Map<String,Object> map5=new HashMap<>();
-//                map5.put("name","全部责任");map5.put("value","55");
-//                Map<String,Object> map6=new HashMap<>();
-//                map6.put("name","无法判定");map6.put("value","1");
-//                list.add(map);list.add(map1);list.add(map2);list.add(map3);list.add(map4);list.add(map5);list.add(map6);
+				List<Map<String,Object>> list=new ArrayList<>();
+		    	if ((StringUtils.isBlank(year) || "2019".equals(year)) && "tj".equals(type)){
+            	Map<String,Object> map=new HashMap<>();
+                map.put("name","无责"); map.put("value","34");
+                Map<String,Object> map1=new HashMap<>();
+                map1.put("name","轻微责任");map1.put("value","82");
+                Map<String,Object> map2=new HashMap<>();
+                map2.put("name","次要责任");map2.put("value","89");
+                Map<String,Object> map3=new HashMap<>();
+                map3.put("name","对等责任");map3.put("value","101");
+                Map<String,Object> map4=new HashMap<>();
+                map4.put("name","主要责任");map4.put("value","86");
+                Map<String,Object> map5=new HashMap<>();
+                map5.put("name","全部责任");map5.put("value","33");
+                Map<String,Object> map6=new HashMap<>();
+                map6.put("name","无法判定");map6.put("value","7");
+                list.add(map);list.add(map1);list.add(map2);list.add(map3);list.add(map4);list.add(map5);list.add(map6);
+				year="2019";
+		    	}else if("2018".equals(year)){
+					Map<String,Object> map=new HashMap<>();
+					map.put("name","无责"); map.put("value","54");
+					Map<String,Object> map1=new HashMap<>();
+					map1.put("name","轻微责任");map1.put("value","82");
+					Map<String,Object> map2=new HashMap<>();
+					map2.put("name","次要责任");map2.put("value","123");
+					Map<String,Object> map3=new HashMap<>();
+					map3.put("name","对等责任");map3.put("value","145");
+					Map<String,Object> map4=new HashMap<>();
+					map4.put("name","主要责任");map4.put("value","108");
+					Map<String,Object> map5=new HashMap<>();
+					map5.put("name","全部责任");map5.put("value","21");
+					Map<String,Object> map6=new HashMap<>();
+					map6.put("name","无法判定");map6.put("value","5");
+					list.add(map);list.add(map1);list.add(map2);list.add(map3);list.add(map4);list.add(map5);list.add(map6);
+				}
+		    	else {
+					 list=complaintMainService.findDuty(user,year,beginMonthDate,endMonthDate,type);
+				}
+
+				//循环 得到总数
+				int sum=0;
+				for (Map sumMap:list) {
+					sum+=MapUtils.getInteger(sumMap,"num",0);
+				}
+				//根据总数 得到百分比
+				for (Map ratioMap:list) {
+					// 创建一个数值格式化对象
+					NumberFormat numberFormat = NumberFormat.getInstance();
+					// 设置精确到小数点后2位
+					numberFormat.setMaximumFractionDigits(2);
+					String result = numberFormat.format(MapUtils.getFloat(ratioMap,"num",(float) 0) / (float) sum * 100);
+					ratioMap.put("num",result);
+				}
+
                 model.addAttribute("dutyName", this.convert(list.toArray(),"ratio",true) );
                 String toJson = JsonUtil.toJson(list);
                 model.addAttribute("dutyNum",toJson);
                 model.addAttribute("dutyTableInfo",list);
+				model.addAttribute("yearDate", year );
                 return "modules/home/duty";
             }else {
-                Map<String,Object> map=complaintMainService.findAmountRatio(user,year,beginMonthDate,endMonthDate,type);
-//                map.put("50万及以上","1");
-//                map.put("10万到50万及以下","6");
-//                map.put("2万到10万及以下","56");
-//                map.put("2万及以下","121");
+                Map<String,Object> map=new LinkedHashMap<>();
+				if ((StringUtils.isBlank(year) || "2019".equals(year)) && "tj".equals(type)){
+					map.put("2万及以下","165");
+					map.put("2万到10万及以下","88");
+					map.put("10万到50万及以下","55");
+					map.put("50万以上","5");
+					model.addAttribute("yearDate", "2019" );
+				}else if("2018".equals(year)){
+					map.put("2万及以下","319");
+					map.put("2万到10万及以下","201");
+					map.put("10万到50万及以下","158");
+					map.put("50万以上","4");
+				}
+				else {
+					map=complaintMainService.findAmountRatio(user,year,beginMonthDate,endMonthDate,type);
+				}
                 List keyList = new ArrayList();
-                List valueList = new ArrayList();
+                List valuesList = new ArrayList();
                 List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 				list.add(map);
+				//循环 得到总数
+				int sum=0;
                 for(String key : map.keySet()){
-                    keyList.add(key);
-                    String value =MapUtils.getString(map,key,"0");
-                    valueList.add(value);
+					sum+=MapUtils.getInteger(map,key,0);
                 }
+				for(String key : map.keySet()) {
+					// 创建一个数值格式化对象
+					NumberFormat numberFormat = NumberFormat.getInstance();
+					// 设置精确到小数点后2位
+					numberFormat.setMaximumFractionDigits(2);
+					String result = numberFormat.format(MapUtils.getFloat(map, key, (float) 0) / (float) sum * 100);
+					map.put(key,result);
+				}
+				int index=0;
+				for(String key : map.keySet()){
+					List valueList = new ArrayList();
+					keyList.add(key);
+					String value =MapUtils.getString(map,key,"0");
+					valueList.add("0");
+					valueList.add(index);
+					valueList.add(value);
+					valuesList.add(valueList);
+					index++;
+				}
 				model.addAttribute("amountTableInfo", list);
 				model.addAttribute("keyList", JsonUtil.toJson(keyList));
-				model.addAttribute("valueList", valueList);
+				model.addAttribute("valueList", valuesList);
                 return "modules/home/amountRatio";
             }
         }else {
@@ -219,6 +346,33 @@ public class ComplaintMainController extends BaseController {
 			if("jfjd".equals(commonType)){//调解数据统计下的  纠纷纠纷焦点 分析
 				//查询当前登录人 有几条 数据时 在 结案总结 之后
 				List<Map<String,Object>> list=complaintMainService.findTypeInfo(user,year,beginMonthDate,endMonthDate,type);
+				list.sort(new Comparator<Map<String, Object>>() {
+					@Override
+					public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+						Integer i1 = MapUtils.getInteger(o1,"num",0);
+						Integer i2 = MapUtils.getInteger(o2,"num",0);
+						return i2.compareTo(i1);
+					}
+				});
+				if ((StringUtils.isBlank(year) || "2019".equals(year)) && "tj".equals(type)){
+					year="2019";
+				}
+				//循环 得到总数
+				int sum=0;
+				for (Map sumMap:list) {
+					sum+=MapUtils.getInteger(sumMap,"num",0);
+				}
+				//根据总数 得到百分比
+				for (Map ratioMap:list) {
+					// 创建一个数值格式化对象
+					NumberFormat numberFormat = NumberFormat.getInstance();
+					// 设置精确到小数点后2位
+					numberFormat.setMaximumFractionDigits(2);
+					String result = numberFormat.format(MapUtils.getFloat(ratioMap,"num",(float) 0) / (float) sum * 100);
+					ratioMap.put("num",result);
+				}
+				model.addAttribute("yearDate", year );
+				model.addAttribute("list3",JsonUtil.toJson(list));
 				model.addAttribute("list", this.convert(list.toArray(),"typeName",true) );
 				model.addAttribute("jfjdTableInfo", list );
 				model.addAttribute("list2", this.convert(list.toArray(),"num",true) );
@@ -226,56 +380,182 @@ public class ComplaintMainController extends BaseController {
 				return "modules/home/focus";
 			}else if("sjzy".equals(commonType)){//涉及专业
 				//各专业数据
-				List<Map<String,Object>> dList=complaintMainService.findDepartment(user,year,beginMonthDate,endMonthDate,type);
-//                Map<String,Object> map=new HashMap<>();
-//                map.put("name","'呼吸内科专业'"); map.put("department","5");
-//                Map<String,Object> map1=new HashMap<>();
-//                map1.put("name","'骨科专业'");map1.put("department","16");
-//                Map<String,Object> map2=new HashMap<>();
-//                map2.put("name","'泌尿外科专业'");map2.put("department","34");
-//                Map<String,Object> map3=new HashMap<>();
-//                map3.put("name","'内分泌专业'");map3.put("department","36");
-//                Map<String,Object> map4=new HashMap<>();
-//                map4.put("name","'消化内科专业'");map4.put("department","42");
-//                Map<String,Object> map5=new HashMap<>();
-//                map5.put("name","'妇科专业'");map5.put("department","55");
-//                Map<String,Object> map6=new HashMap<>();
-//                map6.put("name","'其他'");map6.put("department","10");
-//                dList.add(map);
-//                dList.add(map1);
-//                dList.add(map2);
-//                dList.add(map3);
-//                dList.add(map4);
-//                dList.add(map5);
-//                dList.add(map6);
-				model.addAttribute("nameList", ObjectUtils.convert(dList.toArray(),"name",true) );
+				List<Map<String,Object>> dList=new ArrayList<>();
+				if ((StringUtils.isBlank(year) || "2019".equals(year)) && "tj".equals(type)){
+					Map<String,Object> map=new HashMap<>();
+					map.put("name","'外科'"); map.put("department","454");
+					Map<String,Object> map1=new HashMap<>();
+					map1.put("name","'妇科'");map1.put("department","224");
+					Map<String,Object> map2=new HashMap<>();
+					map2.put("name","'内科'");map2.put("department","223");
+					Map<String,Object> map3=new HashMap<>();
+					map3.put("name","'儿科'");map3.put("department","75");
+					Map<String,Object> map4=new HashMap<>();
+					map4.put("name","'急诊科'");map4.put("department","49");
+					Map<String,Object> map5=new HashMap<>();
+					map5.put("name","'整形科'");map5.put("department","40");
+					Map<String,Object> map6=new HashMap<>();
+					map6.put("name","'眼科'");map6.put("department","35");
+					Map<String,Object> map7=new HashMap<>();
+					map7.put("name","'口腔科'");map7.put("department","27");
+					Map<String,Object> map8=new HashMap<>();
+					map8.put("name","'辅助检查科'");map8.put("department","24");
+					Map<String,Object> map9=new HashMap<>();
+					map9.put("name","'耳鼻喉科'");map9.put("department","13");
+					Map<String,Object> map10=new HashMap<>();
+					map10.put("name","'康复科'");map10.put("department","12");
+					Map<String,Object> map12=new HashMap<>();
+					map12.put("name","'中医科'");map12.put("department","11");
+					Map<String,Object> map13=new HashMap<>();
+					map13.put("name","'重症医学科'");map13.put("department","11");
+					Map<String,Object> map14=new HashMap<>();
+					map14.put("name","'皮肤科'");map14.put("department","5");
+					Map<String,Object> map15=new HashMap<>();
+					map15.put("name","'护理'");map15.put("department","4");
+					Map<String,Object> map16=new HashMap<>();
+					map16.put("name","'麻醉科'");map16.put("department","2");
+					Map<String,Object> map17=new HashMap<>();
+					map17.put("name","'其他'");map17.put("department","13");
+					dList.add(map);
+					dList.add(map1);
+					dList.add(map2);
+					dList.add(map3);
+					dList.add(map4);
+					dList.add(map5);
+					dList.add(map6);
+					dList.add(map7);
+					dList.add(map8);
+					dList.add(map9);
+					dList.add(map10);
+					dList.add(map12);
+					dList.add(map13);
+					dList.add(map14);
+					dList.add(map15);
+					dList.add(map16);
+					dList.add(map17);
+					model.addAttribute("yearDate", "2019" );
+				}else if("2018".equals(year)){
+					Map<String,Object> map=new HashMap<>();
+					map.put("name","'外科'"); map.put("department","411");
+					Map<String,Object> map1=new HashMap<>();
+					map1.put("name","'妇科'");map1.put("department","259");
+					Map<String,Object> map2=new HashMap<>();
+					map2.put("name","'内科'");map2.put("department","192");
+					Map<String,Object> map3=new HashMap<>();
+					map3.put("name","'儿科'");map3.put("department","42");
+					Map<String,Object> map4=new HashMap<>();
+					map4.put("name","'急诊科'");map4.put("department","41");
+					Map<String,Object> map5=new HashMap<>();
+					map5.put("name","'整形科'");map5.put("department","7");
+					Map<String,Object> map6=new HashMap<>();
+					map6.put("name","'眼科'");map6.put("department","24");
+					Map<String,Object> map7=new HashMap<>();
+					map7.put("name","'口腔科'");map7.put("department","19");
+					Map<String,Object> map9=new HashMap<>();
+					map9.put("name","'耳鼻喉科'");map9.put("department","15");
+					Map<String,Object> map10=new HashMap<>();
+					map10.put("name","'康复科'");map10.put("department","11");
+					Map<String,Object> map12=new HashMap<>();
+					map12.put("name","'中医科'");map12.put("department","14");
+					Map<String,Object> map14=new HashMap<>();
+					map14.put("name","'皮肤科'");map14.put("department","7");
+					Map<String,Object> map15=new HashMap<>();
+					map15.put("name","'综检科'");map15.put("department","19");
+					Map<String,Object> map16=new HashMap<>();
+					map16.put("name","'麻醉科'");map16.put("department","6");
+					Map<String,Object> map17=new HashMap<>();
+					map17.put("name","'其他'");map17.put("department","9");
+					dList.add(map);
+					dList.add(map1);
+					dList.add(map2);
+					dList.add(map3);
+					dList.add(map4);
+					dList.add(map5);
+					dList.add(map6);
+					dList.add(map7);
+					dList.add(map9);
+					dList.add(map10);
+					dList.add(map12);
+					dList.add(map14);
+					dList.add(map15);
+					dList.add(map16);
+					dList.add(map17);
+				}
+				else {
+					dList=complaintMainService.findDepartment(user,year,beginMonthDate,endMonthDate,type);
+				}
+				System.out.println(dList);
+				//循环 得到总数
+				int sum=0;
+				for (Map sumMap:dList) {
+					sum+=MapUtils.getInteger(sumMap,"department",0);
+				}
+				//根据总数 得到百分比
+				for (Map ratioMap:dList) {
+					// 创建一个数值格式化对象
+					NumberFormat numberFormat = NumberFormat.getInstance();
+					// 设置精确到小数点后2位
+					numberFormat.setMaximumFractionDigits(2);
+					String result = numberFormat.format(MapUtils.getFloat(ratioMap,"department",(float) 0) / (float) sum * 100);
+					ratioMap.put("department",result);
+				}
+				List name = ObjectUtils.convert(dList.toArray(), "name", true);
+				List newName = new ArrayList();
+				for (Object o : name) {
+					String s = o.toString();
+					boolean br = s.matches(".*[a-z]+.*");
+					if(br==true){
+						TestTree departmentNewName = testTreeDao.get(s.replaceAll("\'","").replaceAll("\"",""));
+						newName.add(departmentNewName==null ? "" : "'"+departmentNewName.getName()+"'");
+					}else{
+						newName.add(o);
+					}
+				}
+
+
+				model.addAttribute("nameList", newName );
 				model.addAttribute("departmentList", ObjectUtils.convert(dList.toArray(),"department",true) );
 				model.addAttribute("sjzyTableInfo", dList );
 				return "modules/home/major";
 			}else if("yydj".equals(commonType)){//机构等级
 				//各等级医院的案件数量统计
-				List<Map<String, Object>> gradeList = complaintMainService.findGrade(user, year, beginMonthDate,endMonthDate,type);
-//                Map<String,Object> map=new HashMap<>();
-//                map.put("name","小学"); map.put("value","5");
-//                Map<String,Object> map1=new HashMap<>();
-//                map1.put("name","初中");map1.put("value","16");
-//                Map<String,Object> map2=new HashMap<>();
-//                map2.put("name","高中");map2.put("value","34");
-//                Map<String,Object> map3=new HashMap<>();
-//                map3.put("name","职高");map3.put("value","36");
-//                Map<String,Object> map4=new HashMap<>();
-//                map4.put("name","大专");map4.put("value","42");
-//                Map<String,Object> map5=new HashMap<>();
-//                map5.put("name","大学");map5.put("value","55");
-//                Map<String,Object> map6=new HashMap<>();
-//                map6.put("name","民营院校");map6.put("value","10");
-//                gradeList.add(map);
-//				gradeList.add(map1);
-//				gradeList.add(map2);
-//				gradeList.add(map3);
-//				gradeList.add(map4);
-//				gradeList.add(map5);
-//				gradeList.add(map6);
+				List<Map<String, Object>> gradeList = new ArrayList<>();
+				if ((StringUtils.isBlank(year) || "2019".equals(year)) && "tj".equals(type)){
+					Map<String,Object> map=new HashMap<>();
+					map.put("name","二级甲等"); map.put("value","337");
+					Map<String,Object> map1=new HashMap<>();
+					map1.put("name","三级甲等");map1.put("value","164");
+					Map<String,Object> map2=new HashMap<>();
+					map2.put("name","民营医疗机构");map2.put("value","112");
+					Map<String,Object> map3=new HashMap<>();
+					map3.put("name","三级乙等");map3.put("value","17");
+					Map<String,Object> map4=new HashMap<>();
+					map4.put("name","其他机构");map4.put("value","35");
+					gradeList.add(map);
+					gradeList.add(map1);
+					gradeList.add(map2);
+					gradeList.add(map3);
+					gradeList.add(map4);
+					model.addAttribute("yearDate", "2019" );
+				}else if("2018".equals(year)){
+					Map<String,Object> map=new HashMap<>();
+					map.put("name","二级甲等"); map.put("value","337");
+					Map<String,Object> map1=new HashMap<>();
+					map1.put("name","三级甲等");map1.put("value","164");
+					Map<String,Object> map2=new HashMap<>();
+					map2.put("name","民营医疗机构");map2.put("value","112");
+					Map<String,Object> map3=new HashMap<>();
+					map3.put("name","三级乙等");map3.put("value","17");
+					Map<String,Object> map4=new HashMap<>();
+					map4.put("name","其他机构");map4.put("value","35");
+					gradeList.add(map);
+					gradeList.add(map1);
+					gradeList.add(map2);
+					gradeList.add(map3);
+					gradeList.add(map4);
+				}else {
+					gradeList=complaintMainService.findGrade(user, year, beginMonthDate,endMonthDate,type);
+				}
 				String toJson = JsonUtil.toJson(gradeList);
 				model.addAttribute("asdf",toJson);
 				model.addAttribute("yydjTableInfo",gradeList);
@@ -310,23 +590,65 @@ public class ComplaintMainController extends BaseController {
 				model.addAttribute("number", this.convert(MonthDataList.toArray(),"num",true) );
 				model.addAttribute("monthTableInfo", MonthDataList );
 				//各市数据
-				List<Map<String,Object>> areaList=complaintMainService.findAreaName(user,year,beginMonthDate,endMonthDate,type);
-//                Map<String,Object> m=new HashMap<>();
-//                m.put("name","临汾市"); m.put("value","5");
-//                Map<String,Object> m1=new HashMap<>();
-//                m1.put("name","阳泉市");m1.put("value","16");
-//                Map<String,Object> m2=new HashMap<>();
-//                m2.put("name","太原市");m2.put("value","34");
-//                Map<String,Object> m3=new HashMap<>();
-//                m3.put("name","晋中市");m3.put("value","36");
-//                Map<String,Object> m4=new HashMap<>();
-//                m4.put("name","运城市");m4.put("value","42");
-//                Map<String,Object> m5=new HashMap<>();
-//                m5.put("name","晋城市");m5.put("value","55");
-//                Map<String,Object> m6=new HashMap<>();
-//                m6.put("name","吕梁市");m6.put("value","10");
-//                areaList.add(m);areaList.add(m1);areaList.add(m2);areaList.add(m3);
-//                areaList.add(m4);areaList.add(m5);areaList.add(m6);
+				List<Map<String,Object>> areaList=new ArrayList<>();
+				if ((StringUtils.isBlank(year) || "2019".equals(year)) && "tj".equals(type)){
+					Map<String,Object> m=new HashMap<>();
+					m.put("name","临汾市"); m.put("value","148");
+					Map<String,Object> m1=new HashMap<>();
+					m1.put("name","阳泉市");m1.put("value","72");
+					Map<String,Object> m2=new HashMap<>();
+					m2.put("name","太原市");m2.put("value","237");
+					Map<String,Object> m3=new HashMap<>();
+					m3.put("name","晋中市");m3.put("value","204");
+					Map<String,Object> m4=new HashMap<>();
+					m4.put("name","运城市");m4.put("value","141");
+					Map<String,Object> m5=new HashMap<>();
+					m5.put("name","晋城市");m5.put("value","117");
+					Map<String,Object> m6=new HashMap<>();
+					m6.put("name","吕梁市");m6.put("value","157");
+					Map<String,Object> m7=new HashMap<>();
+					m7.put("name","长治市");m7.put("value","59");
+					Map<String,Object> m8=new HashMap<>();
+					m8.put("name","朔州市");m8.put("value","37");
+					Map<String,Object> m9=new HashMap<>();
+					m9.put("name","大同市");m9.put("value","30");
+					Map<String,Object> m10=new HashMap<>();
+					m10.put("name","忻州市");m10.put("value","20");
+					areaList.add(m);areaList.add(m1);areaList.add(m2);areaList.add(m3);
+					areaList.add(m4);areaList.add(m5);areaList.add(m6);areaList.add(m7);
+					areaList.add(m9);areaList.add(m8);areaList.add(m10);
+
+					model.addAttribute("yearDate", "2019" );
+				}else if("2018".equals(year)){
+					Map<String,Object> m=new HashMap<>();
+					m.put("name","临汾市"); m.put("value","174");
+					Map<String,Object> m1=new HashMap<>();
+					m1.put("name","阳泉市");m1.put("value","79");
+					Map<String,Object> m2=new HashMap<>();
+					m2.put("name","太原市");m2.put("value","176");
+					Map<String,Object> m3=new HashMap<>();
+					m3.put("name","晋中市");m3.put("value","174");
+					Map<String,Object> m4=new HashMap<>();
+					m4.put("name","运城市");m4.put("value","122");
+					Map<String,Object> m5=new HashMap<>();
+					m5.put("name","晋城市");m5.put("value","108");
+					Map<String,Object> m6=new HashMap<>();
+					m6.put("name","吕梁市");m6.put("value","112");
+					Map<String,Object> m7=new HashMap<>();
+					m7.put("name","长治市");m7.put("value","78");
+					Map<String,Object> m8=new HashMap<>();
+					m8.put("name","朔州市");m8.put("value","43");
+					Map<String,Object> m9=new HashMap<>();
+					m9.put("name","大同市");m9.put("value","30");
+					Map<String,Object> m10=new HashMap<>();
+					m10.put("name","忻州市");m10.put("value","13");
+					areaList.add(m);areaList.add(m1);areaList.add(m2);areaList.add(m3);
+					areaList.add(m4);areaList.add(m5);areaList.add(m6);areaList.add(m7);
+					areaList.add(m9);areaList.add(m8);areaList.add(m10);
+
+				}else {
+					areaList=complaintMainService.findAreaName(user,year,beginMonthDate,endMonthDate,type);
+				}
 				areaList.sort(new Comparator<Map<String, Object>>() {
 					@Override
 					public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -335,6 +657,29 @@ public class ComplaintMainController extends BaseController {
 						return i2.compareTo(i1);
 					}
 				});
+
+				//循环 得到总数
+				int sum=0;
+				for (Map sumMap:areaList) {
+					sum+=MapUtils.getInteger(sumMap,"value",0);
+				}
+				//根据总数 得到百分比
+				for (Map ratioMap:areaList) {
+					// 创建一个数值格式化对象
+					NumberFormat numberFormat = NumberFormat.getInstance();
+					// 设置精确到小数点后2位
+					 numberFormat.setMaximumFractionDigits(2);
+					 String result = numberFormat.format(MapUtils.getFloat(ratioMap,"value",(float) 0) / (float) sum * 100);
+					ratioMap.put("value",result);
+				}
+				List name = this.convert(areaList.toArray(), "name", true);
+				List newName = new ArrayList();
+				for (Object o : name) {
+					newName.add("'"+o+"'");
+				}
+
+				System.out.println(areaList);
+				model.addAttribute("city",newName);
 				model.addAttribute("areaList", JsonUtil.toJson(areaList));
 				model.addAttribute("areaTableInfo", areaList);
 				if ("ts".equals(type)){

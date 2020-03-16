@@ -289,7 +289,11 @@ public class UserUtils {
 		@SuppressWarnings("unchecked")
 		List<Office> officeList = (List<Office>)getCache(CACHE_OFFICE_ALL_LIST);
 		if (officeList == null){
-			officeList = officeDao.findAllList(new Office());
+			Office office = new Office();
+			String areaId = UserUtils.getUser().getCompany().getArea().getId();
+			office.setArea(new Area());
+			office.getArea().setAreaId(areaId);
+			officeList = officeDao.findAllList(office);
 		}
 		return officeList;
 	}

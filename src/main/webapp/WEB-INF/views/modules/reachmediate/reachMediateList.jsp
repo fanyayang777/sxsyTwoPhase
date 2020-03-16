@@ -103,7 +103,7 @@
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="reachMediate">
-			<tr ${not empty reachMediate.complaintMain.isMajor ? "style='background-color: red;'" : ""}>
+			<tr ${not empty reachMediate.complaintMain.isMajor ? "style='background-color: rgb(157,211,250);'" : ""}>
 				<td style="text-align: center;"><a href="${ctx}/reachmediate/reachMediate/form?id=${reachMediate.reachMediateId}&type=view">
 						${reachMediate.complaintMain.caseNumber}
 				</a></td>

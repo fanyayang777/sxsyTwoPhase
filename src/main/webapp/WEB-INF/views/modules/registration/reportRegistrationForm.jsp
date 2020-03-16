@@ -183,7 +183,6 @@
     <form:hidden path="complaintMain.hospital.name"/>
     <form:hidden path="area.name"/>
     <form:hidden path="complaintMain.involveDepartment"/>
-    <form:hidden path="complaintMain.involveEmployee"/>
     <form:hidden path="complaintMain.involveHospital"/>
     <form:hidden path="complaintMain.hospital.area.name"/>
     <form:hidden path="complaintMain.patientAge"/>
@@ -266,14 +265,16 @@
                                onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});" style="width:90%;height:30px;text-align: center;" id="chuxian" onchange="compareDate(this.value)"/>
                     </td>
                     <td class="tit">科室:</td>
-                    <td>
+                    <td colspan="2">
                             ${reportRegistration.complaintMain.testTree}
                     </td>
                     <td class="tit">出险医生:</td>
-                    <td style="text-align: center;">
-                            ${empty reportRegistration.complaintMain.employee.name?reportRegistration.complaintMain.involveEmployee:reportRegistration.complaintMain.employee.name}
+                    <td style="text-align: center;" colspan="2">
+
+                        <form:input path="complaintMain.involveEmployee" htmlEscape="false" class=" "
+                                    value="${empty reportRegistration.complaintMain.employee.name?reportRegistration.complaintMain.involveEmployee:reportRegistration.complaintMain.employee.name}"/>
                     </td>
-                    <td class="tit">是否重大纠纷:</td>
+                   <%-- <td class="tit">是否重大纠纷:</td>
                     <td style="text-align: center;">
                         <c:choose>
                             <c:when test="${not empty reportRegistration.complaintMain.isMajor}">
@@ -285,7 +286,7 @@
                                 <input type="hidden" name="isMajor" value="0"/>
                             </c:otherwise>
                         </c:choose>
-                    </td>
+                    </td>--%>
                 </tr>
                 <tr>
                     <td class="tit">

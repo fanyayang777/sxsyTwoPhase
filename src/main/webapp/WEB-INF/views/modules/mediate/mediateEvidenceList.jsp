@@ -97,7 +97,7 @@
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="mediateEvidence">
-			<tr ${not empty mediateEvidence.complaintMain.isMajor ? "style='background-color: red;'" : ""}>
+			<tr ${not empty mediateEvidence.complaintMain.isMajor ? "style='background-color: rgb(157,211,250);'" : ""}>
 				<td style="text-align:center;">
 					<a href="${ctx}/mediate/mediateEvidence/form?id=${mediateEvidence.mediateEvidenceId}&type=view">
 							${mediateEvidence.complaintMain.caseNumber}

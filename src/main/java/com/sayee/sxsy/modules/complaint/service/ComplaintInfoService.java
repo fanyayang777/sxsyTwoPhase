@@ -10,6 +10,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.sayee.sxsy.common.utils.*;
+import com.sayee.sxsy.modules.act.entity.Act;
+import com.sayee.sxsy.modules.act.service.ActTaskService;
+import com.sayee.sxsy.modules.act.utils.ActUtils;
 import com.sayee.sxsy.modules.auditacceptance.entity.AuditAcceptance;
 import com.sayee.sxsy.modules.complaintdetail.dao.ComplaintMainDetailDao;
 import com.sayee.sxsy.modules.complaintdetail.entity.ComplaintMainDetail;
@@ -17,11 +20,18 @@ import com.sayee.sxsy.modules.complaintdetail.service.ComplaintMainDetailService
 import com.sayee.sxsy.modules.complaintmain.dao.ComplaintMainDao;
 import com.sayee.sxsy.modules.complaintmain.entity.ComplaintMain;
 import com.sayee.sxsy.modules.complaintmain.service.ComplaintMainService;
+import com.sayee.sxsy.modules.registration.dao.ReportRegistrationDao;
+import com.sayee.sxsy.modules.registration.entity.ReportRegistration;
 import com.sayee.sxsy.modules.surgicalconsentbook.dao.PreOperativeConsentDao;
 import com.sayee.sxsy.modules.surgicalconsentbook.service.PreOperativeConsentService;
 import com.sayee.sxsy.modules.sys.entity.User;
 import com.sayee.sxsy.modules.sys.service.SystemService;
 import com.sayee.sxsy.modules.sys.utils.UserUtils;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.task.Task;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -50,10 +60,19 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
     private PreOperativeConsentService preOperativeConsentService;
 
     @Autowired
+    private ActTaskService actTaskService;
+
+    @Autowired
+    private RuntimeService runtimeService;
+
+    @Autowired
+    private SystemService systemService;
+
+    @Autowired
     private ComplaintMainDao complaintMainService;
 
     @Autowired
-    private ComplaintMainDetailDao complaintMainDetailDao;
+    private ReportRegistrationDao reportRegistrationDao;
 
     @Autowired
     private ComplaintInfoDao complaintInfoDao;
@@ -117,7 +136,8 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
     }
 
     @Transactional(readOnly = false)
-    public boolean save(ComplaintInfo complaintInfo, HttpServletRequest request) {
+    public Act save(ComplaintInfo complaintInfo, HttpServletRequest request) {
+        Act act=new Act();
         boolean a = true;
         complaintInfo.setAmountInvolved(StringUtils.isNumber(complaintInfo.getAmountInvolved())==true ? complaintInfo.getAmountInvolved():"0");
         if (StringUtils.isBlank(complaintInfo.getComplaintId())) {
@@ -139,31 +159,70 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
         this.savefj(request,complaintInfo);
 
         String flag = request.getParameter("flag");
-        if ("yes".equals(flag)) {
+        if ("yes".equals(flag) || "2".equals(complaintInfo.getHandleWay())) {
             //如果是点击的下一步  则对医调委的投诉接待进行新增  新增子表
-            ComplaintMainDetail complaintMainDetail = new ComplaintMainDetail();
-            complaintMainDetail.preInsert();
-            complaintMainDetail.setComplaintMainDetailId(complaintMainDetail.getId());
-            complaintMainDetail.setReceptionEmployee(complaintInfo.getReceptionEmployee());        //接待人员
-            complaintMainDetail.setComplaintMode(complaintInfo.getComplaintMode());            //投诉方式
-            complaintMainDetail.setComplaintMainId(complaintInfo.getComplaintMainId());        //主表ID
-            complaintMainDetail.setAppeal(complaintInfo.getAppeal());            //诉求
-            complaintMainDetail.setVisitorDate(complaintInfo.getVisitorDate());            //来访日期
-            complaintMainDetail.setVisitorMobile(complaintInfo.getVisitorMobile());        //访客电话
-            complaintMainDetail.setVisitorName(complaintInfo.getVisitorName());            //访客姓名
-            complaintMainDetail.setVisitorNumber(complaintInfo.getVisitorNumber());        //来访人数
-            complaintMainDetail.setSummaryOfDisputes(complaintInfo.getSummaryOfDisputes());        //投诉纠纷概要
-            complaintMainDetail.setReceptionDate(complaintInfo.getReceptionDate());            //接待日期
-            complaintMainDetail.setPatientRelation(complaintInfo.getPatientRelation());        //患者关系
-            complaintMainDetail.setIsMajor(complaintInfo.getIsMajor());        //是否重大
-            User user=UserUtils.get(complaintInfo.getNextLinkMan());
-            complaintMainDetail.setCreateBy(user);           //将创建人更改为从医院投诉接待拿到的下一步处理人
-            complaintMainDetail.setUpdateBy(user);
-            //保存子表
-            complaintMainDetailDao.insert(complaintMainDetail);
+//            ComplaintMainDetail complaintMainDetail = new ComplaintMainDetail();
+//            complaintMainDetail.preInsert();
+//            complaintMainDetail.setComplaintMainDetailId(complaintMainDetail.getId());
+//            complaintMainDetail.setReceptionEmployee(complaintInfo.getReceptionEmployee());        //接待人员
+//            complaintMainDetail.setComplaintMode(complaintInfo.getComplaintMode());            //投诉方式
+//            complaintMainDetail.setComplaintMainId(complaintInfo.getComplaintMainId());        //主表ID
+//            complaintMainDetail.setAppeal(complaintInfo.getAppeal());            //诉求
+//            complaintMainDetail.setVisitorDate(complaintInfo.getVisitorDate());            //来访日期
+//            complaintMainDetail.setVisitorMobile(complaintInfo.getVisitorMobile());        //访客电话
+//            complaintMainDetail.setVisitorName(complaintInfo.getVisitorName());            //访客姓名
+//            complaintMainDetail.setVisitorNumber(complaintInfo.getVisitorNumber());        //来访人数
+//            complaintMainDetail.setSummaryOfDisputes(complaintInfo.getSummaryOfDisputes());        //投诉纠纷概要
+//            complaintMainDetail.setReceptionDate(complaintInfo.getReceptionDate());            //接待日期
+//            complaintMainDetail.setPatientRelation(complaintInfo.getPatientRelation());        //患者关系
+//            complaintMainDetail.setIsMajor(complaintInfo.getIsMajor());        //是否重大
+//            User user=UserUtils.get(complaintInfo.getNextLinkMan());
+//            complaintMainDetail.setCreateBy(user);           //将创建人更改为从医院投诉接待拿到的下一步处理人
+//            complaintMainDetail.setUpdateBy(user);
+//            //保存子表
+//            complaintMainDetailDao.insert(complaintMainDetail);
+
+
+            //2020年3月15日 14:27:43 现在是 投诉接待 为一体，现在应该在保存一次 报案登记的信息
+            //如果是点击的下一步  则对医调委的报案登记进行新增  新增子表
+            ReportRegistration reportRegistration = complaintInfo.getReportRegistration();
+            if(StringUtils.isBlank(reportRegistration.getCreateBy().getId())){
+
+                reportRegistration.preInsert();
+                reportRegistration.setReportRegistrationId(reportRegistration.getId());//主键
+                reportRegistration.setComplaintMainId(complaintInfo.getComplaintMainId());//主表主键
+                //将主键ID设为UUID
+                reportRegistrationDao.insert(reportRegistration);
+
+            }else{//如果不为空进行更新
+                //修改报案登记表
+                reportRegistration.preUpdate();
+                reportRegistrationDao.update(reportRegistration);
+
+            }
+
+            //保存主表了 证明是 医调委处理
+            Map<String,Object> var=new HashMap<String, Object>();
+
+            var.put("enrollment_user", UserUtils.getUser().getLoginName());
+            var.put("id","complaint_main_id");
+            // 启动流程
+            act=actTaskService.startProcess( "COMPLAINT_MAIN", complaintInfo.getComplaintMainId(), complaintInfo.getCaseNumber(),var,"complaint");
+            //启动流程的时候 创建一个 隐藏的角色
+
+            //第一个节点保存完毕 ；进行 “数据员审核” 节点的保存
+            var.put("pass","1");
+            List<User> u=systemService.findUserByOfficeRoleId("","distribution");
+            for (User user:u) {
+                var.put("datamember_user", user.getLoginName());//根据角色编码 得到数据员的信息
+                break ;
+            }
+            actTaskService.completeFirstTask( act.getProcInsId(), "", complaintInfo.getCaseNumber(), var);
+
         }
 //		super.save(complaintInfo);
-        return a;
+        act.setFlag(String.valueOf(a));
+        return act;
     }
 
     @Transactional(readOnly = false)
@@ -337,5 +396,33 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
                 }
             }
         book.removeAll(newlist);
+    }
+    /*
+    * 数据员 分配员 操作后走的方法
+    * */
+    public void audit(ComplaintInfo complaintInfo, HttpServletRequest request) {
+        String node=request.getParameter("node");
+        String status=request.getParameter("status");
+        Map<String,Object> var=new HashMap<String, Object>();
+        if ("sjy".equals(node)){
+            if ("0".equals(status)){//数据员 通过审核
+                var.put("pass","1");
+                List<User> u=systemService.findUserByOfficeRoleId("","distribution");
+                for (User user:u) {
+                    var.put("allocation_user", user.getLoginName());//根据角色编码 得到数据员的信息
+                    break ;
+                }
+            }else {//驳回
+                var.put("pass","0");
+                User assigness=UserUtils.get(complaintInfo.getCreateBy().getLoginName());//驳回给 创建人
+                var.put("enrollment_user",assigness.getLoginName());
+            }
+        }else {//分配员  分配案件给调解员  进入审核受理
+            var.put("pass","0");
+            User assigness=UserUtils.get(complaintInfo.getNextLinkMan());// 分配给 审核受理的调解员
+            var.put("check_user",assigness.getLoginName());
+        }
+        // 执行流程
+        actTaskService.complete(complaintInfo.getComplaintMain().getAct().getTaskId(), complaintInfo.getComplaintMain().getAct().getProcInsId(), complaintInfo.getComplaintMain().getAct().getComment(), complaintInfo.getComplaintMain().getCaseNumber(), var);
     }
 }

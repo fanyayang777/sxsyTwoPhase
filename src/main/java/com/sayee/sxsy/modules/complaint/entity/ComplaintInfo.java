@@ -4,6 +4,7 @@
 package com.sayee.sxsy.modules.complaint.entity;
 
 import com.sayee.sxsy.modules.complaintmain.entity.ComplaintMain;
+import com.sayee.sxsy.modules.registration.entity.ReportRegistration;
 import com.sayee.sxsy.modules.sys.entity.Dict;
 import com.sayee.sxsy.modules.sys.entity.Office;
 import com.sayee.sxsy.modules.sys.entity.User;
@@ -11,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
 
 import com.sayee.sxsy.common.persistence.DataEntity;
 
+import javax.servlet.Registration;
 import java.util.List;
 
 /**
@@ -69,6 +71,10 @@ public class ComplaintInfo extends DataEntity<ComplaintInfo> {
 	private String closingMethod;//结案方式
 	private String amountInvolved;//涉及金额
 	private List<String> list;//驻卫健委工作站人员list
+	private String node;//数据员审核 还是 分配员分配
+	private String assignee;//数据员审核 还是 分配员分配 时的操作员
+	private ReportRegistration reportRegistration;//报案登记实体类
+
 
 	public ComplaintInfo() {
 		super();
@@ -84,6 +90,30 @@ public class ComplaintInfo extends DataEntity<ComplaintInfo> {
 
 	public void setList(List<String> list) {
 		this.list = list;
+	}
+
+	public String getNode() {
+		return node;
+	}
+
+	public void setNode(String node) {
+		this.node = node;
+	}
+
+	public String getAssignee() {
+		return assignee;
+	}
+
+	public void setAssignee(String assignee) {
+		this.assignee = assignee;
+	}
+
+	public ReportRegistration getReportRegistration() {
+		return reportRegistration;
+	}
+
+	public void setReportRegistration(ReportRegistration reportRegistration) {
+		this.reportRegistration = reportRegistration;
 	}
 
 	public String getTestTree() {

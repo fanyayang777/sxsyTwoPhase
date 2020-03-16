@@ -108,7 +108,7 @@
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="performAgreement">
-			<tr ${not empty performAgreement.complaintMain.isMajor ? "style='background-color: red;'" : ""}>
+			<tr ${not empty performAgreement.complaintMain.isMajor ? "style='background-color: rgb(157,211,250);'" : ""}>
 				<td style="text-align: center;"><a href="${ctx}/perform/performAgreement/form?id=${performAgreement.performAgreementId}&type=view">
 						${performAgreement.complaintMain.caseNumber}
 				</a></td>

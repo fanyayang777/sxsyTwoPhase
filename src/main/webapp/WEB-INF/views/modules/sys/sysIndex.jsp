@@ -11,8 +11,48 @@
 		#header {margin:0 0 8px;position:static;} #header li {font-size:14px;_font-size:12px;}
 		#header .brand {font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:26px;padding-left:33px;}
 		#footer {margin:8px 0 0 0;padding:3px 0 0 0;font-size:11px;text-align:center;border-top:2px solid #0663A2;}
-		#footer, #footer a {color: #999999;}  #left{overflow-x:hidden;overflow-y:auto;}  #left .collapse{position:static;}
+		#footer, #footer a {color: #999999;}  #left{overflow-x:hidden;overflow-y:auto;width: 180px;}  #left .collapse{position:static;}
 		#userControl>li>a{/*color:#fff;*/text-shadow:none;} #userControl>li>a:hover, #user #userControl>li.open>a{background:transparent;}
+		.accordion-heading{
+			background: white;
+		}
+		.accordion-group {
+			border:none;
+			background: white;
+		}
+		.hide:hover{
+			background-color: rgba(76,180,231,0.0);
+		}
+		.nav-list>.active>a{
+			background-color: rgba(76,180,231,0.4);
+			color:rgba(54, 169, 206, 1);
+
+		}
+		.nav-list>.active>a:hover{
+			background-color: rgba(76,180,231,0.4);
+			color:rgba(54, 169, 206, 1);
+		}
+		.accordion {
+			letter-spacing:2px;
+			font-size:15px;
+		}
+		.accordion-heading .accordion-toggle {
+			font-size:18px;
+
+		}
+		.hide {
+			font-size:13px;
+		}
+		.menu {
+			font-size:18px;
+		}
+		#userControl #userInfo .dropdown-toggle{
+			font-size:18px;
+		}
+		#userControl>li>a{
+			font-size:18px;
+		}
+
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -267,7 +307,7 @@
 	    </div>
 	    <div class="container-fluid">
 			<div id="content" class="row-fluid">
-				<div id="left"><%-- 
+				<div id="left"><%--
 					<iframe id="menuFrame" name="menuFrame" src="" style="overflow:visible;" scrolling="yes" frameborder="no" width="100%" height="650"></iframe> --%>
 				</div>
 				<div id="openClose" class="close">&nbsp;</div>
@@ -283,8 +323,8 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript"> 
-		var leftWidth = 160; // 左侧窗口大小
+	<script type="text/javascript">
+		var leftWidth = 220; // 左侧窗口大小
 		var tabTitleHeight = 33; // 页签的高度
 		var htmlObj = $("html"), mainObj = $("#main");
 		var headerObj = $("#header"), footerObj = $("#footer");
@@ -295,7 +335,7 @@
 			htmlObj.css({"overflow-x":strs[1] < minWidth ? "auto" : "hidden", "overflow-y":strs[0] < minHeight ? "auto" : "hidden"});
 			mainObj.css("width",strs[1] < minWidth ? minWidth - 10 : "auto");
 			frameObj.height((strs[0] < minHeight ? minHeight : strs[0]) - headerObj.height() - footerObj.height() - (strs[1] < minWidth ? 42 : 28));
-			$("#openClose").height($("#openClose").height() - 5);// <c:if test="${tabmode eq '1'}"> 
+			$("#openClose").height($("#openClose").height() - 5);// <c:if test="${tabmode eq '1'}">
 			$(".jericho_tab iframe").height($("#right").height() - tabTitleHeight); // </c:if>
 			wSizeWidth();
 		}
@@ -306,7 +346,7 @@
 			}else{
 				$("#right").width("100%");
 			}
-		}// <c:if test="${tabmode eq '1'}"> 
+		}// <c:if test="${tabmode eq '1'}">
 		function openCloseClickCallBack(b){
 			$.fn.jerichoTab.resize();
 		} // </c:if>

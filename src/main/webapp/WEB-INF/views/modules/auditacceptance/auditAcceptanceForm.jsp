@@ -649,14 +649,14 @@
                             <span class="help-inline"><font color="red">*</font> </span>
                         </td>
                         <td class="tit">
-                            起保日期：
+                            <%--起保日期：--%>
                         </td>
                         <td>
-                            <input name="guaranteeTime" type="text" readonly="readonly" maxlength="20"
+                            <%--<input name="guaranteeTime" type="text" readonly="readonly" maxlength="20"
                                    class="input-medium Wdate "
                                    value="${auditAcceptance.guaranteeTime}"
                                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
-                        </td>
+                        --%></td>
                     </tr>
                     <tr>
                         <td class="tit">

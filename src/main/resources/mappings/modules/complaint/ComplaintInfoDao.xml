@@ -36,7 +36,22 @@
 		a.closing_method AS "closingMethod",
 		a.amount_involved AS "amountInvolved",
 		a.create_by AS "createBy.id",
+		r.dispute_time AS "reportRegistration.disputeTime",
+		r.policy_number AS "reportRegistration.policyNumber",
+		r.report_emp AS "reportRegistration.reportEmp",
+		r.report_time AS "reportRegistration.reportTime",
+		r.patient_mobile AS "reportRegistration.patientMobile",
+		r.doctor_mobile AS "reportRegistration.doctorMobile",
+		r.summary_of_disputes AS "reportRegistration.summaryOfDisputes",
+		r.focus AS "reportRegistration.focus",
+		r.patient_ask AS "reportRegistration.patientAsk",
+		r.registration_emp AS "reportRegistration.registrationEmp",
+		r.registration_time AS "reportRegistration.registrationTime",
+		r.next_link AS "reportRegistration.nextLink",
+		r.patient_relation AS "reportRegistration.patientRelation",
+		r.doctor_risk AS "reportRegistration.doctorRisk",
 		u3.name AS "createBy.name",
+		u3.login_name AS "createBy.loginName",
 		o1.name AS "hospitalName",
 -- 		o2.name AS "departmentName",
 		o3.label AS "relationName",
@@ -64,6 +79,8 @@
 		b.del_flag AS "complaintMain.delFlag",
 		b.source AS  "complaintMain.source",
 		t.name AS "typeName",
+		tt.ID_ AS "complaintMain.act.taskId",
+		tt.ASSIGNEE_ AS "complaintMain.act.assigneeName",
 		o6.name AS "shiftHandleName",
 	    group_concat(DISTINCT(te.name))AS "testTree"
 	</sql>
@@ -78,7 +95,8 @@
 		LEFT JOIN SYS_USER u2 ON u2.id = a.next_link_man
 		LEFT JOIN SYS_USER u3 ON u3.id = a.create_by
 		LEFT JOIN COMPLAINT_MAIN b ON b.complaint_main_id = a.complaint_main_id
-		/*AND source = '2'*/
+		LEFT JOIN REPORT_REGISTRATION r ON b.complaint_main_id = r.complaint_main_id
+		LEFT JOIN ACT_RU_TASK tt on tt.PROC_INST_ID_=b.PROC_INS_ID
 		LEFT JOIN TEST_TREE t ON t.id = a.complaint_type
 		LEFT JOIN SYS_OFFICE o6 ON  o6.id = a.shift_handle
 		LEFT JOIN TEST_TREE te ON INSTR(a.involve_department,te.id)>0 and length(te.id)=32
@@ -99,6 +117,12 @@
 		<include refid="complaintInfoJoins"/>
 		<where>
             a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="node != null and node != '' and node=='sjy'">
+				AND tt.TASK_DEF_KEY_='datamember' AND tt.ASSIGNEE_ LIKE CONCAT('%', #{assignee}, '%')
+			</if>
+			<if test="node != null and node != '' and node=='fpy'">
+				AND tt.TASK_DEF_KEY_='allocation' AND tt.ASSIGNEE_ LIKE CONCAT('%', #{assignee}, '%')
+			</if>
 			<if test="caseNumber != null and caseNumber != ''">
 				AND a.case_number LIKE 
 					<if test="dbName == 'oracle'">'%'||#{caseNumber}||'%'</if>
@@ -175,7 +199,7 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO COMPLAINT_INFO(
 			case_number,

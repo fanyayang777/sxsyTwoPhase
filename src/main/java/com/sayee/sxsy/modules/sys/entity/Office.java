@@ -45,6 +45,7 @@ public class Office extends TreeEntity<Office> {
 	private String areaName;		//地区名
 	private String policyNumber;		//保单号
 	private String isInsured;		//是否参保
+	private String insuranceCompany; //保险公司
 	private String insuredTime;		//参保时间
 	private String insuredEndTime;		//参保结束时间
 	private String beds;		//参保结束时间
@@ -66,6 +67,14 @@ public class Office extends TreeEntity<Office> {
 
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
+	}
+
+	public String getInsuranceCompany() {
+		return insuranceCompany;
+	}
+
+	public void setInsuranceCompany(String insuranceCompany) {
+		this.insuranceCompany = insuranceCompany;
 	}
 
 	public String getLabelName() {

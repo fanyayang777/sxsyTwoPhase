@@ -23,6 +23,7 @@ public class OaNotify extends DataEntity<OaNotify> {
 	
 	private static final long serialVersionUID = 1L;
 	private String type;		// 类型
+	private String send;		// 发往
 	private String title;		// 标题
 	private String content;		// 类型
 	private String files;		// 附件
@@ -62,7 +63,15 @@ public class OaNotify extends DataEntity<OaNotify> {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
+	public String getSend() {
+		return send;
+	}
+
+	public void setSend(String send) {
+		this.send = send;
+	}
+
 	@Length(min=0, max=1, message="状态长度必须介于 0 和 1 之间")
 	public String getStatus() {
 		return status;

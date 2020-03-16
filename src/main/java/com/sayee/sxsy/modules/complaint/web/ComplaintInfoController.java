@@ -9,8 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.sayee.sxsy.common.utils.BaseUtils;
 import com.sayee.sxsy.common.utils.DateUtils;
 import com.sayee.sxsy.common.utils.excel.ExportExcel;
+import com.sayee.sxsy.modules.act.entity.Act;
 import com.sayee.sxsy.modules.complaintmain.entity.ComplaintMain;
+import com.sayee.sxsy.modules.sys.entity.User;
 import com.sayee.sxsy.modules.sys.utils.FileBaseUtils;
+import com.sayee.sxsy.modules.sys.utils.UserUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +63,13 @@ public class ComplaintInfoController extends BaseController {
 	@RequiresPermissions("complaint:complaintInfo:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(ComplaintInfo complaintInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		String node=request.getParameter("node");
+		if ("sjy".equals(node) || "fpy".equals(node)){
+			complaintInfo.setAssignee(UserUtils.getUser().getLoginName());
+		}
 		Page<ComplaintInfo> page = complaintInfoService.findPage(new Page<ComplaintInfo>(request, response), complaintInfo);
-
 		model.addAttribute("page", page);
+		model.addAttribute("node", node);
 		return "modules/complaint/complaintInfoList";
 	}
 
@@ -85,6 +92,8 @@ public class ComplaintInfoController extends BaseController {
 			complaintInfo.setCaseNumber(complaintMain.getCaseNumber());
 		}
 		String type=request.getParameter("type");
+		String node=request.getParameter("node");
+		model.addAttribute("node",node);
 		if ("view".equals(type)) {
 			String show2=request.getParameter("show2");
 			model.addAttribute("show2",show2);
@@ -94,7 +103,6 @@ public class ComplaintInfoController extends BaseController {
 			model.addAttribute("complaintInfo", complaintInfo);
 			return "modules/complaint/complaintInfoForm";
 		}
-
 	}
 
 	@RequiresPermissions("complaint:complaintInfo:edit")
@@ -103,13 +111,14 @@ public class ComplaintInfoController extends BaseController {
 		if (!beanValidator(model, complaintInfo )){
 			return form(request,complaintInfo, model);
 		}
-		boolean a= complaintInfoService.save(complaintInfo,request);
-		if(false==a){
+		Act act= complaintInfoService.save(complaintInfo,request);
+		if("false".equals(act.getFlag())){
 			addMessage(model, "案件编号 "+complaintInfo.getCaseNumber()+" 重复");
 			return form(request,complaintInfo, model);
+		}else {
+			addMessage(redirectAttributes, "流程启动成功！");
+			return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage";
 		}
-		addMessage(redirectAttributes, "保存投诉接待成功");
-		return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage";
 	}
 	
 	@RequiresPermissions("complaint:complaintInfo:edit")
@@ -160,6 +169,26 @@ public class ComplaintInfoController extends BaseController {
 			addMessage(redirectAttributes,"导出工作量统计数据失败！失败信息："+e.getMessage());
 		}
 		return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/statement";
+	}
+
+	@RequestMapping(value = "audit")
+	public String audit(ComplaintInfo complaintInfo, Model model, RedirectAttributes redirectAttributes,HttpServletRequest request) {
+		String node=request.getParameter("node");
+		String status=request.getParameter("status");
+		try {
+			complaintInfoService.audit(complaintInfo,request);
+			if (StringUtils.isNotBlank(status)){
+				addMessage(redirectAttributes, "流程"+("0".equals(status)? "通过" :"驳回")+"成功！");
+				return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage";
+			}else {
+				model.addAttribute("message","保存失败！");
+				return form(request,complaintInfo, model);
+			}
+		} catch (Exception e) {
+			logger.error("audit===========：", e);
+			addMessage(redirectAttributes, "系统内部错误,请联系工程师修正！");
+			return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage";
+		}
 	}
 
 }

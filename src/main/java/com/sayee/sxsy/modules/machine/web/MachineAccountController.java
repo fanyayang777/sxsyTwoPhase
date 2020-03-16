@@ -36,6 +36,8 @@ import com.sayee.sxsy.modules.machine.entity.MachineAccount;
 import com.sayee.sxsy.modules.machine.service.MachineAccountService;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 台账信息展示Controller
@@ -79,6 +81,9 @@ public class MachineAccountController extends BaseController {
 		}else {
 			page = machineAccountService.findPage(new Page<MachineAccount>(request, response), machineAccount);
 		}
+		String office = UserUtils.getOfficeList().toString();
+		String newOffice = StringUtils.strip(office, "[]");
+		model.addAttribute("office",newOffice);
 		model.addAttribute("page", page);
 		return "modules/machine/machineAccountList";
 	}

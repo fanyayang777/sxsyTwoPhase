@@ -6,6 +6,23 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#inputForm").validate({
+                submitHandler: function(form){
+                    loading('正在提交，请稍等...');
+                    form.submit();
+                },
+                errorContainer: "#messageBox",
+                errorPlacement: function(error, element) {
+                    $("#messageBox").text("输入有误，请先更正。");
+                    if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+                        error.appendTo(element.parent().parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+
+
             var value='${complaintInfo.handleWay}';
             if(value==''){
                 value = 0;
@@ -13,26 +30,56 @@
             next(value);
         });
         function next(value) {
+            var name='${fns:getUser().company.officeType}';
+            if(name=='2'){//医院
+                $("#pass").hide();
+                $("#result").hide();
+                $("#yq").hide();
+                $("#method").hide();
+            }else{
+                $("#pass").show();
+                $("#result").show();
+                $("#yq").show();
+                $("#method").show();
+            }
 
-            if (value == 1) {
-                $("<td id='shiftBody' class='tit'>转办科室:</td>").insertAfter("#handleWay");
+
+            if(value==1){
+                $("<td id='shiftBody' class='tit'>转办科室：</td>").insertAfter("#handleWay");
                 $("#shiftHandle").show();
+                $("#statusBody").remove();
+                $("#statusHandle").hide();
                 // document.getElementById("shiftHead").style.display="inline";
                 // document.getElementById("shiftHandle").style.display="inline";
-            } else {
+            }else  if(value==0){
+                $("#shiftBody").remove();
+                $("#shiftHandle").hide();
+                $("<td id='statusBody' class='tit'>状态：</td>").insertAfter("#handleWay");
+                $("#statusHandle").show();
+            }else{
                 $("#shiftBody").remove();
                 $("#shiftHandle").hide();
                 // document.getElementById("shiftHead").style.display="none";
                 // document.getElementById("shiftHandle").style.display="none";
+                $("#statusBody").remove();
+                $("#statusHandle").hide();
             }
         }
     </script>
 </head>
 <body>
-<form:form class="form-horizontal">
+<form:form class="form-horizontal" id="inputForm" modelAttribute="complaintInfo" action="${ctx}/complaint/complaintInfo/audit?node=${node}" method="post">
     <input type="hidden" id="flag" name="flag"/>
+    <input type="hidden" id="status" name="status"/>
+    <form:hidden path="complaintMainId"/>
+    <form:hidden path="complaintMain.complaintMainId"/>
+    <form:hidden path="complaintMain.act.taskId"/>
+    <form:hidden path="complaintMain.act.taskName"/>
+    <form:hidden path="complaintMain.act.taskDefKey"/>
+    <form:hidden path="complaintMain.act.procInsId"/>
+    <form:hidden path="complaintMain.act.procDefId"/>
     <sys:message content="${message}"/>
-<fieldset>
+<br>
     <legend>医院投诉接待详情</legend>
     <ul id="myTab" class="nav nav-tabs">
         <li class="active">
@@ -221,26 +268,49 @@
                         转办处理
                     </c:when>
                     <c:when test="${complaintInfo.handleWay == '2'}">
-                        转调解处理
+                        转医调委
+                    </c:when>
+                    <c:when test="${complaintInfo.handleWay == '3'}">
+                        法院诉讼
+                    </c:when>
+                    <c:when test="${complaintInfo.handleWay == '4'}">
+                        行政调解
                     </c:when>
                 </c:choose>
             </td>
             <td id="shiftHandle">
-                        ${fns:getDictLabel(complaintInfo.shiftHandle, 'department', '未知')}
+                            ${fns:getDictLabel(complaintInfo.shiftHandle, 'department','' )}
             </td>
+
+            <td id="statusHandle">
+                <c:choose>
+                    <c:when test="${complaintInfo.status == '0'}">
+                        处理中
+                    </c:when>
+                    <c:when test="${complaintInfo.status == '1'}">
+                        协调中
+                    </c:when>
+                    <c:when test="${complaintInfo.status == '2'}">
+                        结案
+                    </c:when>
+                </c:choose>
+            </td>
+
+
         </tr>
-        <tr>
+        <c:if test="${complaintInfo.handleWay != '2'}"><tr>
             <td class="tit"><font color="red">*</font>处理经过</td>
             <td colspan="3">
                     ${complaintInfo.handlePass}
             </td>
         </tr>
-        <tr>
-            <td class="tit"><font color="red">*</font>处理结果</td>
-            <td colspan="3">
-                    ${complaintInfo.handleResult}
-            </td>
-        </tr>
+            <tr>
+                <td class="tit"><font color="red">*</font>处理结果</td>
+                <td colspan="3">
+                        ${complaintInfo.handleResult}
+                </td>
+            </tr>
+        </c:if>
         <tr>
             <td class="tit"><font color="red">*</font>接待人员：</td>
             <td>
@@ -274,12 +344,27 @@
             </td>
         </tr>
     </table>
+</br>
+    <table class="table-form">
+        <div class="control-group">
+            <label class="control-label">回复内容:</label>
+            <div class="controls">
+                <form:textarea path="complaintMain.act.comment" htmlEscape="false" rows="4" maxlength="200" class="required input-xxlarge"/>
+            </div>
+        </div>
+    </table>
 </fieldset>
+
     <c:if test="${empty show2}">
         <div class="form-actions">
+            <c:if test="${node eq 'sjy' }">
+                <input id="btnSubmit" class="btn btn-success" type="submit" value="通 过" onclick="$('#status').val('0')"/>&nbsp;
+                <input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#status').val('1')"/>&nbsp;
+            </c:if>
             <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
         </div>
     </c:if>
+    <act:histoicFlow procInsId="${complaintInfo.complaintMain.procInsId}"/>
 </form:form>
 </body>
 </html>

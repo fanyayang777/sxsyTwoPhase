@@ -4,6 +4,7 @@
 package com.sayee.sxsy.modules.machine.entity;
 
 import com.sayee.sxsy.common.utils.excel.annotation.ExcelField;
+import com.sayee.sxsy.modules.sys.entity.Area;
 import com.sayee.sxsy.modules.sys.entity.Office;
 import com.sayee.sxsy.modules.sys.entity.User;
 import org.aspectj.lang.annotation.DeclareMixin;
@@ -70,6 +71,9 @@ public class MachineAccount extends DataEntity<MachineAccount> {
 	private String nodeName;		//案件节点
 	private String relatedName;		//相关专业 名称
 	private Office hospital;	//涉及医院
+	private Area area;	//涉及医院所在区域
+	private User hostUser;	//主持人
+	private User clerkUser;	//书记员
 
 
 	private String caseNumber;  //案件编号
@@ -94,6 +98,14 @@ public class MachineAccount extends DataEntity<MachineAccount> {
 	private String assessGrade;	//卷宗评分
 	private String appraiser;	//评分人
 	private String filePlace;	//卷宗位置
+
+	public Area getArea() {
+		return area;
+	}
+
+	public void setArea(Area area) {
+		this.area = area;
+	}
 
 	public String getRelatedName() {
 		return relatedName;
@@ -165,6 +177,22 @@ public class MachineAccount extends DataEntity<MachineAccount> {
     @ExcelField(title="调解次数", align=2, sort=23)
 	public String getMeetingFrequency() {
 		return meetingFrequency;
+	}
+
+	public User getHostUser() {
+		return hostUser;
+	}
+
+	public void setHostUser(User hostUser) {
+		this.hostUser = hostUser;
+	}
+
+	public User getClerkUser() {
+		return clerkUser;
+	}
+
+	public void setClerkUser(User clerkUser) {
+		this.clerkUser = clerkUser;
 	}
 
 	public void setMeetingFrequency(String meetingFrequency) {

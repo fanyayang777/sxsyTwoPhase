@@ -441,6 +441,49 @@ public class ActTaskService extends BaseService {
 	}
 
 	/**
+	 * 启动流程
+	 * @param procDefKey 流程定义KEY
+	 * @param businessTable 业务表表名
+	 * @param businessId	业务表编号
+	 * @param title			流程标题，显示在待办任务标题
+	 * @param vars			流程变量
+	 * @return 流程实例ID
+	 */
+	@Transactional(readOnly = false)
+	public Act startProcess(String businessTable, String businessId, String title, Map<String, Object> vars,String procDefKey) {
+		String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId())
+
+		// 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
+		identityService.setAuthenticatedUserId(userId);
+
+		// 设置流程变量
+		if (vars == null){
+			vars = Maps.newHashMap();
+		}
+
+		// 设置流程标题
+		if (StringUtils.isNotBlank(title)){
+			vars.put("title", title);
+		}
+
+		// 启动流程
+		ProcessInstance procIns = runtimeService.startProcessInstanceByKey(procDefKey, businessTable+":"+businessId, vars);
+
+		// 更新业务表流程实例ID
+		Act act = new Act();
+		act.setBusinessTable(businessTable);// 业务表名
+		act.setBusinessId(businessId);	// 业务表ID
+		act.setProcInsId(procIns.getId());
+		if (MapUtils.isEmpty(vars)){
+			act.setKeyId("id");
+		}else {
+			act.setKeyId(MapUtils.getString(vars,"id","id"));
+		}
+		actDao.updateProcInsIdByBusinessId(act);
+		return act;
+	}
+
+	/**
 	 * 获取任务
 	 * @param taskId 任务ID
 	 */

@@ -110,7 +110,7 @@
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="auditAcceptance">
-			<tr ${not empty auditAcceptance.complaintMain.isMajor ? "style='background-color: red;'" : ""} >
+			<tr ${not empty auditAcceptance.complaintMain.isMajor ? "style='background-color: rgb(157,211,250);'" : ""} >
 				<td style="text-align: center"><a href="${ctx}/auditacceptance/auditAcceptance/form?id=${auditAcceptance.auditAcceptanceId}&type=view">
 					${auditAcceptance.complaintMain.caseNumber}
 				</a></td>

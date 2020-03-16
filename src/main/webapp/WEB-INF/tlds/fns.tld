@@ -57,11 +57,19 @@
   </function>
   
   <function>
+    <description>根据编码获取区域对象</description>
+    <name>getArea</name>
+    <function-class>com.sayee.sxsy.modules.sys.utils.UserUtils</function-class>
+    <function-signature>com.sayee.sxsy.modules.sys.entity.Area getArea(java.lang.String)</function-signature>
+    <example>${fns:getArea(id)}</example>
+  </function>
+
+  <function>
     <description>根据编码获取用户对象</description>
     <name>getUserById</name>
     <function-class>com.sayee.sxsy.modules.sys.utils.UserUtils</function-class>
     <function-signature>com.sayee.sxsy.modules.sys.entity.User get(java.lang.String)</function-signature>
-    <example>${fns:getUserById(id)}</example>  
+    <example>${fns:getUserById(id)}</example>
   </function>
   
   <function>
@@ -95,7 +103,23 @@
     <function-signature>java.util.List getOfficeList()</function-signature>
     <example>${fns:getOfficeList()}</example>  
   </function>
-  
+
+  <function>
+    <description>根据部门ID获取部门实体类</description>
+    <name>getOfficeId</name>
+    <function-class>com.sayee.sxsy.modules.sys.utils.UserUtils</function-class>
+    <function-signature>com.sayee.sxsy.modules.sys.entity.Office getOfficeId(java.lang.String)</function-signature>
+    <example>${fns:getOfficeId(id)}</example>
+  </function>
+
+  <function>
+    <description>根据部门ID获取部门实体类</description>
+    <name>officeId</name>
+    <function-class>com.sayee.sxsy.modules.sys.utils.UserUtils</function-class>
+    <function-signature>com.sayee.sxsy.modules.sys.entity.Office officeId(java.lang.String)</function-signature>
+    <example>${fns:officeId(id)}</example>
+  </function>
+
   <function>
     <description>获取当前用户缓存</description>
     <name>getCache</name>

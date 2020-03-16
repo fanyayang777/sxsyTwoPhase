@@ -51,23 +51,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Transactional(readOnly = true)
 public class MachineAccountService extends CrudService<MachineAccountDao, MachineAccount> {
     @Autowired
-    private ReportRegistrationService reportRegistrationService;
-    @Autowired
-    private AuditAcceptanceService auditAcceptanceService;
-    @Autowired
-    private InvestigateEvidenceService investigateEvidenceService;
-    @Autowired
-    private MediateEvidenceService mediateEvidenceService;
-    @Autowired
-    private AssessAppraisalService assessAppraisalService;
-    @Autowired
-    private SignAgreementService signAgreementService;
-    @Autowired
-    private SummaryInfoService summaryInfoService;
-    @Autowired
     private MachineAccountDao machineAccountDao;
-    @Autowired
-    private PerformAgreementService performAgreementService;
     public MachineAccount get(String id) {
         String machineAccountId=id;
         return machineAccountDao.getDetail(machineAccountId);
@@ -81,6 +65,19 @@ public class MachineAccountService extends CrudService<MachineAccountDao, Machin
     }
 
     public Page<MachineAccount> findPage(Page<MachineAccount> page, MachineAccount machineAccount) {
+        User user = UserUtils.getUser();
+        if (StringUtils.isBlank(machineAccount.getEndReportingTime()) && StringUtils.isBlank(machineAccount.getReportingTime())){
+            machineAccount.setReportingTime(DateUtils.getYear());
+            int year=Integer.valueOf(DateUtils.getYear())+1;
+            machineAccount.setEndReportingTime(String.valueOf(year));
+        }
+        if ("3".equals(user.getCompany().getOfficeType())){
+            //卫计委人员
+            Area area=new Area();
+            area.setId(StringUtils.isBlank(user.getPost()) ? "123456" : user.getPost());
+            machineAccount.setArea(area);
+        }
+        page.setCount(machineAccountDao.findPageCount(machineAccount));
         return super.findPage(page, machineAccount);
     }
 
@@ -127,7 +124,17 @@ public class MachineAccountService extends CrudService<MachineAccountDao, Machin
                 machineAccount.setFlowDays(String.valueOf(DateUtils.getDistanceOfTwoDate(DateUtils.parseDate(machineAccount.getCompensateTime()),DateUtils.parseDate(machineAccount.getClaimSettlementTime()))));
             }
         }
-//        machineAccount.setIsNewRecord(true);
+        //调解次数
+        machineAccount.setMeetingFrequency(StringUtils.isBlank(machineAccount.getMeetingFrequency()) ? "" : machineAccount.getMeetingFrequency());
+        //计算金额
+        machineAccount.setCountAmount(StringUtils.isBlank(machineAccount.getCountAmount()) ? "0" : machineAccount.getCountAmount());
+        /*//提交理赔天数
+        machineAccount.setClaimSettlementDay("");
+        //理赔流转天数（公式
+        machineAccount.setSettlementFlowDays("");
+        //卷宗评分
+        machineAccount.setAssessGrade("");*/
+        // machineAccount.setIsNewRecord(true);
         machineAccount.setDelFlag("0");
         super.save(machineAccount);
     }

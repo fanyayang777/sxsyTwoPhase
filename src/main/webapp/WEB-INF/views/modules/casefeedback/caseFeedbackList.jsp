@@ -63,7 +63,7 @@
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="caseFeedback">
-			<tr ${not empty caseFeedback.complaintMain.isMajor ? "style='background-color: red;'" : ""}>
+			<tr ${not empty caseFeedback.complaintMain.isMajor ? "style='background-color: rgb(157,211,250);'" : ""}>
 				<td style="text-align: center;"><a href="${ctx}/casefeedback/caseFeedback/form?id=${caseFeedback.feedbackId}&type=view">
 						${caseFeedback.complaintMain.caseNumber}
 				</a></td>

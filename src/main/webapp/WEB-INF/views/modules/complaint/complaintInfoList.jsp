@@ -190,10 +190,13 @@
                         转办处理
                     </c:if>
 					<c:if test="${complaintInfo.handleWay eq 2}">
-                        转调解处理
+						转医调委
 					</c:if>
                     <c:if test="${complaintInfo.handleWay eq 3}">
-                        诉讼
+						法院诉讼
+                    </c:if>
+					<c:if test="${complaintInfo.handleWay eq 4}">
+						行政调解
                     </c:if>
 
 				</td>
@@ -214,6 +217,12 @@
 					<c:if test="${complaintInfo.handleWay ne 2 and complaintInfo.createBy.id eq fns:getUser().id}">
 						<a href="${ctx}/complaint/complaintInfo/form?id=${complaintInfo.complaintId}">处理</a>
 						<a href="${ctx}/complaint/complaintInfo/delete?id=${complaintInfo.complaintId}" onclick="return confirmx('确认要删除该投诉接待吗？', this.href)">删除</a>
+					</c:if>
+					<c:if test="${node eq 'sjy'}">
+						<a href="${ctx}/complaint/complaintInfo/form?id=${complaintInfo.complaintId}&type=view&node=${node}">审核</a>
+					</c:if>
+					<c:if test="${node eq 'fpy'}">
+						<a href="${ctx}/complaint/complaintInfo/form?id=${complaintInfo.complaintId}&type=view&node=${node}">分配</a>
 					</c:if>
 					<a href="${ctx}/complaint/complaintInfo/form?id=${complaintInfo.complaintId}&type=view">详情</a>
 				</td></shiro:hasPermission>

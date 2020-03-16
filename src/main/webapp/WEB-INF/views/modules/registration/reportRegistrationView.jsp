@@ -133,20 +133,20 @@
                                onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});" style="width:90%;height:30px;text-align: center;" id="chuxian" onchange="compareDate(this.value)" disabled="disabled"/>
                     </td>
                     <td class="tit">科室:</td>
-                    <td>
+                    <td colspan="2">
                             ${reportRegistration.complaintMain.testTree}
                     </td>
                     <td class="tit">出险医生:</td>
-                    <td style="text-align: center;">
+                    <td style="text-align: center;" colspan="2">
                             ${empty reportRegistration.complaintMain.employee.name?reportRegistration.complaintMain.involveEmployee:reportRegistration.complaintMain.employee.name}
                     </td>
-                    <td class="tit">是否重大纠纷:</td>
+                    <%--<td class="tit">是否重大纠纷:</td>
                     <td>
                         <form:select path="isMajor" style='width:110px;text-align: center;' disabled="true">
                             <form:option value="0">否</form:option>
                             <form:option value="1">是</form:option>
                         </form:select>
-                    </td>
+                    </td>--%>
                 </tr>
                 <tr>
                     <td class="tit">

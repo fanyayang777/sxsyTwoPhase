@@ -28,6 +28,7 @@
 	</script>
 </head>
 <body>
+
 <ul class="nav nav-tabs">
 	<li class="active"><a href="${ctx}/sys/office/list?id=${office.id}&parentIds=${office.parentIds}">机构列表</a></li>
 	<shiro:hasPermission name="sys:office:edit"><li><a href="${ctx}/sys/office/form?parent.id=${office.id}&officeType=${office.officeType}">机构添加</a></li></shiro:hasPermission>
@@ -65,11 +66,13 @@
 </table>
 <script type="text/template" id="treeTableTpl">
 	<tr id="{{row.id}}" pId="{{pid}}">
+
 		<td><a href="${ctx}/sys/office/form?id={{row.id}}">{{row.name}}</a></td>
-		<td>{{row.area.name}}</td>
+			<td>{{row.area.name}}</td>
 		<td>{{row.code}}</td>
 		<td>{{dict.type}}</td>
-		<c:choose>
+
+			<c:choose>
 			<c:when test="${office.officeType == '2'}">
 				<td>{{row.labelName}}</td>
 			</c:when>
@@ -80,6 +83,7 @@
 			<a href="${ctx}/sys/office/delete?id={{row.id}}" onclick="return confirmx('要删除该机构及所有子机构项吗？', this.href)">删除</a>
 			<a href="${ctx}/sys/office/form?parent.id={{row.id}}&officeType=${office.officeType}">添加下级机构</a>
 		</td></shiro:hasPermission>
+
 	</tr>
 </script>
 </body>

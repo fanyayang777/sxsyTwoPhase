@@ -5,6 +5,7 @@
 	<sql id="oaNotifyColumns">
 		a.ID AS "id",
 		a.TYPE AS "type",
+		a.SEND AS "send",
 		a.TITLE AS "title",
 		a.CONTENT AS "content",
 		a.FILES AS "files",
@@ -100,6 +101,7 @@
 		INSERT INTO OA_NOTIFY(
 			ID,
 			TYPE,
+			SEND,
 			TITLE,
 			CONTENT,
 			FILES,
@@ -113,6 +115,7 @@
 		) VALUES (
 			#{id},
 			#{type},
+			#{send},
 			#{title},
 			#{content},
 			#{files},
@@ -129,6 +132,7 @@
 	<update id="update">
 		UPDATE OA_NOTIFY SET
 			TYPE = #{type},
+			SEND = #{send},
 			TITLE = #{title},
 			CONTENT = #{content},
 			FILES = #{files},

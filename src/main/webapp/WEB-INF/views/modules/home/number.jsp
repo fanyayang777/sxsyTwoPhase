@@ -4,10 +4,10 @@
 <head>
     <title>统计</title>
     <meta name="decorator" content="default"/>
-    <script src="${ctxStatic}/echarts/dist/echarts.min.js" type="text/javascript"></script>
+    <script src="${ctxStatic}/echarts/dist/echarts.js" type="text/javascript"></script>
     <script src="${ctxStatic}/echarts/dist/echarts-gl.min.js"></script>
-    <script src="${ctxStatic}/echarts/map/js/province/shanxi.js"></script>
-    <script src="${ctxStatic}/echarts/dark.js"></script>
+    <script src="${ctxStatic}/echarts/map/js/province/shanxi1.js"></script>
+    <script src="${ctxStatic}/echarts/theme/dark.js"></script>
 </head>
 <style type="text/css">
 

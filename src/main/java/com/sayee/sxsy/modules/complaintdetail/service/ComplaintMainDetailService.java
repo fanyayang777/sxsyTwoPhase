@@ -50,7 +50,7 @@ public class ComplaintMainDetailService extends CrudService<ComplaintMainDetailD
 	@Autowired
 	private ComplaintMainDetailDao complaintMainDetailDao;
 	public ComplaintMainDetail get(String id) {
-		return super.get(id);
+        return super.get(id);
 	}
 	
 	public List<ComplaintMainDetail> findList(ComplaintMainDetail complaintMainDetail) {

@@ -83,7 +83,9 @@
 		FROM SYS_OFFICE a
 		<include refid="officeJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
-
+		<if test="area!=null and area.areaId!=null and area.areaId!=''">
+			AND a.area_id in (SELECT id FROM sys_area WHERE PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or id= #{area.areaId})
+		</if>
 		ORDER BY a.code
 	</select>
 
@@ -93,9 +95,26 @@
 		FROM SYS_OFFICE a
 		<include refid="officeJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds} AND a.office_type= #{officeType}
-		<if test="area!=null and area.id!=null and area.id!=''">
-			AND a.area_id LIKE CONCAT('%', #{area.id}, '%')
+		<if test="area!=null and area.areaId!=null and area.areaId!=''">
+			AND a.area_id in (SELECT id FROM sys_area WHERE PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or id= #{area.areaId})
 		</if>
+		<if test="name!=null and name!=''">
+			AND a.name LIKE CONCAT('%', #{name}, '%')
+		</if>
+		<if test="area.name!=null and area.name!=''">
+			AND ar.name LIKE CONCAT('%', #{area.name}, '%')
+
+		</if>
+		ORDER BY a.code
+	</select>
+
+	<select id="rootFindByParentIdsLike" resultType="Office">
+		SELECT
+		<include refid="officeColumns"/>
+		FROM SYS_OFFICE a
+		<include refid="officeJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds} AND a.office_type= #{officeType}
+
 		<if test="name!=null and name!=''">
 			AND a.name LIKE CONCAT('%', #{name}, '%')
 		</if>

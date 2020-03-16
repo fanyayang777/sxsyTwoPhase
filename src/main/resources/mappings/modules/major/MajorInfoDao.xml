@@ -39,13 +39,13 @@
 	</sql>
 	
 	<sql id="majorInfoJoins">
-		LEFT JOIN sys_user u27 ON u27.id = a.participant
+		LEFT JOIN SYS_USER u27 ON u27.id = a.participant
 	</sql>
     
 	<select id="get" resultType="MajorInfo">
 		SELECT 
 			<include refid="majorInfoColumns"/>
-		FROM major_info a
+		FROM MAJOR_INFO a
 		<include refid="majorInfoJoins"/>
 		WHERE a.major_id = #{id}
 	</select>
@@ -53,7 +53,7 @@
 	<select id="findList" resultType="MajorInfo">
 		SELECT 
 			<include refid="majorInfoColumns"/>
-		FROM major_info a
+		FROM MAJOR_INFO a
 		<include refid="majorInfoJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
@@ -77,7 +77,7 @@
 	<select id="findAllList" resultType="MajorInfo">
 		SELECT 
 			<include refid="majorInfoColumns"/>
-		FROM major_info a
+		FROM MAJOR_INFO a
 		<include refid="majorInfoJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
@@ -93,7 +93,7 @@
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO major_info(
+		INSERT INTO MAJOR_INFO(
 			major_id,
 			complaint_main_id,
 			occurrence_time,
@@ -163,7 +163,7 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE major_info SET 	
+		UPDATE MAJOR_INFO SET
 			complaint_main_id = #{complaintMainId},
 			occurrence_time = #{occurrenceTime},
 			event_number = #{eventNumber},
@@ -202,7 +202,7 @@
 	</update>
 
 	<update id="delete">
-		UPDATE major_info SET 
+		UPDATE MAJOR_INFO SET
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE major_id = #{id}
 	</update>

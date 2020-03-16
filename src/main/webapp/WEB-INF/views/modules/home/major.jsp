@@ -17,7 +17,6 @@
 
 </style>
 
-
 <body>
 <form:form id="searchForm" action="${ctx}/complaintmain/complaintMain/head?type=${type}&commonType=sjzy" method="post" class="breadcrumb form-search">
     <ul class="ul-form" style="height: 35px;">
@@ -27,7 +26,7 @@
                    value="${yearDate}"
                    onclick="WdatePicker({dateFmt:'yyyy',isShowClear:true}); $('#beginMonthDate').val('');$('#endMonthDate').val('');"/>
         </li>
-        <li id="month" style="">
+        <%--<li id="month" style="">
             <label>日期(月)：</label>
             <input id="beginMonthDate" name="beginMonthDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                    value="${beginMonthDate}"
@@ -37,7 +36,7 @@
                    value="${endMonthDate}"
                    onclick="WdatePicker({dateFmt:'yyyy-MM',isShowClear:true});$('#yearDate').val('');"/>
 
-        </li>
+        </li>--%>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="统计"/></li>
     </ul>
 </form:form>
@@ -46,8 +45,20 @@
 
     <div style="clear: both;"></div>
 </div>--%>
-<div id="main4" style="width: 49%; border: 0px;border-style:solid;height: 500px;float: left;margin-top: 6px;margin-left: 0.5%;"></div>
-<div id="bb" style="float : right;width: 49%;height:500px;">
+<c:if test="${yearDate eq 2018 or yearDate eq 2019}">
+    <div id="aa" style="width: 98%; border: 0px;border-style:solid;height: 400px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/3.png');background-repeat: no-repeat; background-size :100% 100%;">
+    </div>
+    <div id="main3" style="width: 98%; border: 0px;border-style:solid;height: 450px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/1.png');background-repeat: no-repeat; background-size :100% 100%;">
+    </div>
+
+    <div id="bb" style="width: 98%; height: 450px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/8.png');background-repeat: no-repeat; background-size :100% 100%;">
+    </div>
+</c:if>
+<c:if test="${yearDate ne 2018 and yearDate ne 2019}">
+    <div id="main4" style="width: 99%; border: 0px;border-style:solid;height: 500px;float: left;margin-top: 6px;margin-left: 0.5%;"></div>
+</c:if>
+
+<%--<div id="bb" style="float : right;width: 49%;height:500px;">
     <table class="table table-striped table-bordered table-condensed">
         <thead>
         <tr>
@@ -68,17 +79,17 @@
         </c:forEach>
         </tbody>
     </table>
-</div>
+</div>--%>
 <script type="text/javascript">
     var myChart4 = echarts.init(document.getElementById('main4'), 'dark');
     optionZY = {
-        backgroundColor:'rgba(128, 128, 128, 0.5)', //rgba设置透明度0.1
+        backgroundColor:'rgba(255, 255, 255, 0)', //rgba设置透明度0.1
         title:{
-            text:'各专业案件统计',
-            x:0,
+            text:${yearDate}+'年各专业案件统计',
+            x:'center',
             textStyle:{
-                color:'rgb(255,255,255)',
-                fontSize:14
+                color:'rgb(54, 169, 206)',
+                fontSize:20
             }
         },
         tooltip : {
@@ -87,6 +98,28 @@
                 type: 'cross',
                 label: {
                     backgroundColor: '#6a7985'
+                }
+            }
+        },
+        toolbox :{
+            show:true,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: 'none'
+                }, //区域缩放，区域缩放还原
+                dataView: {
+                    readOnly: false
+                }, //数据视图
+                magicType: {
+                    type: ['line', 'bar'],
+                },  //切换为折线图，切换为柱状图
+                restore: {},  //还原
+                saveAsImage: {},   //保存为图片
+
+            },
+            iconStyle:{
+                normal:{
+                    color:'blue',//设置颜色
                 }
             }
         },
@@ -100,29 +133,70 @@
         xAxis : [
             {
                 type : 'category',
-                boundaryGap : false,
-                data : ${nameList}
+                data : ${nameList},
+
+                axisLabel: {
+                    color:'#000000',
+                    interval:0,
+                    rotate:30
+                },
+                lineStyle: {
+                    color: '#000000', // 颜色
+                    width: 3 // 粗细
+                },
+                axisLine:{
+                    lineStyle:{
+                        color:'#000000',
+                    }
+                },
             }
         ],
         yAxis : [
             {
-                type : 'value'
+                type : 'value',
+                axisLabel: {
+                    show: true,
+                    interval: 'auto',
+                    formatter: '{value} %',
+                    color:'#000000',
+                },
+                axisLine:{
+                    lineStyle:{
+                        color:'#000000',
+                    }
+                },
             }
         ],
         series : [
-
             {
-                name:'各专业案件数量',
-                type:'line',
-                stack: '总量',
-                label: {
+                name:'百分比',
+                type:'bar',
+                barWidth: 20,
+                data:${departmentList},
+                itemStyle: {
                     normal: {
-                        show: true,
-                        position: 'top'
+                        color: new echarts.graphic.LinearGradient(
+                            0, 0, 0, 1,
+                            [
+                                {offset: 0, color: 'rgb(37,198,255)'},
+
+                                {offset: 1, color: 'rgb(31,111,181)'}
+                            ]
+                        )
                     }
                 },
-                areaStyle: {normal: {}},
-                data:${departmentList}
+                label:{
+                    show:true,
+                    formatter: function (a) {
+                        return a.value+"%";
+                    },
+                    position: 'top',
+                    textStyle: {
+                        color: 'black',
+                        fontSize: 14
+                    },
+                    color:'#000000'
+                }
             }
         ]
     };

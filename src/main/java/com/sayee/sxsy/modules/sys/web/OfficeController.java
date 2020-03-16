@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sayee.sxsy.modules.sys.entity.Area;
 import com.sayee.sxsy.modules.sys.entity.Office;
 import com.sayee.sxsy.modules.sys.entity.User;
 import com.sayee.sxsy.modules.sys.service.OfficeService;
@@ -67,9 +68,13 @@ public class OfficeController extends BaseController {
 		String officeType=request.getParameter("officeType");
 		if (StringUtils.isNotBlank(officeType) && officeType!=null){
 			office.setOfficeType(officeType);
-
 		}
-		model.addAttribute("list", officeService.findList(office));
+		List<Office> list = officeService.findList(office);
+
+		List<Area> areaList = UserUtils.getAreaList();
+		model.addAttribute("areaList",areaList);
+		model.addAttribute("list", list);
+
 		return "modules/sys/officeList";
 	}
 

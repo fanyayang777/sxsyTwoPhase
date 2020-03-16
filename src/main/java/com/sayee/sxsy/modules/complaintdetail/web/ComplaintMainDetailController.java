@@ -43,6 +43,7 @@ import java.util.Map;
 @RequestMapping(value = "${adminPath}/complaintdetail/complaintMainDetail")
 public class ComplaintMainDetailController extends BaseController {
 
+
 	@Autowired
 	private ComplaintMainDetailService complaintMainDetailService;
 	@Autowired
@@ -56,7 +57,7 @@ public class ComplaintMainDetailController extends BaseController {
 		if (entity == null){
 			entity = new ComplaintMainDetail();
 		}
-		return entity;
+        return entity;
 	}
 	
 	@RequiresPermissions("complaintdetail:complaintMainDetail:view")
@@ -97,12 +98,13 @@ public class ComplaintMainDetailController extends BaseController {
 			ComplaintMain complaintMain = complaintMainService.get(complaintMainDetail.getComplaintMainId());
 			complaintMainDetail.getComplaintMain().setTestTree(complaintMain.getTestTree());
 		}
-		if ("view".equals(type)) {
-			String show2=request.getParameter("show2");
-			model.addAttribute("show2",show2);
-			model.addAttribute("complaintMainDetail", complaintMainDetail);
-			return "modules/complaintdetail/complaintMainDetailView";
-		}else {
+			if ("view".equals(type)) {
+				String show2=request.getParameter("show2");
+				model.addAttribute("show2",show2);
+
+				model.addAttribute("complaintMainDetail", complaintMainDetail);
+				return "modules/complaintdetail/complaintMainDetailView";
+			}else {
 
 			model.addAttribute("complaintMainDetail", complaintMainDetail);
 			return "modules/complaintdetail/complaintMainDetailForm";

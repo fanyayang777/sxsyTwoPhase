@@ -43,9 +43,18 @@ public class ComplaintMain extends ActEntity<ComplaintMain> {
     private String key; //放 流程节点编码
     private String url; //不同模块 的不同路径
     private String nodeName; //节点名称
+    private String assignee; //节点操作人
 	private String source;		//案子的来源  1医调委录入 2 医院录入 默认是1
 	private String testTree;//涉及科室
 	private String isMajor;//是否重大 主表为主
+
+	public String getAssignee() {
+		return assignee;
+	}
+
+	public void setAssignee(String assignee) {
+		this.assignee = assignee;
+	}
 
 	public String getComplaintId() {
 		return complaintId;

@@ -104,6 +104,14 @@
 				</div>
 			</div>
 			<div class="control-group">
+				<label class="control-label">保险公司:</label>
+				<div class="controls">
+					<form:select path="insuranceCompany" class="input-medium">
+						<form:options items="${fns:getDictList('sys_office_form')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					</form:select>
+				</div>
+			</div>
+			<div class="control-group">
 				<label class="control-label">保单号:</label>
 				<div class="controls">
 					<form:input path="policyNumber" htmlEscape="false" maxlength="50" cssClass=""/>

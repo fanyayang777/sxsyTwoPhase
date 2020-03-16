@@ -65,12 +65,16 @@
 		</div>
 
 		<div class="control-group" <c:if test="${user.office.officeType eq '1' or user.office.officeType eq '2'}">style="display: none"</c:if>>
-			<label class="control-label">岗位:</label>
+			<label class="control-label">区域:</label>
 			<div class="controls">
-				<form:select path="post">
+				<%--<form:select path="post">
 					<form:options items="${fns:getDictList('post')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 				<span class="help-inline"><font color="red">*</font> “是”代表此账号允许登录，“否”则表示此账号不允许登录</span>
+			--%>
+					<sys:treeselect id="post" name="post" value="${user.post}" labelName="area"
+									labelValue="${fns:getArea(user.post).name}"
+									title="区域" url="/sys/area/treeData" cssClass="required" dataMsgRequired="请选择区域"/>
 			</div>
 		</div>
 		<div class="control-group" <c:if test="${user.office.officeType eq '1' or user.office.officeType eq '3'}">style="display: none"</c:if>>

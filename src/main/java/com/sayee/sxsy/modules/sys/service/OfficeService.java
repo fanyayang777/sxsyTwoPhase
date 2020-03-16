@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sayee.sxsy.common.utils.StringUtils;
+import com.sayee.sxsy.modules.sys.entity.Area;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,14 @@ public class OfficeService extends TreeService<OfficeDao, Office> {
 				return dao.findByRemarksIdsLike(office);
 			}
 			office.setParentIds(office.getParentIds()+"%");
+			String areaId = UserUtils.getUser().getCompany().getArea().getId();
+
+				office.setArea(new Area());
+				office.getArea().setAreaId(areaId);
+				if(office.getArea().getAreaId().equals("2")){
+					return dao.rootFindByParentIdsLike(office);
+				}
+
 			return dao.findByParentIdsLike(office);
 		}
 		return  new ArrayList<Office>();

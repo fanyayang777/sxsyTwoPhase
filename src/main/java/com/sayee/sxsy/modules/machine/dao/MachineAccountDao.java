@@ -35,4 +35,6 @@ public interface MachineAccountDao extends CrudDao<MachineAccount> {
      * 导出台账
      */
     public List<MachineAccount> findMachine(MachineAccount machineAccount);
+
+    long findPageCount(MachineAccount machineAccount);
 }
