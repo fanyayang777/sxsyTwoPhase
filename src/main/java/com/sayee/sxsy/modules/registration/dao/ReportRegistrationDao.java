@@ -17,5 +17,7 @@ import org.apache.ibatis.annotations.Param;
 public interface ReportRegistrationDao extends CrudDao<ReportRegistration> {
 
     public void insertzf( @Param("acceId1") String acceId1,@Param("itemId1") String itemId1,@Param("files1") String files1,@Param("fjtype") String fjtype);
+
+    public void updateLinkMan(@Param("nextLinkMan") String nextLinkMan,@Param("reportRegistrationId")  String reportRegistrationId);
 //    public void findFj(ReportRegistration reportRegistration);
 }

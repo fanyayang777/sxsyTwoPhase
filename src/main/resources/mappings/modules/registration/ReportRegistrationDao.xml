@@ -257,6 +257,12 @@
 		WHERE report_registration_id = #{reportRegistrationId}
 	</update>
 
+	<update id="updateLinkMan">
+		UPDATE REPORT_REGISTRATION SET
+			next_link_man = #{nextLinkMan}
+		WHERE report_registration_id = #{reportRegistrationId}
+	</update>
+
 	<update id="delete">
 		UPDATE REPORT_REGISTRATION SET
 			del_flag = #{DEL_FLAG_DELETE}

@@ -800,5 +800,6 @@
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
+	<act:histoicFlow procInsId="${complaintInfo.complaintMain.procInsId}"/>
 </body>
 </html>

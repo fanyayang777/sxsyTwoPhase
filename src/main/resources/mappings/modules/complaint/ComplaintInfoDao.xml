@@ -36,6 +36,9 @@
 		a.closing_method AS "closingMethod",
 		a.amount_involved AS "amountInvolved",
 		a.create_by AS "createBy.id",
+		u3.name AS "createBy.name",
+		u3.login_name AS "createBy.loginName",
+		r.report_registration_id AS "reportRegistration.reportRegistrationId",
 		r.dispute_time AS "reportRegistration.disputeTime",
 		r.policy_number AS "reportRegistration.policyNumber",
 		r.report_emp AS "reportRegistration.reportEmp",
@@ -54,8 +57,6 @@
 		r.create_date AS "reportRegistration.createDate",
 		r.update_by AS "reportRegistration.updateBy.id",
 		r.update_date AS "reportRegistration.updateDate",
-		u3.name AS "createBy.name",
-		u3.login_name AS "createBy.loginName",
 		o1.name AS "hospitalName",
 -- 		o2.name AS "departmentName",
 		o3.label AS "relationName",
@@ -85,6 +86,7 @@
 		t.name AS "typeName",
 		tt.ID_ AS "complaintMain.act.taskId",
 		tt.ASSIGNEE_ AS "complaintMain.act.assigneeName",
+		tt.TASK_DEF_KEY_ AS "complaintMain.act.taskDefKey",
 		o6.name AS "shiftHandleName",
 	    group_concat(DISTINCT(te.name))AS "testTree"
 	</sql>

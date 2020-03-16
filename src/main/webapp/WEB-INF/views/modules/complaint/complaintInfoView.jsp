@@ -76,8 +76,11 @@
     <form:hidden path="complaintMain.act.taskId"/>
     <form:hidden path="complaintMain.act.taskName"/>
     <form:hidden path="complaintMain.act.taskDefKey"/>
-    <form:hidden path="complaintMain.act.procInsId"/>
+    <form:hidden path="complaintMain.procInsId"/>
     <form:hidden path="complaintMain.act.procDefId"/>
+    <form:hidden path="createBy.id" />
+    <form:hidden path="createBy.loginName" />
+    <form:hidden path="reportRegistration.reportRegistrationId" />
     <sys:message content="${message}"/>
 <br>
     <legend>医院投诉接待详情</legend>
@@ -358,8 +361,8 @@
             <div class="control-group">
                 <label class="control-label">调解员:</label>
                 <div class="controls">
-                    <sys:treeselect id="nextLinkMan" name="nextLinkMan" value="${complaintInfo.nextLinkMan}" labelName="link.name" labelValue="${complaintInfo.link.name}"
-                                    title="用户" url="/sys/office/treeData?type=3&officeType=1"  cssClass="required" dataMsgRequired="请选择下一环节处理人" allowClear="true" notAllowSelectParent="true"/>
+                    <sys:treeselect id="nextLinkMan" name="reportRegistration.nextLinkMan" value="${complaintInfo.reportRegistration.nextLinkMan}" labelName="link.name" labelValue="${complaintInfo.reportRegistration.nextLinkMan}"
+                                    title="用户" url="/sys/office/treeData?type=3&officeType=1" isAll="true"  cssClass="required" dataMsgRequired="请选择下一环节处理人" allowClear="true" notAllowSelectParent="true"/>
                 </div>
             </div>
             </c:if>
