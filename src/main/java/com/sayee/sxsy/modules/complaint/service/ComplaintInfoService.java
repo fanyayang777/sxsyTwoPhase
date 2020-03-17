@@ -94,12 +94,12 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
         User u=UserUtils.getUser();
         if ("1".equals(officeType)){//医调委
             List<String> aa=ObjectUtils.convert(UserUtils.getRoleList().toArray(),"enname",true);
-            if (aa.contains("commission")){//韩主任 医调委主任 看全部数据
+            if (aa.contains("yitiaoweizhuren")){//韩主任 医调委主任 看全部数据  before commission
 
-            }else if(aa.contains("zwjw")){
+            }else if(aa.contains("jinzhuxingzhengbumenzhuren")){// zwjw
                 //曹华磊 与韩主任 有全部数据的权限，为了看 看卫健委工作站人员 信息
                 List<String> list=new ArrayList<String>();
-                List<User> listUser=UserUtils.getUser("wjwgzzry");
+                List<User> listUser=UserUtils.getUser("jinzhuxingzhengbumentiaojieyuan");//wjwgzzry
 
                 for (User user:listUser) {
                     list.add(user.getId());
@@ -110,7 +110,7 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
                     list.add(u.getId());
                     complaintInfo.setList(list);
                 }
-            }else if(aa.contains("DepartmentDeputyDirector")){
+            }else if(aa.contains("fengxianguankongbuzhuren")){//DepartmentDeputyDirector
                 //风险管控部 部门副主任 看自己部门所有数据
                 List<String> list=new ArrayList<String>();
 
@@ -166,12 +166,20 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
             reportRegistration.preInsert();
             reportRegistration.setReportRegistrationId(reportRegistration.getId());//主键
             reportRegistration.setComplaintMainId(complaintInfo.getComplaintMainId());//主表主键
+            reportRegistration.setSummaryOfDisputes(complaintInfo.getSummaryOfDisputes());//纠纷概要
+            reportRegistration.setFocus(complaintInfo.getSummaryOfDisputes());//纠纷概要
+            reportRegistration.setPatientAsk(complaintInfo.getAppeal());//诉求 对要求
+            reportRegistration.setPatientMobile(complaintInfo.getComplaintMain().getPatientMobile());
             //将主键ID设为UUID
             reportRegistrationDao.insert(reportRegistration);
 
         }else{//如果不为空进行更新
             //修改报案登记表
             reportRegistration.preUpdate();
+            reportRegistration.setSummaryOfDisputes(complaintInfo.getSummaryOfDisputes());//纠纷概要
+            reportRegistration.setFocus(complaintInfo.getSummaryOfDisputes());//焦点 对 纠纷概要
+            reportRegistration.setPatientAsk(complaintInfo.getAppeal());//诉求 对 要求
+            reportRegistration.setPatientMobile(complaintInfo.getComplaintMain().getPatientMobile());
             reportRegistrationDao.update(reportRegistration);
 
         }
@@ -269,10 +277,12 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
                 complaintMain1.setPatientName(complaintInfo.getPatientName());        //患者姓名
                 complaintMain1.setPatientAge(complaintInfo.getPatientAge());            //患者年龄
                 complaintMain1.setPatientSex(complaintInfo.getPatientSex());            //患者性别
+                complaintMain1.setPatientMobile(complaintInfo.getComplaintMain().getPatientMobile()); //患者电话
                 complaintMain1.setInvolveHospital(complaintInfo.getInvolveHospital());        //涉及医院
+                complaintMain1.setHospitalGrade(complaintInfo.getComplaintMain().getHospitalGrade());        //医院等级
                 complaintMain1.setInvolveDepartment(complaintInfo.getInvolveDepartment());        //涉及科室
                 complaintMain1.setInvolveEmployee(complaintInfo.getInvolveEmployee());        //涉及人员
-                complaintMain.setPatientCard(complaintInfo.getComplaintMain().getPatientCard());    //患者身份证
+                complaintMain1.setPatientCard(complaintInfo.getComplaintMain().getPatientCard());    //患者身份证
                 complaintMain1.setSource("2");        //信息来源
                 complaintInfo.setComplaintMain(complaintMain1);
                 complaintMainService.insert(complaintInfo.getComplaintMain());            //保存主表
@@ -284,9 +294,11 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
             complaintMain.setPatientName(complaintInfo.getPatientName());        //患者姓名
             complaintMain.setPatientAge(complaintInfo.getPatientAge());            //患者年龄
             complaintMain.setPatientSex(complaintInfo.getPatientSex());            //患者性别
+            complaintMain.setPatientMobile(complaintInfo.getComplaintMain().getPatientMobile()); //患者电话
             complaintMain.setInvolveHospital(complaintInfo.getInvolveHospital());        //涉及医院
             complaintMain.setInvolveDepartment(complaintInfo.getInvolveDepartment());        //涉及科室
             complaintMain.setInvolveEmployee(complaintInfo.getInvolveEmployee());        //涉及人员
+            complaintMain.setHospitalGrade(complaintInfo.getComplaintMain().getHospitalGrade());        //医院等级
             complaintMain.setPatientCard(complaintInfo.getComplaintMain().getPatientCard());    //患者身份证
             complaintInfo.setComplaintMain(complaintMain);
             complaintMainService.update(complaintInfo.getComplaintMain());            //保存主表

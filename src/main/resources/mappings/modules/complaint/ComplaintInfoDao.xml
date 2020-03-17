@@ -129,9 +129,6 @@
 			<if test="node != null and node != '' and node=='fpy'">
 				AND tt.TASK_DEF_KEY_='allocation' AND tt.ASSIGNEE_ LIKE CONCAT('%', #{assignee}, '%')
 			</if>
-			<if test="node == null or node == '' ">
-				OR (tt.TASK_DEF_KEY_='enrollment' AND tt.ASSIGNEE_ LIKE CONCAT('%', #{assignee}, '%'))
-			</if>
 			<if test="caseNumber != null and caseNumber != ''">
 				AND a.case_number LIKE 
 					<if test="dbName == 'oracle'">'%'||#{caseNumber}||'%'</if>
@@ -171,9 +168,13 @@
 			<if test="receptionDate != null and receptionDate != '' or receptionEndDate != null and receptionEndDate != ''">
 				AND (a.reception_date BETWEEN #{receptionDate} AND #{receptionEndDate})
 			</if>
-			<if test="user != null and user.id != null and user.id != ''">
-				AND a.create_by = #{user.id}
-			</if>
+            <if test="node == null or node == ''">
+                <if test="(user != null and user.id != null and user.id != '') and (node == null or node == '') ">
+                    AND a.create_by = #{user.id}
+                </if>
+                OR (tt.TASK_DEF_KEY_='enrollment' AND tt.ASSIGNEE_ LIKE CONCAT('%', #{assignee}, '%'))
+            </if>
+
 			<if test="list != null and list != ''">
 				AND a.create_by in
 				<foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
@@ -187,6 +188,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.case_number DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -198,7 +200,7 @@
 		<include refid="complaintInfoJoins"/>
 		INNER JOIN  SYS_OFFICE o9 ON a.involve_hospital = o9.name
 		<where>
-			o9.id = a.a.involve_hospital
+			o9.id = a.involve_hospital
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

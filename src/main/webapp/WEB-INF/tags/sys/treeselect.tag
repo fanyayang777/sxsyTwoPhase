@@ -88,7 +88,8 @@
 					$("#${id}Name").val("");
                 }//</c:if>
 				if(typeof ${id}TreeselectCallBack == 'function'){
-					${id}TreeselectCallBack(v, h, f);
+					var i=ids.join(",").replace(/u_/ig,"");
+					${id}TreeselectCallBack(v, h, f,i);
 				}
 			}, loaded:function(h){
 				$(".jbox-content", top.document).css("overflow-y","hidden");

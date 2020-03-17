@@ -64,7 +64,8 @@
 			</div>
 		</div>
 
-		<div class="control-group" <c:if test="${user.office.officeType eq '1' or user.office.officeType eq '2'}">style="display: none"</c:if>>
+		<c:if test="${user.company.officeType eq '3' }">
+		<div class="control-group" >
 			<label class="control-label">区域:</label>
 			<div class="controls">
 				<%--<form:select path="post">
@@ -77,6 +78,7 @@
 									title="区域" url="/sys/area/treeData" cssClass="required" dataMsgRequired="请选择区域"/>
 			</div>
 		</div>
+		</c:if>
 		<div class="control-group" <c:if test="${user.office.officeType eq '1' or user.office.officeType eq '3'}">style="display: none"</c:if>>
 			<label class="control-label">职称:</label>
 			<div class="controls">

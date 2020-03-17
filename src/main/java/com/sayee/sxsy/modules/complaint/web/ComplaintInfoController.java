@@ -6,12 +6,16 @@ package com.sayee.sxsy.modules.complaint.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sayee.sxsy.common.utils.AjaxHelper;
 import com.sayee.sxsy.common.utils.BaseUtils;
 import com.sayee.sxsy.common.utils.DateUtils;
 import com.sayee.sxsy.common.utils.excel.ExportExcel;
 import com.sayee.sxsy.modules.act.entity.Act;
 import com.sayee.sxsy.modules.complaintmain.entity.ComplaintMain;
+import com.sayee.sxsy.modules.stopmediate.entity.StopMediate;
+import com.sayee.sxsy.modules.sys.entity.Office;
 import com.sayee.sxsy.modules.sys.entity.User;
+import com.sayee.sxsy.modules.sys.utils.DictUtils;
 import com.sayee.sxsy.modules.sys.utils.FileBaseUtils;
 import com.sayee.sxsy.modules.sys.utils.UserUtils;
 import org.apache.commons.collections.MapUtils;
@@ -34,6 +38,7 @@ import com.sayee.sxsy.modules.complaint.entity.ComplaintInfo;
 import com.sayee.sxsy.modules.complaint.service.ComplaintInfoService;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -193,5 +198,33 @@ public class ComplaintInfoController extends BaseController {
 			return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage";
 		}
 	}
+	//选择医院 传  城市
+	@RequestMapping(value = "officeInfo")
+	public void officeInfo(HttpServletRequest request,HttpServletResponse response) {
+		String code="";//1.成功 0失败
+		Map<String,Object> map=new HashMap<String,Object>();
+		String hospital=request.getParameter("hospital");//前台传过来的状态
+//		String hospital=request.getParameter("involveHospital");//前台传过来的状态
+		if (StringUtils.isBlank(hospital)){
+			map.put("status","0");
+			AjaxHelper.responseWrite(request,response,"1","success",map);
+			return;
+		}
+		Office o=UserUtils.getOfficeId(hospital);
+
+		if(StringUtils.isNotBlank(o.getHospitalGrade())){
+			String label=DictUtils.getDictLabel(o.getHospitalGrade(),"hospital_grade","其他");
+			map.put("hospitalGrade",label); //医院等级
+		}
+
+		map.put("policyNumber",o.getPolicyNumber()); //保单号
+		map.put("gradeValue",o.getHospitalGrade()); //医院等级 value
+
+		map.put("areaName",o.getArea().getName());	//医院地址
+		map.put("areaId",o.getArea().getId());	//医院地址
+		AjaxHelper.responseWrite(request,response,"1","success",map);
+	}
+
+
 
 }
