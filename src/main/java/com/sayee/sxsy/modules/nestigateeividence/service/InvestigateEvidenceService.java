@@ -68,8 +68,9 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
         List<Role> roleList=UserUtils.getRoleList();//获取当前登陆人角色
         List<String> aa= ObjectUtils.convert(roleList.toArray(),"enname",true);
         User user=UserUtils.getUser();
-        if (user.isAdmin() || aa.contains("commission") || aa.contains("DirectorOfMediation")){//是管理员  医调委主任 调解部副主任  查看全部
-            //!aa.contains("dept") &&
+        if (user.isAdmin() || aa.contains("quanshengtiaojiebuzhuren") || aa.contains("yitiaoweizhuren")
+                || aa.contains("yitiaoweifuzhuren")|| aa.contains("shengzhitiaojiebuzhuren/fuzhuren")|| aa.contains("yitiaoweizhuren")
+        ){    //!aa.contains("dept") &&
         }else if(aa.contains("szcz") || aa.contains("szjc") || aa.contains("szjz") || aa.contains("szgj") ||aa.contains("szyq") ||aa.contains("szsz") ||aa.contains("szxc") || aa.contains("szdt") || aa.contains("szll") ||aa.contains("szxy") || aa.contains("szyc") ||aa.contains("szlf") ||aa.contains("szybzg") ||aa.contains("szebzg")){
             List<Office> officeList = Lists.newArrayList();// 按明细设置数据范围s
             for (Role role:roleList) {
@@ -93,7 +94,7 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                 list.add(user.getLoginName());
                 investigateEvidence.setList(new ArrayList(list));
             }
-        }else if((  aa.contains("deputyDirector") ||aa.contains("director")) ){
+        }else if((  aa.contains("gongzuozhanzhuren/fuzhuren")) ){
             //工作站 主任 副主任 看自己 的员工
             List<String> list=new ArrayList<String>();
             List<User> listUser=UserUtils.getUserByOffice(user.getOffice().getId());

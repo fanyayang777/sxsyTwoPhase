@@ -12,6 +12,7 @@ import com.sayee.sxsy.common.utils.DateUtils;
 import com.sayee.sxsy.common.utils.excel.ExportExcel;
 import com.sayee.sxsy.modules.act.entity.Act;
 import com.sayee.sxsy.modules.complaintmain.entity.ComplaintMain;
+import com.sayee.sxsy.modules.registration.entity.ReportRegistration;
 import com.sayee.sxsy.modules.stopmediate.entity.StopMediate;
 import com.sayee.sxsy.modules.sys.entity.Office;
 import com.sayee.sxsy.modules.sys.entity.User;
@@ -114,8 +115,10 @@ public class ComplaintInfoController extends BaseController {
 	@RequiresPermissions("complaint:complaintInfo:edit")
 	@RequestMapping(value = "save")
 	public String save(ComplaintInfo complaintInfo, Model model, RedirectAttributes redirectAttributes,HttpServletRequest request) {
-		if (!beanValidator(model, complaintInfo )){
-			return form(request,complaintInfo, model);
+        ReportRegistration reportRegistration=complaintInfo.getReportRegistration();
+	    if ("yes".equals(request.getParameter("flag")) && !beanValidator(model, reportRegistration ) || !beanValidator(model, complaintInfo )  ){
+			//点击下一步的时候 进行后台字段验证
+		    return form(request,complaintInfo, model);
 		}
 		Act act= complaintInfoService.save(complaintInfo,request);
 		if("false".equals(act.getFlag())){

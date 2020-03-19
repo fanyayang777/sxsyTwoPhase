@@ -24,6 +24,7 @@ import com.sayee.sxsy.modules.registration.dao.ReportRegistrationDao;
 import com.sayee.sxsy.modules.registration.entity.ReportRegistration;
 import com.sayee.sxsy.modules.surgicalconsentbook.dao.PreOperativeConsentDao;
 import com.sayee.sxsy.modules.surgicalconsentbook.service.PreOperativeConsentService;
+import com.sayee.sxsy.modules.sys.entity.Area;
 import com.sayee.sxsy.modules.sys.entity.User;
 import com.sayee.sxsy.modules.sys.service.SystemService;
 import com.sayee.sxsy.modules.sys.utils.UserUtils;
@@ -61,9 +62,6 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
 
     @Autowired
     private ActTaskService actTaskService;
-
-    @Autowired
-    private RuntimeService runtimeService;
 
     @Autowired
     private SystemService systemService;
@@ -223,13 +221,16 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
 
             //第一个节点保存完毕 ；进行 “数据员审核” 节点的保存
             var.put("pass","1");
-            List<User> u=systemService.findUserByOfficeRoleId("","distribution");
+            List<User> u=systemService.findUserByOfficeRoleId("","shujuyuan");
             for (User user:u) {
-                var.put("datamember_user", user.getLoginName());//根据角色编码 得到数据员的信息
-                break ;
+                String aa=UserUtils.getOfficeId(complaintInfo.getInvolveHospital()).getArea().getParentIds();
+                String bb=UserUtils.get(user.getId()).getCompany().getArea().getId();
+                if (aa.indexOf(bb)!=-1){
+                    var.put("datamember_user", user.getLoginName());//根据角色编码 得到数据员的信息
+                    break ;
+                }
             }
             actTaskService.completeFirstTask( act.getProcInsId(), "", complaintInfo.getCaseNumber(), var);
-
         }
 //		super.save(complaintInfo);
         act.setFlag(String.valueOf(a));
@@ -424,10 +425,14 @@ public class ComplaintInfoService extends CrudService<ComplaintInfoDao, Complain
         if ("sjy".equals(node)){
             if ("0".equals(status)){//数据员 通过审核
                 var.put("pass","1");
-                List<User> u=systemService.findUserByOfficeRoleId("","distribution");
+                List<User> u=systemService.findUserByOfficeRoleId("","anjianfenpeiyuan");
                 for (User user:u) {
-                    var.put("allocation_user", user.getLoginName());//根据角色编码 得到数据员的信息
-                    break ;
+                    String aa=UserUtils.getOfficeId(complaintInfo.getInvolveHospital()).getArea().getParentIds();
+                    String bb=UserUtils.get(user.getId()).getCompany().getArea().getId();
+                    if (aa.indexOf(bb)!=-1){
+                        var.put("allocation_user", user.getLoginName());//根据角色编码 得到数据员的信息
+                        break ;
+                    }
                 }
             }else {//驳回
                 var.put("pass","0");

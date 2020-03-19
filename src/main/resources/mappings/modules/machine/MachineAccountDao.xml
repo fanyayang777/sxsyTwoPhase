@@ -153,7 +153,7 @@
 				<if test="dbName == 'mysql'">concat('%',#{fileNumber},'%')</if>
 			</if>
 			<if test="area != null and area.id != null and area.id != ''">
-				AND ar.id = #{area.id}
+				AND ( ar.parent_id LIKE concat('%',#{area.id},'%') or ar.id=#{area.id} )
 			</if>
 		</where>
 		<choose>

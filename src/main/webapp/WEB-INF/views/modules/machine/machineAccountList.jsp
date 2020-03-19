@@ -126,12 +126,6 @@
                    value="${machineAccount.endReportingTime}"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
         </li>
-        <li><label>所属地区：</label>
-            <sys:treeselect id="area" name="area.id" value="${machineAccount.area.id}" labelName="area.name"
-                            labelValue="${ empty machineAccount.area.name ? machineAccount.area.name :machineAccount.area.name}"
-                            title="区域" url="/sys/area/treeData" cssClass="required" dataMsgRequired="请选择区域"/>
-        </li>
-
         <li><label>部门：</label>
             <sys:treeselect id="deptId" name="deptId" value="${machineAccount.deptId}" labelName="office.name"
                             labelValue="${machineAccount.office.name}"
@@ -147,7 +141,7 @@
         <li><label>医院名称：</label>
             <form:input path="hospitalId" htmlEscape="false" maxlength="32" class="input-medium"/>
         </li>
-        <%--<li><label>保单号：</label>
+        <li><label>保单号：</label>
             <form:input path="policyNumber" htmlEscape="false" maxlength="50" class="input-medium"/>
         </li>
         <li><label>起保日期：</label>
@@ -162,7 +156,7 @@
         </li>
         <li><label>卷宗编号：</label>
             <form:input path="fileNumber" htmlEscape="false" maxlength="20" class="input-medium"/>
-        </li>--%>
+        </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
             <input id="btnImport" class="btn btn-primary" type="button" value="导入"/>
             <input id="btnExportFiles" class="btn btn-primary" type="button" value="导出"/>
@@ -242,8 +236,7 @@
     </thead>
     <tbody class="as">
     <c:forEach items="${page.list}" var="machineAccount">
-        <c:choose>
-        <c:when test="${fn:contains(office,machineAccount.office.name)}">
+
         <tr>
 
             <td>
@@ -496,11 +489,6 @@
                 </td>
             </shiro:hasPermission>
         </tr>
-        </c:when>
-            <c:otherwise>
-                ${page=null}
-            </c:otherwise>
-        </c:choose>
     </c:forEach>
     </tbody>
 </table>

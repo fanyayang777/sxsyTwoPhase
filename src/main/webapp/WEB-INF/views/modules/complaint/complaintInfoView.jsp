@@ -408,7 +408,7 @@
                             ${complaintInfo.hospitalName}
                     </td>
                     <td class="tit" width="10%">保单号:</td>
-                    <td colspan="3">
+                    <td colspan="3" style="text-align: center">
                         <%--<form:input path="reportRegistration.policyNumber" htmlEscape="false" maxlength="255" class="input-small required" value="${empty complaintInfo.reportRegistration.policyNumber ? (empty reportRegistration.complaintMain.hospital.policyNumber ? '未参保' : reportRegistration.complaintMain.hospital.policyNumber) : reportRegistration.policyNumber}" cssStyle="width: 87%;height: 30px; text-align: center;" />--%>
                                 ${empty complaintInfo.reportRegistration.policyNumber ? (empty complaintInfo.reportRegistration.complaintMain.hospital.policyNumber ? '未参保' : complaintInfo.reportRegistration.complaintMain.hospital.policyNumber) : complaintInfo.reportRegistration.policyNumber}
                     </td>
@@ -417,7 +417,7 @@
                     <td class="tit"><font color="red">*</font>纠纷发生时间:</td>
                     <td width="15%">
                         <input id="disputeTime" name="reportRegistration.disputeTime" type="text" readonly="readonly" maxlength="20"
-                               class="input-small Wdate required"
+                               class="input-small Wdate required" disabled="disabled"
                                value="${complaintInfo.reportRegistration.disputeTime}"
                                onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});" style="width:90%;height:30px;text-align: center;" id="jiufen" onchange="compareDate(this.value)"/>
                     </td>
@@ -460,14 +460,14 @@
                     </td>
                     <td class="tit"><font color="red">*</font>身份证号:</td>
                     <td>
-                        <form:input path="complaintMain.patientCard" htmlEscape="false" maxlength="20" onchange="GetAge(this.value);" class="input-xlarge required card" cssStyle="width: 90%;height: 30px;text-align: center;"/>
+                        <form:input path="complaintMain.patientCard" htmlEscape="false" maxlength="20" onchange="GetAge(this.value);" class="input-xlarge required card" cssStyle="width: 90%;height: 30px;text-align: center;" readonly="true"/>
                     </td>
                 </tr>
                 <tr>
                     <td class="tit"><font color="red">*</font>出险时间:</td>
                     <td>
                         <input id="reportTime" name="reportRegistration.reportTime" type="text" readonly="readonly" maxlength="20"
-                               class="input-small Wdate required"
+                               class="input-small Wdate required" disabled="disabled"
                                value="${complaintInfo.reportRegistration.reportTime}"
                                onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});" style="width:90%;height:30px;text-align: center;" id="chuxian" onchange="compareDate(this.value)"/>
                     </td>
@@ -481,7 +481,7 @@
                     </td>
                     <td class="tit">是否使用医责险:</td>
                     <td style="text-align: center;">
-                        <form:select path="reportRegistration.doctorRisk" style='width:110px;text-align: center;'>
+                        <form:select path="reportRegistration.doctorRisk" disabled="true" style='width:110px;text-align: center;'>
                             <form:option value="0">否</form:option>
                             <form:option value="1">是</form:option>
                         </form:select>
@@ -544,21 +544,12 @@
                 <tr>
                     <td class="tit"><font color="red">*</font>填表人签名:</td>
                     <td colspan="3">
-                            <%--<sys:treeselect id="registrationEmp" name="registrationEmp"--%>
-                            <%--value="${empty reportRegistration.registrationEmp ? fns:getUser().id : reportRegistration.registrationEmp}" labelName=""--%>
-                            <%--labelValue="${empty reportRegistration.djEmployee.name ?  fns:getUser().name : reportRegistration.djEmployee.name}"--%>
-                            <%--title="用户" url="/sys/office/treeData?type=3&officeType=1" dataMsgRequired="必填信息"--%>
-                            <%--cssClass="required" allowClear="true" isAll="true" notAllowSelectParent="true" />--%>
-                        <sys:treeselect id="registrationEmp" name="reportRegistration.registrationEmp"
-                                        value="${empty complaintInfo.reportRegistration.registrationEmp ? fns:getUser().id : complaintInfo.reportRegistration.registrationEmp}" labelName="emp"
-                                        labelValue="${empty complaintInfo.reportRegistration.djEmployee.name ?  fns:getUser().name : complaintInfo.reportRegistration.djEmployee.name}"
-                                        title="用户" url="/sys/office/treeData?type=3&officeType=1" dataMsgRequired="必填信息"
-                                        cssClass="required" allowClear="true" isAll="true" notAllowSelectParent="true" />
+                            ${empty complaintInfo.reportRegistration.djEmployee.name ?  fns:getUser().name : complaintInfo.reportRegistration.djEmployee.name}
                     </td>
                     <td class="tit"><font color="red">*</font>填表日期:</td>
                     <td colspan="3">
                         <input id="registrationTime" name="reportRegistration.registrationTime" type="text" readonly="readonly" maxlength="20"
-                               class="input-medium Wdate required"
+                               class="input-medium Wdate required" disabled="disabled"
                                value="${complaintInfo.reportRegistration.registrationTime}"
                                onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});" style="width:40%;height:30px;text-align: center;"/>
                     </td>
@@ -577,7 +568,7 @@
                     <td class="tit">审核日期:</td>
                     <td>
                         <input name="reportRegistration.patientRelation" type="text" readonly="readonly" maxlength="20"
-                               class="input-medium Wdate "
+                               class="input-medium Wdate " disabled="disabled"
                                value="${complaintInfo.reportRegistration.patientRelation}"
                                onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});" style="width:90%;height:30px;text-align: center;"/>
                     </td>
@@ -772,24 +763,24 @@
             </td>
         </tr>
 
-        <tr>
-                <%--<td class="tit"><font color="red">*</font>是否进入医调委调解：</td>--%>
-                <%--<td>--%>
-                <%--<form:select id="isMediate" path="isMediate" style='width:110px;text-align: center;' >--%>
-                <%--<form:option value="0">否</form:option>--%>
-                <%--<form:option value="1">是</form:option>--%>
-                <%--</form:select>--%>
-                <%--</td>--%>
-                <%--<td class="hidden"><font color="red">*</font>下一处理环节：</td>--%>
-                <%--<td class="hidden">--%>
-                <%--<form:input path="nextLink" htmlEscape="false" maxlength="32" class="input-xlarge "/>--%>
-                <%--</td>--%>
+       <%-- <tr>
+                &lt;%&ndash;<td class="tit"><font color="red">*</font>是否进入医调委调解：</td>&ndash;%&gt;
+                &lt;%&ndash;<td>&ndash;%&gt;
+                &lt;%&ndash;<form:select id="isMediate" path="isMediate" style='width:110px;text-align: center;' >&ndash;%&gt;
+                &lt;%&ndash;<form:option value="0">否</form:option>&ndash;%&gt;
+                &lt;%&ndash;<form:option value="1">是</form:option>&ndash;%&gt;
+                &lt;%&ndash;</form:select>&ndash;%&gt;
+                &lt;%&ndash;</td>&ndash;%&gt;
+                &lt;%&ndash;<td class="hidden"><font color="red">*</font>下一处理环节：</td>&ndash;%&gt;
+                &lt;%&ndash;<td class="hidden">&ndash;%&gt;
+                &lt;%&ndash;<form:input path="nextLink" htmlEscape="false" maxlength="32" class="input-xlarge "/>&ndash;%&gt;
+                &lt;%&ndash;</td>&ndash;%&gt;
             <td class="tit"><font color="red">*</font>下一环节处理人：</td>
             <td>
-                    <%--<form:input path="nextLinkMan" htmlEscape="false" maxlength="32" class="input-xlarge "/>--%>
-                ${complaintInfo.link.name}
+                    &lt;%&ndash;<form:input path="nextLinkMan" htmlEscape="false" maxlength="32" class="input-xlarge "/>&ndash;%&gt;
+                ${complaintInfo.reportRegistration.linkEmployee.name}
             </td>
-        </tr>
+        </tr>--%>
     </table>
 </br>
     <table class="table-form">
@@ -827,7 +818,9 @@
             <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
         </div>
     </c:if>
-    <act:histoicFlow procInsId="${complaintInfo.complaintMain.procInsId}"/>
+    <c:if test="${not empty complaintInfo.complaintMain.procInsId}">
+        <act:histoicFlow procInsId="${complaintInfo.complaintMain.procInsId}"/>
+    </c:if>
 </form:form>
 </body>
 </html>

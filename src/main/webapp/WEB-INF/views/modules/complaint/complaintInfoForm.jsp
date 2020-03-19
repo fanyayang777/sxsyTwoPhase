@@ -797,5 +797,8 @@
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
+    <c:if test="${not empty complaintInfo.complaintMain.procInsId}">
+        <act:histoicFlow procInsId="${complaintInfo.complaintMain.procInsId}"/>
+    </c:if>
 </body>
 </html>

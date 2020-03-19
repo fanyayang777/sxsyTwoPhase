@@ -43,8 +43,8 @@ public class AssessApplyController extends BaseController {
 	private AssessApplyService assessApplyService;
 	@Autowired
 	SummaryInfoService summaryInfoService;
-	@Autowired
-	private PreOperativeConsentService preOperativeConsentService;
+	/*@Autowired
+	private PreOperativeConsentService preOperativeConsentService;*/
 	@ModelAttribute
 	public AssessApply get(@RequestParam(required=false) String id) {
 		AssessApply entity = null;

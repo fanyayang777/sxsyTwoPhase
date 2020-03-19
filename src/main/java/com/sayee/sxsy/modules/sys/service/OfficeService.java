@@ -29,11 +29,11 @@ public class OfficeService extends TreeService<OfficeDao, Office> {
 		return UserUtils.getOfficeList();
 	}
 
-	public List<Office> findList(Boolean isAll){
+	public List<Office> findList(Boolean isAll,String officeType){
 		if (isAll != null && isAll){
 			return UserUtils.getOfficeAllList();
 		}else{
-			return UserUtils.getOfficeList();
+			return UserUtils.getOfficeListType(officeType);
 		}
 	}
 
@@ -44,16 +44,21 @@ public class OfficeService extends TreeService<OfficeDao, Office> {
 				office.setParentIds(office.getParentIds()+"%");
 				return dao.findByRemarksIdsLike(office);
 			}
+			Area area=new Area();
+			if (office.getArea()!=null){
+				area=office.getArea();
+			}else {
+				area=UserUtils.getUser().getCompany().getArea();
+			}
+			area.setName("");
+			area.setAreaId(StringUtils.isBlank(area.getAreaId())?area.getId() : area.getAreaId());
+			office.setArea(area);
 			office.setParentIds(office.getParentIds()+"%");
-			String areaId = UserUtils.getUser().getCompany().getArea().getId();
-
-				office.setArea(new Area());
-				office.getArea().setAreaId(areaId);
-				if(office.getArea().getAreaId().equals("2")){
-					return dao.rootFindByParentIdsLike(office);
-				}
-
+			if("2".equals(office.getArea().getId())){
+				return dao.rootFindByParentIdsLike(office);
+			}
 			return dao.findByParentIdsLike(office);
+
 		}
 		return  new ArrayList<Office>();
 	}

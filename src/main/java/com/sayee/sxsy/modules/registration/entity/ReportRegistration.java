@@ -167,7 +167,7 @@ public class ReportRegistration extends DataEntity<ReportRegistration> {
 	}
 
 	@JsonBackReference
-	@NotNull(message="关联主表主键不能为空")
+	//@NotNull(message="关联主表主键不能为空")
 	public String getComplaintMainId() {
 		return complaintMainId;
 	}
@@ -203,7 +203,7 @@ public class ReportRegistration extends DataEntity<ReportRegistration> {
 		this.patientRelation = patientRelation;
 	}
 
-	@Length(min=0, max=20, message="报案日期长度必须介于 0 和 20 之间")
+	@Length(min=1, max=20, message="报案日期长度必须介于 0 和 20 之间")
 	public String getReportTime() {
 		return reportTime;
 	}
@@ -230,7 +230,7 @@ public class ReportRegistration extends DataEntity<ReportRegistration> {
 		this.registrationTime = registrationTime;
 	}
 
-	@Length(min=0, max=20, message="纠纷发生时间长度必须介于 0 和 10 之间")
+	@Length(min=1, max=20, message="纠纷发生时间长度必须介于 0 和 10 之间")
 	public String getDisputeTime() {
 		return disputeTime;
 	}

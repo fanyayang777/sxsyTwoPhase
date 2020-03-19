@@ -51,7 +51,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Transactional(readOnly = true)
 public class MachineAccountService extends CrudService<MachineAccountDao, MachineAccount> {
     @Autowired
+    private ReportRegistrationService reportRegistrationService;
+    @Autowired
+    private AuditAcceptanceService auditAcceptanceService;
+    @Autowired
+    private InvestigateEvidenceService investigateEvidenceService;
+    @Autowired
+    private MediateEvidenceService mediateEvidenceService;
+    @Autowired
+    private AssessAppraisalService assessAppraisalService;
+    @Autowired
+    private SignAgreementService signAgreementService;
+    @Autowired
+    private SummaryInfoService summaryInfoService;
+    @Autowired
     private MachineAccountDao machineAccountDao;
+    @Autowired
+    private PerformAgreementService performAgreementService;
     public MachineAccount get(String id) {
         String machineAccountId=id;
         return machineAccountDao.getDetail(machineAccountId);
@@ -66,6 +82,8 @@ public class MachineAccountService extends CrudService<MachineAccountDao, Machin
 
     public Page<MachineAccount> findPage(Page<MachineAccount> page, MachineAccount machineAccount) {
         User user = UserUtils.getUser();
+        Area ar=user.getCompany().getArea();
+        machineAccount.setArea(ar);
         if (StringUtils.isBlank(machineAccount.getEndReportingTime()) && StringUtils.isBlank(machineAccount.getReportingTime())){
             machineAccount.setReportingTime(DateUtils.getYear());
             int year=Integer.valueOf(DateUtils.getYear())+1;
@@ -78,6 +96,7 @@ public class MachineAccountService extends CrudService<MachineAccountDao, Machin
             machineAccount.setArea(area);
         }
         page.setCount(machineAccountDao.findPageCount(machineAccount));
+
         return super.findPage(page, machineAccount);
     }
 

@@ -50,8 +50,8 @@ public class AuditAcceptanceController extends BaseController {
 	private MachineAccountService machineAccountService;
 	@Autowired
 	private SummaryInfoService summaryInfoService;
-	@Autowired
-	private OfficeService officeService;
+	/*@Autowired
+	private OfficeService officeService;*/
 	@ModelAttribute
 	public AuditAcceptance get(@RequestParam(required=false) String id) {
 		AuditAcceptance entity = null;

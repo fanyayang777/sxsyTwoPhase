@@ -19,7 +19,7 @@ public interface CrudDao<T> extends BaseDao {
 	 * @return
 	 */
 	public T get(String id);
-	
+
 	/**
 	 * 获取单条数据
 	 * @param entity
@@ -32,9 +32,12 @@ public interface CrudDao<T> extends BaseDao {
 	 * @param entity
 	 * @return
 	 */
-	public List<T> findList(T entity);
-	
-	/**
+    public List<T> findList(T entity);
+    public List<T> findListOne(T entity);
+    public List<T> findListTwo(T entity);
+    public List<T> findListThree(T entity);
+
+    /**
 	 * 查询所有数据列表
 	 * @param entity
 	 * @return

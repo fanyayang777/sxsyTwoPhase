@@ -19,7 +19,7 @@ import com.sayee.sxsy.common.persistence.TreeEntity;
  */
 @Transactional(readOnly = true)
 public abstract class TreeService<D extends TreeDao<T>, T extends TreeEntity<T>> extends CrudService<D, T> {
-	
+
 	@Transactional(readOnly = false)
 	public void save(T entity) {
 		

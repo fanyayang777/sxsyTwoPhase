@@ -9,11 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.common.collect.Lists;
 import com.sayee.sxsy.common.utils.*;
 import com.sayee.sxsy.modules.complaintmain.dao.ComplaintMainDao;
-import com.sayee.sxsy.modules.machine.dao.MachineAccountDao;
-import com.sayee.sxsy.modules.machine.entity.MachineAccount;
 import com.sayee.sxsy.modules.oa.entity.OaNotify;
 import com.sayee.sxsy.modules.oa.service.OaNotifyService;
-import com.sayee.sxsy.modules.registration.entity.ReportRegistration;
+import com.sayee.sxsy.modules.sys.entity.Office;
 import com.sayee.sxsy.modules.sys.entity.User;
 import com.sayee.sxsy.modules.sys.utils.UserUtils;
 import com.sayee.sxsy.test.dao.TestTreeDao;
@@ -50,7 +48,6 @@ import java.util.*;
 public class ComplaintMainController extends BaseController {
     @Autowired
     private OaNotifyService oaNotifyService;
-
 	@Autowired
 	private TestTreeDao testTreeDao;
 
@@ -59,7 +56,7 @@ public class ComplaintMainController extends BaseController {
 
 	@Autowired
 	private ComplaintMainService complaintMainService;
-
+	
 	@ModelAttribute
 	public ComplaintMain get(@RequestParam(required=false) String id) {
 		ComplaintMain entity = null;
@@ -132,9 +129,9 @@ public class ComplaintMainController extends BaseController {
 
 	}
 	/*
-	 * 后台首页
-	 *
-	 * */
+	* 后台首页
+	*
+	* */
 	@RequestMapping(value = "index")
 	public String index(OaNotify oaNotify,ComplaintMain complaintMain, HttpServletRequest request, HttpServletResponse response, Model model) {
 		List<ComplaintMain> list=complaintMainDao.selfList(UserUtils.getUser().getLoginName());
@@ -150,8 +147,8 @@ public class ComplaintMainController extends BaseController {
 		model.addAttribute("sum", list.size()+ywc);
 		model.addAttribute("list", list.size()>10 ? list.subList(0,10) : list);
 		List<String> aa=ObjectUtils.convert(UserUtils.getRoleList().toArray(),"enname",true);
-		if (  (  aa.contains("director") ||aa.contains("accounting") || aa.contains("InformationDirector") || aa.contains("deputyDirector")|| aa.contains("OfficeSupervisor")|| aa.contains("deputyDirectorOfOffice")|| aa.contains("MedicalExpert")|| aa.contains("commission")|| aa.contains("y_dept")
-				|| aa.contains("complaint") || aa.contains("    wjwgzzry") || aa.contains("logisticsDepartment") || aa.contains("Staff") || aa.contains("data_clerk") || aa.contains("DirectorOfMediation") || aa.contains("DepartmentHead") || aa.contains("DepartmentDeputyDirector") || aa.contains("zwjw")) && list.isEmpty()){
+		if (  (  aa.contains("quanshengtiaojiebuzhuren") ||aa.contains("yitiaoweizhuren") || aa.contains("yitiaoweifuzhuren")|| aa.contains("yiyuantousubanrenyuan")|| aa.contains("yiyuanxingzhengrenyuan")|| aa.contains("gongzuozhanzhuren/fuzhuren")|| aa.contains("shengzhitiaojiebuzhuren/fuzhuren")|| aa.contains("jinzhuyiyuantiaojieyuan")
+				|| aa.contains("jinzhuxingzhengbumenzhuren") || aa.contains("xingzhengbumenrenyuan") ) && list.isEmpty()){
 			int year=Integer.valueOf(DateUtils.getYear())+1;
 			List newList=complaintMainDao.getMachine(DateUtils.getYear(),String.valueOf(year));
 			complaintMainService.format(newList);
@@ -170,6 +167,14 @@ public class ComplaintMainController extends BaseController {
 		model.addAttribute("notifyPage", notifyPage);
 		model.addAttribute("notifyCount", notifyCount);
 		return "modules/home/index";
+//		complaintMain.setUser(UserUtils.getUser());
+//        Page<ComplaintMain> page = complaintMainService.selfList(new Page<ComplaintMain>(request, response), complaintMain);
+//        page.setList(page.getList().size()>10 ? page.getList().subList(0,10) : page.getList());
+//        model.addAttribute("page", page);
+//        Page<OaNotify> notifyPage = oaNotifyService.find(new Page<OaNotify>(request, response), oaNotify);
+//        notifyPage.setList(notifyPage.getList().size()>10 ? notifyPage.getList().subList(0,10) : notifyPage.getList());
+//        model.addAttribute("notifyPage", notifyPage);
+//		return "modules/home/index";
 	}
 
 
@@ -226,7 +231,7 @@ public class ComplaintMainController extends BaseController {
 		String endMonthDate=request.getParameter("endMonthDate");
 		String newType=request.getParameter("newType");
         User user=UserUtils.getUser();
-        model.addAttribute("yearDate", year );
+		model.addAttribute("yearDate", year );
         model.addAttribute("beginMonthDate", beginMonthDate );
         model.addAttribute("endMonthDate", endMonthDate );
 		if (StringUtils.isNotBlank(newType)){
@@ -275,6 +280,7 @@ public class ComplaintMainController extends BaseController {
 				for (Map sumMap:list) {
 					sum+=MapUtils.getInteger(sumMap,"num",0);
 				}
+				System.out.println("=========================="+sum);
 				//根据总数 得到百分比
 				for (Map ratioMap:list) {
 					// 创建一个数值格式化对象
@@ -287,6 +293,13 @@ public class ComplaintMainController extends BaseController {
 
                 model.addAttribute("dutyName", this.convert(list.toArray(),"ratio",true) );
                 String toJson = JsonUtil.toJson(list);
+                List name = this.convert(list.toArray(), "name", true);
+                List newName = new ArrayList();
+                for (Object o : name) {
+                    newName.add("'"+o+"'");
+                }
+                System.out.println(newName);
+                model.addAttribute("name", name);
                 model.addAttribute("dutyNum",toJson);
                 model.addAttribute("dutyTableInfo",list);
 				model.addAttribute("yearDate", year );
@@ -346,7 +359,7 @@ public class ComplaintMainController extends BaseController {
 			if("jfjd".equals(commonType)){//调解数据统计下的  纠纷纠纷焦点 分析
 				//查询当前登录人 有几条 数据时 在 结案总结 之后
 				List<Map<String,Object>> list=complaintMainService.findTypeInfo(user,year,beginMonthDate,endMonthDate,type);
-				list.sort(new Comparator<Map<String, Object>>() {
+                list.sort(new Comparator<Map<String, Object>>() {
 					@Override
 					public int compare(Map<String, Object> o1, Map<String, Object> o2) {
 						Integer i1 = MapUtils.getInteger(o1,"num",0);
@@ -484,7 +497,6 @@ public class ComplaintMainController extends BaseController {
 				else {
 					dList=complaintMainService.findDepartment(user,year,beginMonthDate,endMonthDate,type);
 				}
-				System.out.println(dList);
 				//循环 得到总数
 				int sum=0;
 				for (Map sumMap:dList) {

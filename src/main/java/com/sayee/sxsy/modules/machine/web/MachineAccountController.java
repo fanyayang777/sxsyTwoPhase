@@ -70,7 +70,7 @@ public class MachineAccountController extends BaseController {
 		//当前登录人 角色  如果是 主任 副主任，查询他们工作站下面人员的  台账  ；其余角色查询全部
 		Page<MachineAccount> page =new Page<MachineAccount>();
         User user=UserUtils.getUser();
-		if (!aa.contains("dept") &&(  aa.contains("deputyDirector") ||aa.contains("director") || aa.contains("accounting"))  ){
+		if (!aa.contains("dept") &&(  aa.contains("gongzuozhanzhuren/fuzhuren"))  ){//  deputyDirector director accounting
 			//主任 副主任 看自己工作站的人员 台账
 			if (user.getOffice()!=null && user.getOffice().getName().indexOf("工作站")!=-1 ){
 				machineAccount.setDeptId(user.getOffice().getId());

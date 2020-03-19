@@ -237,36 +237,32 @@ public class ComplaintMainService extends CrudService<ComplaintMainDao, Complain
 	}
 
 	public List<Map<String, Object>> findTypeInfo(User user,String year,String beginMonthDate,String endMonthDate,String type) {
-		String officeId="";
-		if (user.getRoleList().contains("yydept")){
-			officeId=user.getOffice().getId();
-		}
+
+		String areaId =UserUtils.getUser().getCompany().getArea().getId();
 		if (StringUtils.isBlank(year) && StringUtils.isBlank(beginMonthDate) && StringUtils.isBlank(endMonthDate)){
 			year= DateUtils.getYear();
 		}
 		List<Map<String, Object>> list=null;
 		if ("tj".equals(type)){
-			list=complaintMainDao.findTypeInfoTj(year,beginMonthDate,endMonthDate,officeId);
+			list=complaintMainDao.findTypeInfoTj(year,beginMonthDate,endMonthDate,areaId);
 		}else{
-			list=complaintMainDao.findTypeInfo(year,beginMonthDate,endMonthDate,officeId);
+			list=complaintMainDao.findTypeInfo(year,beginMonthDate,endMonthDate,areaId);
 		}
 		return list;
 	}
 
 	public List<Map<String, Object>> findGrade(User user,String year,String beginMonthDate,String endMonthDate,String type) {
-		String officeId="";
-		if (user.getRoleList().contains("yydept")){
-			officeId=user.getOffice().getId();
-		}
+	    String areaId=UserUtils.getUser().getCompany().getArea().getId();
 		if (StringUtils.isBlank(year) && StringUtils.isBlank(beginMonthDate) && StringUtils.isBlank(endMonthDate)){
 			year= DateUtils.getYear();
 		}
 		List<Map<String, Object>> list=null;
 		if ("tj".equals(type)){
-			list=complaintMainDao.findGradeTj(year,beginMonthDate,endMonthDate,officeId);
+			list=complaintMainDao.findGradeTj(year,beginMonthDate,endMonthDate,areaId);
 		}else{
-			list=complaintMainDao.findGrade(year,beginMonthDate,endMonthDate,officeId);
+			list=complaintMainDao.findGrade(year,beginMonthDate,endMonthDate,areaId);
 		}
+        System.out.println(list);
 		return list;
 	}
 
@@ -295,18 +291,17 @@ public class ComplaintMainService extends CrudService<ComplaintMainDao, Complain
 	 */
 	@Transactional(readOnly = false)
 	public List<Map<String,Object>> findAreaName (User user,String year,String beginMonthDate,String endMonthDate,String type){
-		String officeId="";
-		if (user.getRoleList().contains("yydept")){
-			officeId=UserUtils.getUser().getOffice().getId();
-		}
+
+			String areaId= UserUtils.getUser().getCompany().getArea().getId();
+		System.out.println(areaId);
 		if(StringUtils.isBlank(year) && StringUtils.isBlank(beginMonthDate) && StringUtils.isBlank(endMonthDate)){
 			year =  DateUtils.getYear();
 		}
 		List<Map<String, Object>> list=null;
 		if ("tj".equals(type)){
-			list=complaintMainDao.findAreaNameTj(year,beginMonthDate,endMonthDate,officeId);
+			list=complaintMainDao.findAreaNameTj(year,beginMonthDate,endMonthDate,areaId);
 		}else{
-			list=complaintMainDao.findAreaName(year,beginMonthDate,endMonthDate,officeId);
+			list=complaintMainDao.findAreaName(year,beginMonthDate,endMonthDate,areaId);
 		}
 		return list;
 	}
@@ -345,15 +340,14 @@ public class ComplaintMainService extends CrudService<ComplaintMainDao, Complain
 	 * @return
 	 */
 	public List<Map<String,Object>> findDepartment(User user,String year,String beginMonthDate,String endMonthDate,String type){
-		String officeId="";
-		if (user.getRoleList().contains("yydept")){
-			officeId=UserUtils.getUser().getOffice().getId();
-		}
+
+	    String areaId = UserUtils.getUser().getCompany().getArea().getId();
+        System.out.println(areaId);
 		List<Map<String, Object>> list=null;
 		if ("tj".equals(type)){
-			list=complaintMainDao.findDepartmentTj(year,beginMonthDate,endMonthDate,officeId);
+			list=complaintMainDao.findDepartmentTj(year,beginMonthDate,endMonthDate,areaId);
 		}else{
-			list=complaintMainDao.findDepartment(year,beginMonthDate,endMonthDate,officeId);
+			list=complaintMainDao.findDepartment(year,beginMonthDate,endMonthDate,areaId);
 		}
 		return list;
 	}
@@ -373,20 +367,19 @@ public class ComplaintMainService extends CrudService<ComplaintMainDao, Complain
 	 * @return
 	 */
 	public List<Map<String, Object>> findDuty(User user,String year,String beginMonthDate,String endMonthDate,String type) {
-		String officeId="";
-		if (user.getRoleList().contains("yydept")){
-			officeId=user.getOffice().getId();
-		}
-		if (StringUtils.isBlank(year) && StringUtils.isBlank(beginMonthDate) && StringUtils.isBlank(endMonthDate)){
+		String areaId = UserUtils.getUser().getCompany().getArea().getId();
+        System.out.println(areaId);
+        if (StringUtils.isBlank(year) && StringUtils.isBlank(beginMonthDate) && StringUtils.isBlank(endMonthDate)){
 			year= DateUtils.getYear();
 		}
 		List<Map<String, Object>> list=null;
 		if ("tj".equals(type)){
-			list=complaintMainDao.findDutyTj(year,beginMonthDate,endMonthDate,officeId);
+			list=complaintMainDao.findDutyTj(year,beginMonthDate,endMonthDate,areaId);
 		}else{
 			//list=complaintMainDao.findTypeInfo(year,beginMonthDate,endMonthDate);
 		}
-		return list;
+        System.out.println(list);
+        return list;
 	}
 
 	/***
@@ -396,20 +389,21 @@ public class ComplaintMainService extends CrudService<ComplaintMainDao, Complain
 	 * @return
 	 */
 	public Map<String, Object> findAmountRatio(User user,String year,String beginMonthDate,String endMonthDate,String type) {
-		String officeId="";
-		if (user.getRoleList().contains("yydept")){
-			officeId=user.getOffice().getId();
-		}
+
+
+	    String areaId=UserUtils.getUser().getCompany().getArea().getId();
+
 		if (StringUtils.isBlank(year) && StringUtils.isBlank(beginMonthDate) && StringUtils.isBlank(endMonthDate)){
 			year= DateUtils.getYear();
 		}
 		Map<String, Object> map=null;
 		if ("tj".equals(type)){
-			map=complaintMainDao.findAmountRatioTj(year,beginMonthDate,endMonthDate,officeId);
+			map=complaintMainDao.findAmountRatioTj(year,beginMonthDate,endMonthDate,areaId);
 		}else{
 			//list=complaintMainDao.findTypeInfo(year,beginMonthDate,endMonthDate);
 		}
-		return map;
+        System.out.println(map);
+        return map;
 	}
 
 	public List<ComplaintMain> getRepeat(String card, String hospital,String complaintMainId) {

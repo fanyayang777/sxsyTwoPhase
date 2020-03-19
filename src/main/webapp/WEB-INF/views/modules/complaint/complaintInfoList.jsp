@@ -57,10 +57,24 @@
 	</form>
 </div>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/complaint/complaintInfo/">投诉接待列表</a></li>
-		<shiro:hasPermission name="complaint:complaintInfo:edit"><li><a href="${ctx}/complaint/complaintInfo/form">投诉接待添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/complaint/complaintInfo/">
+			<c:choose>
+				<c:when test="${ node eq 'sjy'}">
+					数据员审核列表
+				</c:when>
+				<c:when test="${ node eq 'fpy'}">
+					分配员列表
+				</c:when>
+				<c:otherwise>
+					投诉接待列表
+				</c:otherwise>
+			</c:choose>
+		</a></li>
+		<c:if test="${node ne 'sjy' and node ne 'fpy'}">
+			<shiro:hasPermission name="complaint:complaintInfo:edit"><li><a href="${ctx}/complaint/complaintInfo/form">投诉接待添加</a></li></shiro:hasPermission>
+		</c:if>
 	</ul>
-	<form:form id="searchForm" modelAttribute="complaintInfo" action="${ctx}/complaint/complaintInfo/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="complaintInfo" action="${ctx}/complaint/complaintInfo/?node=${node}" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>

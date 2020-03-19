@@ -66,8 +66,15 @@ public class OfficeController extends BaseController {
 	@RequestMapping(value = {"list"})
 	public String list(HttpServletRequest request,Office office, Model model) {
 		String officeType=request.getParameter("officeType");
+		String areaId = request.getParameter("area.id");
 		if (StringUtils.isNotBlank(officeType) && officeType!=null){
 			office.setOfficeType(officeType);
+		}
+		if (StringUtils.isNotBlank(areaId)){
+			office.setArea(new Area());
+			office.getArea().setAreaId(areaId);
+		}else {
+			office.setArea(UserUtils.getUser().getCompany().getArea());
 		}
 		List<Office> list = officeService.findList(office);
 
@@ -191,10 +198,9 @@ public class OfficeController extends BaseController {
 	public List<Map<String, Object>> treeData(@RequestParam(required=false) String extId, @RequestParam(required=false) String type,
 											  @RequestParam(required=false) Long grade, @RequestParam(required=false) Boolean isAll,@RequestParam(required=false) String officeType,@RequestParam(required=false) String pid,@RequestParam(required=false) String next, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
-		List<Office> list = officeService.findList(isAll);
+		List<Office> list = officeService.findList(isAll,officeType);
 		for (int i=0; i<list.size(); i++){
 			Office e = list.get(i);
-			System.out.println(e.getParent().getName());
 			if ((StringUtils.isBlank(extId) || (extId!=null && !extId.equals(e.getId()) && e.getParentIds().indexOf(","+extId+",")==-1))
 					&& (type == null || (type != null && (type.equals("1") ? type.equals(e.getType()) : true)))
 					&& (grade == null || (grade != null && Integer.parseInt(e.getGrade()) <= grade.intValue()))
@@ -251,8 +257,11 @@ public class OfficeController extends BaseController {
 
 
 				}
+
 			}
+
 		}
+		System.out.println(mapList);
 		return mapList;
 	}
 }

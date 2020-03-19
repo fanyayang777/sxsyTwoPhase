@@ -50,22 +50,22 @@ public class MediateApiController {
     private OrganizationApiService organizationApiService;
     @Autowired
     private OfficeApiService officeApiService;
-    @Autowired
-    private AuditAcceptanceService auditAcceptanceService;
-    @Autowired
-    private ComplaintMainDetailService complaintMainDetailService;//投诉接待
-    @Autowired
-    private InvestigateEvidenceService investigateEvidenceService;//调查取证
-    @Autowired
-    private MediateEvidenceService mediateEvidenceService;//质证调解
-    @Autowired
-    private AssessAppraisalService assessAppraisalService;//评估鉴定
-    @Autowired
-    private ReachMediateService reachMediateService;//达成调解
-    @Autowired
-    private SignAgreementService signAgreementService;//签署协议
-    @Autowired
-    private PerformAgreementService performAgreementService;//履行协议
+//    @Autowired
+//    private AuditAcceptanceService auditAcceptanceService;
+//    @Autowired
+//    private ComplaintMainDetailService complaintMainDetailService;//投诉接待
+//    @Autowired
+//    private InvestigateEvidenceService investigateEvidenceService;//调查取证
+//    @Autowired
+//    private MediateEvidenceService mediateEvidenceService;//质证调解
+//    @Autowired
+//    private AssessAppraisalService assessAppraisalService;//评估鉴定
+//    @Autowired
+//    private ReachMediateService reachMediateService;//达成调解
+//    @Autowired
+//    private SignAgreementService signAgreementService;//签署协议
+//    @Autowired
+//    private PerformAgreementService performAgreementService;//履行协议
     @Autowired
     private ActTaskService actTaskService;//流程
     @Autowired
@@ -167,8 +167,8 @@ public class MediateApiController {
 
     @Autowired
     private MediateReportApiService mediateReportApiService;
-    @Autowired
-    private MachineAccountService machineAccountService;
+//    @Autowired
+//    private MachineAccountService machineAccountService;
 
     /*报案登记*/
     @RequestMapping("doreportregistration")

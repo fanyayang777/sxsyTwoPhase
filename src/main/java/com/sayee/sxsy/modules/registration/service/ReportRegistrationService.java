@@ -67,9 +67,10 @@ public class ReportRegistrationService extends CrudService<ReportRegistrationDao
 		List<Role> roleList=UserUtils.getRoleList();//获取当前登陆人角色
 		List<String> aa= ObjectUtils.convert(roleList.toArray(),"enname",true);
 		User user=UserUtils.getUser();
-		if (user.isAdmin() || aa.contains("commission") || aa.contains("DirectorOfMediation")){//是管理员  医调委主任 调解部副主任  查看全部
-			//!aa.contains("dept") &&
-		}else if((  aa.contains("deputyDirector") ||aa.contains("director")) ){
+		if (user.isAdmin() || aa.contains("quanshengtiaojiebuzhuren") || aa.contains("yitiaoweizhuren")
+				|| aa.contains("yitiaoweifuzhuren")|| aa.contains("shengzhitiaojiebuzhuren/fuzhuren")|| aa.contains("yitiaoweizhuren")
+		){	//!aa.contains("dept") &&
+		}else if((  aa.contains("gongzuozhanzhuren/fuzhuren")) ){
 			//工作站 主任 副主任 看自己 的员工
 			List<String> list=new ArrayList<String>();
 			List<User> listUser=UserUtils.getUserByOffice(user.getOffice().getId());

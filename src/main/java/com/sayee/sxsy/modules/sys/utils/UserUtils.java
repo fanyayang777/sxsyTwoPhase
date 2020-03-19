@@ -275,6 +275,10 @@ public class UserUtils {
 	 * 获取当前用户有权限访问的部门
 	 * @return
 	 */
+	/**
+	 * 获取当前用户有权限访问的部门
+	 * @return
+	 */
 	public static List<Office> getOfficeList(){
 		@SuppressWarnings("unchecked")
 		List<Office> officeList = (List<Office>)getCache(CACHE_OFFICE_LIST);
@@ -285,12 +289,42 @@ public class UserUtils {
 			}else{
 				Office office = new Office();
 				office.getSqlMap().put("dsf", BaseService.dataScopeFilter(user, "a", ""));
+				office.setArea(UserUtils.getUser().getCompany().getArea());
 				officeList = officeDao.findList(office);
+				System.out.println(officeList);
 			}
 			putCache(CACHE_OFFICE_LIST, officeList);
 		}
 		return officeList;
 	}
+
+
+    public static List<Office> getOfficeListType(String officeType){
+        @SuppressWarnings("unchecked")
+        List<Office> officeList =new ArrayList<>();
+        //if (officeList == null){
+        User user = getUser();
+        if (user.isAdmin()){
+            officeList = officeDao.findAllList(new Office());
+        }else{
+            Office office = new Office();
+            office.getSqlMap().put("dsf", BaseService.dataScopeFilter(user, "a", ""));
+            office.setArea(UserUtils.getUser().getCompany().getArea());
+            office.setOfficeType(officeType);
+            if(officeType.equals("1")){
+                officeList = officeDao.findListOne(office);
+            }else if(officeType.equals("2")){
+                officeList = officeDao.findListTwo(office);
+            }else if(officeType.equals("3")){
+                officeList = officeDao.findListThree(office);
+            }else{
+                officeList = officeDao.findList(office);
+            }
+            System.out.println("officeList结果："+officeList);
+        }
+        //}
+        return officeList;
+    }
 
 
 
@@ -303,10 +337,13 @@ public class UserUtils {
 		List<Office> officeList = (List<Office>)getCache(CACHE_OFFICE_ALL_LIST);
 		if (officeList == null){
 			Office office = new Office();
-			String areaId = UserUtils.getUser().getCompany().getArea().getId();
-			office.setArea(new Area());
-			office.getArea().setAreaId(areaId);
-			officeList = officeDao.findAllList(office);
+			Area area = UserUtils.getUser().getCompany().getArea();
+			if(area.getId().equals("2")){
+				officeList = officeDao.findAllList(office);
+			}else {
+				office.setArea(area);
+				officeList = officeDao.findAllList(office);
+			}
 		}
 		return officeList;
 	}

@@ -42,6 +42,7 @@
 		a.deputy_person AS "deputyPerson.id",
 		p.name AS "parent.name",
 		ar.name AS "area.name",
+		ar.id AS "area.id",
 		ar.parent_ids AS "area.parentIds",
 		pp.name AS "primaryPerson.name",
 		dp.name AS "deputyPerson.name",
@@ -64,6 +65,49 @@
 		WHERE a.id = #{id}
 	</select>
 
+    <select id="findListOne" resultType="Office">
+        SELECT
+        <include refid="officeColumns"/>
+        FROM SYS_OFFICE a
+        <include refid="officeJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        ${sqlMap.dsf} AND
+        (a.office_type= #{officeType} OR a.id=#{currentUser.office.id})
+        <if test="area!=null and area.areaId!=null and area.areaId!=''">
+            AND a.area_id in (SELECT id FROM SYS_AREA WHERE PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or id= #{area.areaId})
+        </if>
+        ORDER BY a.code
+    </select>
+
+    <select id="findListTwo" resultType="Office">
+        SELECT
+        <include refid="officeColumns"/>
+        FROM SYS_OFFICE a
+        <include refid="officeJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        <!-- 数据范围过滤 -->
+        <if test="area!=null and area.areaId!=null and area.areaId!=''">
+            AND ar.PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or ar.id= #{area.areaId}
+        </if>
+        ORDER BY a.code
+    </select>
+
+    <select id="findListThree" resultType="Office">
+        SELECT
+        <include refid="officeColumns"/>
+        FROM SYS_OFFICE a
+        <include refid="officeJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        <!-- 数据范围过滤 -->
+        AND a.office_type= #{officeType}
+
+
+        <if test="area!=null and area.areaId!=null and area.areaId!=''">
+            AND a.area_id in (SELECT id FROM SYS_AREA WHERE PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or id= #{area.areaId})
+        </if>
+        ORDER BY a.code
+    </select>
+
 	<select id="findList" resultType="Office">
 		SELECT
 		<include refid="officeColumns"/>
@@ -72,8 +116,11 @@
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
 		<!-- 数据范围过滤 -->
 		${sqlMap.dsf}
-		OR a.id = #{currentUser.office.id}
-		AND a.office_type= #{officeType}
+		OR (a.id = #{currentUser.office.id}
+		AND a.office_type= #{officeType} )
+        <if test="area!=null and area.areaId!=null and area.areaId!=''">
+            AND a.area_id in (SELECT id FROM SYS_AREA WHERE PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or id= #{area.areaId})
+        </if>
 		ORDER BY a.code
 	</select>
 
@@ -84,7 +131,7 @@
 		<include refid="officeJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
 		<if test="area!=null and area.areaId!=null and area.areaId!=''">
-			AND a.area_id in (SELECT id FROM sys_area WHERE PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or id= #{area.areaId})
+			AND a.area_id in (SELECT id FROM SYS_AREA WHERE PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or id= #{area.areaId})
 		</if>
 		ORDER BY a.code
 	</select>
@@ -96,17 +143,18 @@
 		<include refid="officeJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds} AND a.office_type= #{officeType}
 		<if test="area!=null and area.areaId!=null and area.areaId!=''">
-			AND a.area_id in (SELECT id FROM sys_area WHERE PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or id= #{area.areaId})
+			AND a.area_id in (SELECT id FROM SYS_AREA WHERE PARENT_ID LIKE CONCAT('%', #{area.areaId}, '%') or id= #{area.areaId})
 		</if>
 		<if test="name!=null and name!=''">
 			AND a.name LIKE CONCAT('%', #{name}, '%')
 		</if>
-		<if test="area.name!=null and area.name!=''">
+		<if test="area!=null and area.name!=null and area.name!=''">
 			AND ar.name LIKE CONCAT('%', #{area.name}, '%')
 
 		</if>
 		ORDER BY a.code
 	</select>
+
 
 	<select id="rootFindByParentIdsLike" resultType="Office">
 		SELECT

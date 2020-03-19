@@ -168,18 +168,17 @@
 			<if test="receptionDate != null and receptionDate != '' or receptionEndDate != null and receptionEndDate != ''">
 				AND (a.reception_date BETWEEN #{receptionDate} AND #{receptionEndDate})
 			</if>
-            <if test="node == null or node == ''">
-                <if test="(user != null and user.id != null and user.id != '') and (node == null or node == '') ">
-                    AND a.create_by = #{user.id}
-                </if>
-                OR (tt.TASK_DEF_KEY_='enrollment' AND tt.ASSIGNEE_ LIKE CONCAT('%', #{assignee}, '%'))
-            </if>
-
 			<if test="list != null and list != ''">
 				AND a.create_by in
 				<foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
 					#{id}
 				</foreach>
+			</if>
+			<if test="node == null or node == ''">
+				<if test="(user != null and user.id != null and user.id != '') and (node == null or node == '') ">
+					AND a.create_by = #{user.id}
+				</if>
+				OR (tt.TASK_DEF_KEY_='enrollment' AND tt.ASSIGNEE_ LIKE CONCAT('%', #{assignee}, '%'))
 			</if>
 		</where>
 		GROUP BY a.complaint_id
