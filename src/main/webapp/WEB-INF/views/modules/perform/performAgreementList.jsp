@@ -122,7 +122,7 @@
 						${performAgreement.complaintMain.hospital.name}
 				</td>
 				<td style="text-align: center;">
-						${performAgreement.auditAcceptance.insuranceCompany}
+						${fns:getDictLabel(performAgreement.auditAcceptance.insuranceCompany, 'sys_office_form',performAgreement.auditAcceptance.insuranceCompany)}
 				</td>
 				<td style="text-align: center;">
 						${performAgreement.auditAcceptance.treatmentOutcome}

@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sayee.sxsy.newModules.complaintman.dao.ComplaintMainMapper" >
+  <resultMap id="BaseResultMap" type="com.sayee.sxsy.newModules.complaintman.entity.ComplaintMain" >
+    <id column="COMPLAINT_MAIN_ID" property="complaintMainId" jdbcType="VARCHAR" />
+    <result column="CASE_NUMBER" property="caseNumber" jdbcType="VARCHAR" />
+    <result column="PATIENT_NAME" property="patientName" jdbcType="VARCHAR" />
+    <result column="PATIENT_SEX" property="patientSex" jdbcType="VARCHAR" />
+    <result column="PATIENT_AGE" property="patientAge" jdbcType="TINYINT" />
+    <result column="PATIENT_CARD" property="patientCard" jdbcType="VARCHAR" />
+    <result column="PATIENT_MOBILE" property="patientMobile" jdbcType="CHAR" />
+    <result column="INVOLVE_HOSPITAL" property="involveHospital" jdbcType="VARCHAR" />
+    <result column="HOSPITAL_LEVEL" property="hospitalLevel" jdbcType="CHAR" />
+    <result column="HOSPITAL_GRADE" property="hospitalGrade" jdbcType="CHAR" />
+    <result column="INVOLVE_DEPARTMENT" property="involveDepartment" jdbcType="VARCHAR" />
+    <result column="INVOLVE_EMPLOYEE" property="involveEmployee" jdbcType="VARCHAR" />
+    <result column="IS_MAJOR" property="isMajor" jdbcType="VARCHAR" />
+    <result column="PROC_INS_ID" property="procInsId" jdbcType="VARCHAR" />
+    <result column="SOURCE" property="source" jdbcType="CHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    COMPLAINT_MAIN_ID, CASE_NUMBER, PATIENT_NAME, PATIENT_SEX, PATIENT_AGE, PATIENT_CARD, 
+    PATIENT_MOBILE, INVOLVE_HOSPITAL, HOSPITAL_LEVEL, HOSPITAL_GRADE, INVOLVE_DEPARTMENT, 
+    INVOLVE_EMPLOYEE, IS_MAJOR, PROC_INS_ID, SOURCE, CREATE_BY, CREATE_DATE, UPDATE_BY, 
+    UPDATE_DATE, DEL_FLAG
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sayee.sxsy.newModules.complaintman.entity.ComplaintMainExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from COMPLAINT_MAIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from COMPLAINT_MAIN
+    where COMPLAINT_MAIN_ID = #{complaintMainId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from COMPLAINT_MAIN
+    where COMPLAINT_MAIN_ID = #{complaintMainId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sayee.sxsy.newModules.complaintman.entity.ComplaintMainExample" >
+    delete from COMPLAINT_MAIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sayee.sxsy.newModules.complaintman.entity.ComplaintMain" >
+    insert into COMPLAINT_MAIN (COMPLAINT_MAIN_ID, CASE_NUMBER, PATIENT_NAME, 
+      PATIENT_SEX, PATIENT_AGE, PATIENT_CARD, 
+      PATIENT_MOBILE, INVOLVE_HOSPITAL, HOSPITAL_LEVEL, 
+      HOSPITAL_GRADE, INVOLVE_DEPARTMENT, INVOLVE_EMPLOYEE, 
+      IS_MAJOR, PROC_INS_ID, SOURCE, 
+      CREATE_BY, CREATE_DATE, UPDATE_BY, 
+      UPDATE_DATE, DEL_FLAG)
+    values (#{complaintMainId,jdbcType=VARCHAR}, #{caseNumber,jdbcType=VARCHAR}, #{patientName,jdbcType=VARCHAR}, 
+      #{patientSex,jdbcType=VARCHAR}, #{patientAge,jdbcType=TINYINT}, #{patientCard,jdbcType=VARCHAR}, 
+      #{patientMobile,jdbcType=CHAR}, #{involveHospital,jdbcType=VARCHAR}, #{hospitalLevel,jdbcType=CHAR}, 
+      #{hospitalGrade,jdbcType=CHAR}, #{involveDepartment,jdbcType=VARCHAR}, #{involveEmployee,jdbcType=VARCHAR}, 
+      #{isMajor,jdbcType=VARCHAR}, #{procInsId,jdbcType=VARCHAR}, #{source,jdbcType=CHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sayee.sxsy.newModules.complaintman.entity.ComplaintMain" >
+    insert into COMPLAINT_MAIN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="complaintMainId != null" >
+        COMPLAINT_MAIN_ID,
+      </if>
+      <if test="caseNumber != null" >
+        CASE_NUMBER,
+      </if>
+      <if test="patientName != null" >
+        PATIENT_NAME,
+      </if>
+      <if test="patientSex != null" >
+        PATIENT_SEX,
+      </if>
+      <if test="patientAge != null" >
+        PATIENT_AGE,
+      </if>
+      <if test="patientCard != null" >
+        PATIENT_CARD,
+      </if>
+      <if test="patientMobile != null" >
+        PATIENT_MOBILE,
+      </if>
+      <if test="involveHospital != null" >
+        INVOLVE_HOSPITAL,
+      </if>
+      <if test="hospitalLevel != null" >
+        HOSPITAL_LEVEL,
+      </if>
+      <if test="hospitalGrade != null" >
+        HOSPITAL_GRADE,
+      </if>
+      <if test="involveDepartment != null" >
+        INVOLVE_DEPARTMENT,
+      </if>
+      <if test="involveEmployee != null" >
+        INVOLVE_EMPLOYEE,
+      </if>
+      <if test="isMajor != null" >
+        IS_MAJOR,
+      </if>
+      <if test="procInsId != null" >
+        PROC_INS_ID,
+      </if>
+      <if test="source != null" >
+        SOURCE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="complaintMainId != null" >
+        #{complaintMainId,jdbcType=VARCHAR},
+      </if>
+      <if test="caseNumber != null" >
+        #{caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName != null" >
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="patientSex != null" >
+        #{patientSex,jdbcType=VARCHAR},
+      </if>
+      <if test="patientAge != null" >
+        #{patientAge,jdbcType=TINYINT},
+      </if>
+      <if test="patientCard != null" >
+        #{patientCard,jdbcType=VARCHAR},
+      </if>
+      <if test="patientMobile != null" >
+        #{patientMobile,jdbcType=CHAR},
+      </if>
+      <if test="involveHospital != null" >
+        #{involveHospital,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalLevel != null" >
+        #{hospitalLevel,jdbcType=CHAR},
+      </if>
+      <if test="hospitalGrade != null" >
+        #{hospitalGrade,jdbcType=CHAR},
+      </if>
+      <if test="involveDepartment != null" >
+        #{involveDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="involveEmployee != null" >
+        #{involveEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="isMajor != null" >
+        #{isMajor,jdbcType=VARCHAR},
+      </if>
+      <if test="procInsId != null" >
+        #{procInsId,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=CHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sayee.sxsy.newModules.complaintman.entity.ComplaintMainExample" resultType="java.lang.Integer" >
+    select count(*) from COMPLAINT_MAIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update COMPLAINT_MAIN
+    <set >
+      <if test="record.complaintMainId != null" >
+        COMPLAINT_MAIN_ID = #{record.complaintMainId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.caseNumber != null" >
+        CASE_NUMBER = #{record.caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientName != null" >
+        PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientSex != null" >
+        PATIENT_SEX = #{record.patientSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientAge != null" >
+        PATIENT_AGE = #{record.patientAge,jdbcType=TINYINT},
+      </if>
+      <if test="record.patientCard != null" >
+        PATIENT_CARD = #{record.patientCard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientMobile != null" >
+        PATIENT_MOBILE = #{record.patientMobile,jdbcType=CHAR},
+      </if>
+      <if test="record.involveHospital != null" >
+        INVOLVE_HOSPITAL = #{record.involveHospital,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hospitalLevel != null" >
+        HOSPITAL_LEVEL = #{record.hospitalLevel,jdbcType=CHAR},
+      </if>
+      <if test="record.hospitalGrade != null" >
+        HOSPITAL_GRADE = #{record.hospitalGrade,jdbcType=CHAR},
+      </if>
+      <if test="record.involveDepartment != null" >
+        INVOLVE_DEPARTMENT = #{record.involveDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.involveEmployee != null" >
+        INVOLVE_EMPLOYEE = #{record.involveEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isMajor != null" >
+        IS_MAJOR = #{record.isMajor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.procInsId != null" >
+        PROC_INS_ID = #{record.procInsId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.source != null" >
+        SOURCE = #{record.source,jdbcType=CHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null" >
+        DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update COMPLAINT_MAIN
+    set COMPLAINT_MAIN_ID = #{record.complaintMainId,jdbcType=VARCHAR},
+      CASE_NUMBER = #{record.caseNumber,jdbcType=VARCHAR},
+      PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      PATIENT_SEX = #{record.patientSex,jdbcType=VARCHAR},
+      PATIENT_AGE = #{record.patientAge,jdbcType=TINYINT},
+      PATIENT_CARD = #{record.patientCard,jdbcType=VARCHAR},
+      PATIENT_MOBILE = #{record.patientMobile,jdbcType=CHAR},
+      INVOLVE_HOSPITAL = #{record.involveHospital,jdbcType=VARCHAR},
+      HOSPITAL_LEVEL = #{record.hospitalLevel,jdbcType=CHAR},
+      HOSPITAL_GRADE = #{record.hospitalGrade,jdbcType=CHAR},
+      INVOLVE_DEPARTMENT = #{record.involveDepartment,jdbcType=VARCHAR},
+      INVOLVE_EMPLOYEE = #{record.involveEmployee,jdbcType=VARCHAR},
+      IS_MAJOR = #{record.isMajor,jdbcType=VARCHAR},
+      PROC_INS_ID = #{record.procInsId,jdbcType=VARCHAR},
+      SOURCE = #{record.source,jdbcType=CHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sayee.sxsy.newModules.complaintman.entity.ComplaintMain" >
+    update COMPLAINT_MAIN
+    <set >
+      <if test="caseNumber != null" >
+        CASE_NUMBER = #{caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName != null" >
+        PATIENT_NAME = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="patientSex != null" >
+        PATIENT_SEX = #{patientSex,jdbcType=VARCHAR},
+      </if>
+      <if test="patientAge != null" >
+        PATIENT_AGE = #{patientAge,jdbcType=TINYINT},
+      </if>
+      <if test="patientCard != null" >
+        PATIENT_CARD = #{patientCard,jdbcType=VARCHAR},
+      </if>
+      <if test="patientMobile != null" >
+        PATIENT_MOBILE = #{patientMobile,jdbcType=CHAR},
+      </if>
+      <if test="involveHospital != null" >
+        INVOLVE_HOSPITAL = #{involveHospital,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalLevel != null" >
+        HOSPITAL_LEVEL = #{hospitalLevel,jdbcType=CHAR},
+      </if>
+      <if test="hospitalGrade != null" >
+        HOSPITAL_GRADE = #{hospitalGrade,jdbcType=CHAR},
+      </if>
+      <if test="involveDepartment != null" >
+        INVOLVE_DEPARTMENT = #{involveDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="involveEmployee != null" >
+        INVOLVE_EMPLOYEE = #{involveEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="isMajor != null" >
+        IS_MAJOR = #{isMajor,jdbcType=VARCHAR},
+      </if>
+      <if test="procInsId != null" >
+        PROC_INS_ID = #{procInsId,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        SOURCE = #{source,jdbcType=CHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where COMPLAINT_MAIN_ID = #{complaintMainId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sayee.sxsy.newModules.complaintman.entity.ComplaintMain" >
+    update COMPLAINT_MAIN
+    set CASE_NUMBER = #{caseNumber,jdbcType=VARCHAR},
+      PATIENT_NAME = #{patientName,jdbcType=VARCHAR},
+      PATIENT_SEX = #{patientSex,jdbcType=VARCHAR},
+      PATIENT_AGE = #{patientAge,jdbcType=TINYINT},
+      PATIENT_CARD = #{patientCard,jdbcType=VARCHAR},
+      PATIENT_MOBILE = #{patientMobile,jdbcType=CHAR},
+      INVOLVE_HOSPITAL = #{involveHospital,jdbcType=VARCHAR},
+      HOSPITAL_LEVEL = #{hospitalLevel,jdbcType=CHAR},
+      HOSPITAL_GRADE = #{hospitalGrade,jdbcType=CHAR},
+      INVOLVE_DEPARTMENT = #{involveDepartment,jdbcType=VARCHAR},
+      INVOLVE_EMPLOYEE = #{involveEmployee,jdbcType=VARCHAR},
+      IS_MAJOR = #{isMajor,jdbcType=VARCHAR},
+      PROC_INS_ID = #{procInsId,jdbcType=VARCHAR},
+      SOURCE = #{source,jdbcType=CHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR}
+    where COMPLAINT_MAIN_ID = #{complaintMainId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -113,7 +113,7 @@
 						${mediateEvidence.complaintMain.hospital.name}
 				</td>
 				<td style="text-align:center;">
-						${mediateEvidence.auditAcceptance.insuranceCompany}
+						${fns:getDictLabel(mediateEvidence.auditAcceptance.insuranceCompany, 'sys_office_form',mediateEvidence.auditAcceptance.insuranceCompany)}
 				</td>
 				<td style="text-align:center;">
 						${mediateEvidence.auditAcceptance.treatmentOutcome}

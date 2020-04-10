@@ -4,123 +4,117 @@
 <head>
     <title>统计</title>
     <meta name="decorator" content="default"/>
-    <script src="${ctxStatic}/echarts/dist/echarts.js" type="text/javascript"></script>
+    <script src="${ctxStatic}/echarts/dist/echarts.min.js" type="text/javascript"></script>
     <script src="${ctxStatic}/echarts/dist/echarts-gl.min.js"></script>
-    <script src="${ctxStatic}/echarts/map/js/province/shanxi1.js"></script>
-    <script src="${ctxStatic}/echarts/theme/dark.js"></script>
+    <script src="${ctxStatic}/echarts/map/js/province/shanxi.js"></script>
+    <script src="${ctxStatic}/echarts/dark.js"></script>
 </head>
 <style type="text/css">
-
-   body{
-       background-color: black;
-   }
-
+    body{
+        background-color: white;
+    }
 </style>
 
 
 <body>
-<form:form id="searchForm" action="${ctx}/complaintmain/complaintMain/head?type=${type}&commonType=sl" method="post" class="breadcrumb form-search">
+<form:form id="searchForm" action="${ctx}/complaintmain/complaintMain/head?type=ts" method="post" class="breadcrumb form-search">
     <ul class="ul-form" style="height: 35px;">
-        <li id="year" style="">
+        <li id="year" style="">s
             <label>日期(年)：</label>
             <input id="yearDate" name="yearDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                    value="${yearDate}"
                    onclick="WdatePicker({dateFmt:'yyyy',isShowClear:true}); $('#beginMonthDate').val('');$('#endMonthDate').val('');"/>
         </li>
-        <li id="month" style="">
-            <label>日期(月)：</label>
-            <input id="beginMonthDate" name="beginMonthDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="${beginMonthDate}"
-                   onclick="WdatePicker({dateFmt:'yyyy-MM',isShowClear:true});$('#yearDate').val('');"/>
-            -
-            <input id="endMonthDate" name="endMonthDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="${endMonthDate}"
-                   onclick="WdatePicker({dateFmt:'yyyy-MM',isShowClear:true});$('#yearDate').val('');"/>
+            <%--<li id="month" style="">
+                <label>日期(月)：</label>
+                <input id="beginMonthDate" name="beginMonthDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                       value="${beginMonthDate}"
+                       onclick="WdatePicker({dateFmt:'yyyy-MM',isShowClear:true});$('#yearDate').val('');"/>
+                -
+                <input id="endMonthDate" name="endMonthDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                       value="${endMonthDate}"
+                       onclick="WdatePicker({dateFmt:'yyyy-MM',isShowClear:true});$('#yearDate').val('');"/>
 
-        </li>
+            </li>--%>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="统计"/></li>
     </ul>
 </form:form>
 <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-<div id="aa" style="width: 100%;margin: 0 auto;background : #ffffff ;background-size:cover;"><%--background-image: url('${ctxStatic}/images/background.jpg');--%>
-    <div id="bigMain" style="width: 49%;border: 0px;border-style:solid;height: 450px;float: left;margin-left: 0.5%;margin-top: 0px;"></div>
-    <div id="bb" style="float : right;width: 49%;height:450px;">
-        <table class="table table-striped table-bordered table-condensed">
-            <thead>
-            <tr>
-                <th style="text-align:center;">区域名称</th>
-                <th style="text-align:center;">数量</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach items="${areaTableInfo}" var="info">
-                <tr>
-                    <td style="text-align:center;">
-                            ${info.name}
-                    </td>
-                    <td style="text-align:center;">
-                            ${info.value}
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </div>
-    <div style="clear: both;"></div>
-    <div id="main2" style="width: 49%; border: 0px;border-style:solid;height: 450px;float: left;margin-left: 0.5%;margin-top: 10px;"></div>
-    <div id="cc" style="float : right;width: 49%;height:450px;margin-top: 10px;">
-        <table class="table table-striped table-bordered table-condensed">
-            <thead>
-            <tr>
-                <th style="text-align:center;">时间</th>
-                <th style="text-align:center;">数量</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach items="${monthTableInfo}" var="info">
-                <tr>
-                    <td style="text-align:center;">
-                            ${info.monthDate}
-                    </td>
-                    <td style="text-align:center;">
-                            ${info.num}
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </div>
-    <div style="clear: both;"></div>
-</div>
-<script type="text/javascript">
-    var myChart2 = echarts.init(document.getElementById('main2'), 'dark');
 
+
+<c:if test="${yearDate eq 2018 or yearDate eq 2019}">
+    <div id="aa" style="width: 98%; border: 0px;border-style:solid;height: 400px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/num1.png');background-repeat: no-repeat; background-size :60% 100% ;background-position: center">
+    </div>
+    <div id="main4" style="width: 98%; border: 0px;border-style:solid;height: 450px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/num2.png');background-repeat: no-repeat; background-size :60% 100% ;background-position: center">
+    </div>
+
+    <div id="bb" style="width: 98%; height: 450px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/num3.png');background-repeat: no-repeat; background-size :60% 100% ;background-position: center">
+    </div>
+</c:if>
+<c:if test="${yearDate ne 2018 and yearDate ne 2019}">
+    <div id="aa" style="width: 100%;margin: 0 auto;background : #ffffff ;background-size:cover;"><%--background-image: url('${ctxStatic}/images/background.jpg');--%>
+            <%-- <div id="main1" style="width: 49%; border: 0px;border-style:solid;height: 600px;float: left;margin-left: 0.5%;"></div>--%>
+        <div id="main2" style="width: 99%; height: 500px;border: 0px;border-style:solid;float: left;margin-left: 0.5%;"></div>
+        <div style="clear: both;"></div>
+        <div id="bigMain" style="display: none; width: 0%;height: 0px;border: 0px;border-style:solid;float: right;margin-right: 1%;margin-top: -295px;"></div>
+
+        <div style="clear: both;"></div>
+    </div>
+</c:if>
+
+<script type="text/javascript">
+    /*    var myChart1 = echarts.init(document.getElementById('bigMain'), 'dark');*/
+    var myChart2 = echarts.init(document.getElementById('main2'), 'dark');
     optionZX = {
-        backgroundColor:'rgba(128, 128, 128, 0.1)', //rgba设置透明度0.1
+        backgroundColor:'rgba(255, 255, 255, 0)', //rgba设置透明度0.1
         title : {
-            text: '各月份投诉数量',
-            x:0,
+            text: ${yearDate}+'年投诉数量分析',
+            x:'center',
             textStyle:{
-                color:'rgb(0,0,0)',
-                fontSize:14
+                color:'rgb(54, 169, 206)',
+                fontSize:20
             }
         },
         xAxis: {
             type: 'category',
-            data: ${monthData},
+            data: ${city},
             axisLabel: {
-                color: function (value) {
-                  return value == '周二' ? 'green' : 'black';
+                color:'#000000'
+            },
+            lineStyle: {
+                color: '#000000', // 颜色
+                width: 3 // 粗细
+            },
+            axisLine:{
+                lineStyle:{
+                    color:'#000000',
                 }
             }
         },
         yAxis: {
+            name:'占全年百分比',
             type: 'value',
+            nameRotate: 90,
+            nameGap: 61,
+            nameLocation: "middle",
+            nameTextStyle : {
+                color:'#000000',
+                fontSize:'20',
+            },
             axisLabel: {
-                color: function (value) {
-                    return value == '周二' ? 'green' : 'black';
+                show: true,
+                interval: 'auto',
+                formatter: '{value} %',
+                color:'#000000',
+            },
+            axisLine:{
+                lineStyle:{
+                    color:'#000000'
                 }
-            }
+            },
+
+
+            show: true
         },
         tooltip : {
             trigger: 'axis',
@@ -128,33 +122,256 @@
                 type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
             }
         },
+        toolbox: {
+            show: true,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: 'none',
+
+                }, //区域缩放，区域缩放还原
+                dataView: {
+                    readOnly: false
+                }, //数据视图
+                magicType: {
+                    type: ['line', 'bar'],
+                    fillerColor: 'rgba(144,197,237,0.2)'
+                },  //切换为折线图，切换为柱状图
+                restore: {},  //还原
+                saveAsImage: {},   //保存为图片
+
+            },
+            iconStyle:{
+                normal:{
+                    color:'blue',//设置颜色
+                }
+            }
+
+
+        },
         series: [{
-            name:'数量',
-            data: ${number},
-            type: 'line'
+            name:'百分比',
+            data: ${areaList},
+            type: 'bar',
+            barWidth: 30,
+            label:{
+                show:true,
+                formatter: function (a) {
+                    return a.value+"%";
+                },
+                color:'#000000'
+            },
+            itemStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: 'rgb(37,198,255)'},
+
+                            {offset: 1, color: 'rgb(31,111,181)'}
+                        ]
+                    ),
+                    label:{
+                        show: true,
+                        position: 'top',
+                        textStyle: {
+                            color: 'black',
+                            fontSize: 14
+                        },
+                        formatter: function (a) {
+                            return a.value+"%";
+                        },
+                        color:'#000000'
+                    }
+                }
+            }
         }]
     };
-
+    //仪表盘
+    optionYB = {
+        backgroundColor:'rgba(128, 128, 128, 0.5)', //rgba设置透明度0.1
+        title:{
+            text:'调解案件统计',
+            x:0,
+            textStyle:{
+                color:'rgb(255,255,255)',
+                fontSize:14
+            }
+        },
+        tooltip : {
+            formatter: "{a} <br/>{c} {b}"
+        },
+        series : [
+            {
+                name: '案件总数(件)',
+                type: 'gauge',
+                z: 10,
+                min: 0,
+                max: 1000,
+                // splitNumber: 11,
+                radius: '85%',
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: [[0.2, 'lime'],[0.8, '#1e90ff'],[1, '#ff4500']],
+                        width: 3,
+                        shadowColor : '#fff', //默认透明
+                        shadowBlur: 10
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length: 15,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length: 18,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                axisLabel: {
+                    backgroundColor: 'auto',
+                    borderRadius: 2,
+                    color: '#eee',
+                    padding: 1,
+                    textShadowBlur: 1,
+                    textShadowOffsetX: 1,
+                    textShadowOffsetY: 1,
+                    textShadowColor: '#222',
+                    fontSize:10
+                },
+                title : {
+                    // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    // fontWeight: 'bolder',
+                    fontSize: 20,
+                    fontStyle: 'italic'
+                },
+                detail : {
+                    //其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    // formatter: function (value) {
+                    //     value = (value + '').split('.');
+                    //     value.length < 2 && (value.push('00'));
+                    //     return ('00' + value[0]).slice(-2)
+                    //         + '.' + (value[1] + '00').slice(0, 2);
+                    // },
+                    fontWeight: 'bolder',
+                    fontSize: 14,
+                    // borderRadius: 3,
+                    backgroundColor: '#444',
+                    borderColor: '#aaa',
+                    shadowBlur: 5,
+                    shadowColor: '#333',
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 3,
+                    borderWidth: 2,
+                    textBorderColor: '#000',
+                    textBorderWidth: 2,
+                    textShadowBlur: 2,
+                    textShadowColor: '#fff',
+                    textShadowOffsetX: 0,
+                    textShadowOffsetY: 0,
+                    fontFamily: 'Arial',
+                    width: 25,
+                    color: '#eee',
+                    rich: {}
+                },
+                data:[{value: ${listZ}}]
+            },
+            {
+                name: '已完成案件数量(件)',
+                type: 'gauge',
+                center: ['22%', '55%'],    // 默认全局居中
+                radius: '75%',
+                z:200,
+                min:0,
+                max:1000,
+                endAngle:45,
+                // splitNumber:7,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: [[0.2, 'lime'],[0.8, '#1e90ff'],[1, '#ff4500']],
+                        width: 3,
+                        shadowColor : '#fff', //默认透明
+                        shadowBlur: 10
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length:12,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length:20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width:5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],       // x, y，单位px
+                },
+                detail: {
+                    // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    fontWeight: 'bolder'
+                },
+                data:[{value: ${ywc}}]
+            },
+            {
+                name: '未完成案件数量(件)',
+                type: 'gauge',
+                center: ['78%', '55%'],    // 默认全局居中
+                radius: '75%',
+                z:200,
+                min:0,
+                max:1000,
+                startAngle:135,
+                // splitNumber:7,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: [[0.2, 'lime'],[0.8, '#1e90ff'],[1, '#ff4500']],
+                        width: 3,
+                        shadowColor : '#fff', //默认透明
+                        shadowBlur: 10
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length:12,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length:20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width:5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],       // x, y，单位px
+                },
+                detail: {
+                    // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    fontWeight: 'bolder'
+                },
+                data:[{value: ${wwc}}]
+            }
+        ]
+    };
+    /*    myChart1.setOption(optionYB);*/
     myChart2.setOption(optionZX);
-    myChart2.off('click');//防止重复绑定 事件
-    myChart2.on('click',function(params){
-    });
-
-
-
-
-
     var rawData = ${areaList};
-
     var rawsData = [];
     function provinceMap(id,cityData){
-
         function sortRule(a,b){return a.value-b.value;}
         cityData.sort(sortRule);
         var provinceName=cityData.map(name => name.name);
-
         var provinceChart =  echarts.init(document.getElementById(id));
-
         var geoCoordMap = {
             '太原市': [112.53,37.87]
             ,'阳曲':[112.65,38.05]
@@ -193,6 +410,7 @@
             ,'孟县':[113.37,38.01]
             ,'昔阳':[113.68,37.62]
             ,'左权':[113.35,37.07]
+
             ,'太谷':[112.53,37.42]
             ,'平遥':[112.18,37.2]
             ,'灵石':[111.77,36.83]
@@ -261,7 +479,7 @@
             ,'稷山':[110.97,35.6]
         };
         var provinceOption = {
-            backgroundColor:'rgba(128, 128, 128, 0.1)', //rgba设置透明度0.1
+            backgroundColor:'rgba(128, 128, 128, 0)', //rgba设置透明度0.1
             legend: [],
             xAxis: [{
                 type: "value",
@@ -280,7 +498,6 @@
             }],
             yAxis: [{
                 type: "category",
-
                 axisLine: {
                     show: false
                 },
@@ -307,7 +524,7 @@
                 x:0,
                 textStyle:{
                     color:'rgb(0,0,0)',
-                    fontSize:12
+                    fontSize:14
                 }
             },{
                 text: "各市投诉量",
@@ -322,7 +539,6 @@
                 show:true,
             }],
             //backgroundColor:'#aaa',
-
             geo:{
                 show:true,
                 map:'山西',
@@ -382,25 +598,19 @@
                     },
                 }
             }],
-
-
         };//option
         provinceChart.setOption(provinceOption);
-
         function renderEachCity() {
-            var width=$('#bigMain').width();
-            var height=$('#bigMain').height();
+            var width=$('#main1').width();
+            var height=$('#main1').height();
             // option.xAxis.push();
             // option.yAxis.push();
             // option.grid.push();map
             // option.series.push();
             echarts.util.each(rawData, function(dataItem, idx) {
-
                 var geoCoord = geoCoordMap[dataItem.name];
                 var coord = provinceChart.convertToPixel('geo', dataItem.name);
                 idx += '';
-
-
                 provinceOption.xAxis.push({
                     id: idx,
                     gridId: idx,
@@ -419,8 +629,6 @@
                     left: coord[0],
                     bottom:height-coord[1]+10,
                 });
-
-
                 provinceOption.series.push({
                     name:dataItem.name,
                     type: 'bar',
@@ -451,30 +659,22 @@
                     },
                     data: [dataItem.value]
                 });
-
-
             });
             provinceChart.setOption(provinceOption);
         }
-
         renderEachCity();
-
         var a=0;//省级 跳入 市级，返回上一级 是 初始化为0
         provinceChart.off('click');//防止重复绑定 事件
         provinceChart.on('click',function(params){
             if(params.name!=undefined && params.name!='' && a==0){
                 a=1;
                 provinceChart.clear();
-                Maps('bigMain',rawsData,params.name);
+                Maps('main1',rawsData,params.name);
             }
         })
-
     }
-
     function Maps(id,cityData,cityName){
         var name=cityData.map(name=>name.name);
-
-
         var chartCity =  echarts.init(document.getElementById(id));
         $.getJSON('${ctxStatic}/echarts/map/json/shanxi/'+cityName+'.json', function (usaJson) {
             echarts.registerMap('city', usaJson);
@@ -487,13 +687,9 @@
                 '万网网络':[113.353986,21.924979],
                 '大朗科技':[113.353986,21.924979],
                 '腾度科技':[112.353986,22.924979]
-
-
-
             };
             //不是本市 的数据
             echarts.util.each(rawsData, function(dataItem, idx) {
-
                 var coord = chartCity.convertToPixel('geo', dataItem.name);
             });
             var optionCity = {
@@ -516,7 +712,6 @@
                 }],
                 yAxis: [{
                     type: "category",
-
                     axisLine: {
                         show: false
                     },
@@ -574,9 +769,7 @@
                 //          color: ['#00467F', '#A5CC82']
                 //     },
                 //     calculable:true
-
                 // },
-
                 geo:{
                     left:'10',
                     show:true,
@@ -646,10 +839,8 @@
                         }
                     }
                 }]
-
             };//option
             chartCity.setOption(optionCity);
-
             function renderEachCitys() {
                 var width=$('#'+id).width();
                 var height=$('#'+id).height();
@@ -658,7 +849,6 @@
                 // option.grid.push();
                 // option.series.push();
                 echarts.util.each(rawsData, function(dataItem, idx) {
-
                     var geoCoord = geoCoordMap[dataItem.name];
                     var coord = chartCity.convertToPixel('geo', dataItem.name);
                     idx += '';
@@ -674,19 +864,12 @@
                                 show: false
                             },
                             axisTick: {
-
-
                                 show: false,
-
                             },
                             axisLabel: {
                                 interval:0,
                                 fontSize:10,
-
                                 color: "#fff",
-
-
-
                             }
                         });
                         optionCity.yAxis.push({
@@ -701,8 +884,6 @@
                             left: coord[0],
                             bottom:height-coord[1]+10,
                         });
-
-
                         optionCity.series.push({
                             name:dataItem.name,
                             type: 'bar',
@@ -735,22 +916,17 @@
                             data: [dataItem.value]
                         });
                     }
-
                 });
                 chartCity.setOption(optionCity);
             }
-
             renderEachCitys();
-
-
             chartCity.on('click',function(params){
                 chartCity.clear();
-                provinceMap('bigMain',rawData);
+                provinceMap('main1',rawData);
             })
         });
     }
-
-    provinceMap('bigMain',rawData);
+    provinceMap('main1',rawData);
 </script>
 
 </body>

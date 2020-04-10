@@ -261,7 +261,7 @@
 		<div class="tab-pane fade in active" id="sign">
 			<div id="myTab1Content" class=""  >
 				<legend style="color: black;">协议号</legend>
-				<form:input path="agreementNumber" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
+				<form:input path="agreementNumber" htmlEscape="false" maxlength="20" class="input-xlarge required agreementId" placeHolder="下方生成协议号" readonly="true"/>
 				<%--<p style="font-size: 20px;color: black;">${signAgreement.agreementNumber}</p>--%>
 				<table id="patientTable" class="table  table-bordered table-condensed">
 					<legend style="color: black;">甲方（患方）</legend>
@@ -1187,7 +1187,10 @@
 		</tr>
 	</table>
 </fieldset>
-	<div class="form-actions" style="text-align: center;">
+    <div class="form-actions" style="text-align: center;">
+
+			<input type="button"  class="btn btn-primary" value="生成协议编号" style="width: 110px;" id="btn">
+
 		<shiro:hasPermission name="sign:signAgreement:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存" onclick="$('#flag').val('no'),$('#export').val('no'),removeCssClass()"/>&nbsp;</shiro:hasPermission>
 		<shiro:hasPermission name="sign:signAgreement:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="下一步" onclick="$('#flag').val('yes'),$('#export').val('no'),addCssClass()"/>&nbsp;</shiro:hasPermission>
 		<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
@@ -1195,6 +1198,31 @@
 	<act:histoicFlow procInsId="${signAgreement.complaintMain.procInsId}" />
 </form:form>
 <script type="text/javascript">
+	window.onload=function(){
+		var id = $("#agreementNumber")
+		if(id.val()==""||id.val()==null){
+
+		}else{
+			$("#btn").attr("style","display:none;");
+		}
+	}
+
+    $(function(){
+        $("#btn").click(function(){
+            $.ajax({
+                url:"${ctx}/sign/signAgreement/agreement",
+                type:"post",
+                success: function(data) {
+                    $("#agreementNumber").val(data);
+                },
+                error: function(err) {
+                    alert(2);
+                }
+            });
+            return false;
+        });
+    });
+
 	var medicalOfficeEmpRowIdx = 0, medicalOfficeEmpTp = $("#medicalOfficeEmpTp").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g,"");
 	var patientLinkEmpRowIdx = 0, patientLinkEmpTp = $("#patientLinkEmpTp").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g,"");
 	var patientLinkDRowIdx = 0, patientLinkDTp = $("#patientLinkDTp").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g,"");

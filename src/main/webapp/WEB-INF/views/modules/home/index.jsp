@@ -148,8 +148,10 @@
                 top.$('.jbox-body .jbox-icon').css('top','55px');
             }
             s.onclick=function(){
-                top.$.jBox.info('此功能正在开发中...', '提示', {closed:function(){
-                    }});
+                // top.$.jBox.info('此功能正在开发中...', '提示', {closed:function(){
+                //     }});
+                addTabPage('培训学习','${ctx}/complaintmain/complaintMain/aa');
+                sessionStorage.setItem("key","value");
                 top.$('.jbox-body .jbox-icon').css('top','55px');
             }
         </script>

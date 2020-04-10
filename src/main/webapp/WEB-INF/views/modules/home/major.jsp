@@ -46,12 +46,12 @@
     <div style="clear: both;"></div>
 </div>--%>
 <c:if test="${yearDate eq 2018 or yearDate eq 2019}">
-    <div id="aa" style="width: 98%; border: 0px;border-style:solid;height: 400px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/3.png');background-repeat: no-repeat; background-size :100% 100%;">
+    <div id="aa" style="width: 100%; border: 0px;border-style:solid;height: 400px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/3.png');background-repeat: no-repeat; background-size :100% 100%;">
     </div>
-    <div id="main3" style="width: 98%; border: 0px;border-style:solid;height: 450px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/1.png');background-repeat: no-repeat; background-size :100% 100%;">
+    <div id="main3" style="width: 100%; border: 0px;border-style:solid;height: 450px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/1.png');background-repeat: no-repeat; background-size :100% 100%;">
     </div>
 
-    <div id="bb" style="width: 98%; height: 450px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/8.png');background-repeat: no-repeat; background-size :100% 100%;">
+    <div id="bb" style="width: 100%; height: 450px;float: left;margin-top: 6px;margin-left: 0.5%;background-image: url('${ctxStatic}/images/8.png');background-repeat: no-repeat; background-size :100% 100%;">
     </div>
 </c:if>
 <c:if test="${yearDate ne 2018 and yearDate ne 2019}">
@@ -171,7 +171,7 @@
             {
                 name:'百分比',
                 type:'bar',
-                barWidth: 20,
+                barWidth: 15,
                 data:${departmentList},
                 itemStyle: {
                     normal: {
@@ -182,7 +182,7 @@
 
                                 {offset: 1, color: 'rgb(31,111,181)'}
                             ]
-                        )
+                        ),
                     }
                 },
                 label:{
@@ -193,7 +193,7 @@
                     position: 'top',
                     textStyle: {
                         color: 'black',
-                        fontSize: 14
+                        fontSize: 12
                     },
                     color:'#000000'
                 }

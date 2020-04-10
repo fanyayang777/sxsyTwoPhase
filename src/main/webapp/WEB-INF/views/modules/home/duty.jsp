@@ -205,7 +205,7 @@
                         color: 'black',
                     }
                 },
-                data: ['全部责任', '主要责任', '对等责任', '次要责任', '轻微责任', '无责', '无法判定'],
+                data: ${name}
                 <%--data: ${dutyName},--%>
             }
         ],
@@ -258,7 +258,7 @@
                 barCategoryGap:'20%',		//---柱形间距
                 radius: '55%',
                 <%--data: ${dutyNum},--%>
-                data: [{"name":"无责","value":"7.64"},{"name":"轻微责任","value":"20"},{"name":"次要责任","value":"23"},{"name":"对等责任","value":"19.6"},{"name":"主要责任","value":"18.5"},{"name":"全部责任","value":"8.62"},{"name":"无法判定","value":"1.65"}]
+                data: ${dutyNum}
             }
         ]
     };

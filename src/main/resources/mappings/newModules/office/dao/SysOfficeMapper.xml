@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sayee.sxsy.newModules.office.dao.SysOfficeMapper" >
+  <resultMap id="BaseResultMap" type="com.sayee.sxsy.newModules.office.entity.SysOffice" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="PARENT_IDS" property="parentIds" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="SORT" property="sort" jdbcType="DECIMAL" />
+    <result column="AREA_ID" property="areaId" jdbcType="VARCHAR" />
+    <result column="OFFICE_TYPE" property="officeType" jdbcType="CHAR" />
+    <result column="BEDS" property="beds" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="CHAR" />
+    <result column="GRADE" property="grade" jdbcType="CHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+    <result column="MASTER" property="master" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="FAX" property="fax" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="HOSPITAL_GRADE" property="hospitalGrade" jdbcType="CHAR" />
+    <result column="USEABLE" property="useable" jdbcType="VARCHAR" />
+    <result column="LEGAL_REPRESENTATIVE" property="legalRepresentative" jdbcType="VARCHAR" />
+    <result column="represent_phone" property="representPhone" jdbcType="VARCHAR" />
+    <result column="director_charge" property="directorCharge" jdbcType="VARCHAR" />
+    <result column="director_phone" property="directorPhone" jdbcType="VARCHAR" />
+    <result column="dispute_head" property="disputeHead" jdbcType="VARCHAR" />
+    <result column="dispute_phone" property="disputePhone" jdbcType="VARCHAR" />
+    <result column="PRIMARY_PERSON" property="primaryPerson" jdbcType="VARCHAR" />
+    <result column="DEPUTY_PERSON" property="deputyPerson" jdbcType="VARCHAR" />
+    <result column="is_insured" property="isInsured" jdbcType="CHAR" />
+    <result column="INSURANCE_COMPANY" property="insuranceCompany" jdbcType="VARCHAR" />
+    <result column="insured_time" property="insuredTime" jdbcType="VARCHAR" />
+    <result column="insured_end_time" property="insuredEndTime" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="CHAR" />
+    <result column="POLICY_NUMBER" property="policyNumber" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, PARENT_ID, PARENT_IDS, NAME, SORT, AREA_ID, OFFICE_TYPE, BEDS, CODE, TYPE, GRADE, 
+    ADDRESS, ZIP_CODE, MASTER, PHONE, FAX, EMAIL, HOSPITAL_GRADE, USEABLE, LEGAL_REPRESENTATIVE, 
+    represent_phone, director_charge, director_phone, dispute_head, dispute_phone, PRIMARY_PERSON, 
+    DEPUTY_PERSON, is_insured, INSURANCE_COMPANY, insured_time, insured_end_time, CREATE_BY, 
+    CREATE_DATE, UPDATE_BY, UPDATE_DATE, REMARKS, DEL_FLAG, POLICY_NUMBER
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sayee.sxsy.newModules.office.entity.SysOfficeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from SYS_OFFICE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_OFFICE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from SYS_OFFICE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sayee.sxsy.newModules.office.entity.SysOfficeExample" >
+    delete from SYS_OFFICE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sayee.sxsy.newModules.office.entity.SysOffice" >
+    insert into SYS_OFFICE (ID, PARENT_ID, PARENT_IDS, 
+      NAME, SORT, AREA_ID, 
+      OFFICE_TYPE, BEDS, CODE, 
+      TYPE, GRADE, ADDRESS, ZIP_CODE, 
+      MASTER, PHONE, FAX, 
+      EMAIL, HOSPITAL_GRADE, USEABLE, 
+      LEGAL_REPRESENTATIVE, represent_phone, director_charge, 
+      director_phone, dispute_head, dispute_phone, 
+      PRIMARY_PERSON, DEPUTY_PERSON, is_insured, 
+      INSURANCE_COMPANY, insured_time, insured_end_time, 
+      CREATE_BY, CREATE_DATE, UPDATE_BY, 
+      UPDATE_DATE, REMARKS, DEL_FLAG, 
+      POLICY_NUMBER)
+    values (#{id,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{parentIds,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{sort,jdbcType=DECIMAL}, #{areaId,jdbcType=VARCHAR}, 
+      #{officeType,jdbcType=CHAR}, #{beds,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{type,jdbcType=CHAR}, #{grade,jdbcType=CHAR}, #{address,jdbcType=VARCHAR}, #{zipCode,jdbcType=VARCHAR}, 
+      #{master,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{hospitalGrade,jdbcType=CHAR}, #{useable,jdbcType=VARCHAR}, 
+      #{legalRepresentative,jdbcType=VARCHAR}, #{representPhone,jdbcType=VARCHAR}, #{directorCharge,jdbcType=VARCHAR}, 
+      #{directorPhone,jdbcType=VARCHAR}, #{disputeHead,jdbcType=VARCHAR}, #{disputePhone,jdbcType=VARCHAR}, 
+      #{primaryPerson,jdbcType=VARCHAR}, #{deputyPerson,jdbcType=VARCHAR}, #{isInsured,jdbcType=CHAR}, 
+      #{insuranceCompany,jdbcType=VARCHAR}, #{insuredTime,jdbcType=VARCHAR}, #{insuredEndTime,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}, #{delFlag,jdbcType=CHAR}, 
+      #{policyNumber,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sayee.sxsy.newModules.office.entity.SysOffice" >
+    insert into SYS_OFFICE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="parentIds != null" >
+        PARENT_IDS,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="sort != null" >
+        SORT,
+      </if>
+      <if test="areaId != null" >
+        AREA_ID,
+      </if>
+      <if test="officeType != null" >
+        OFFICE_TYPE,
+      </if>
+      <if test="beds != null" >
+        BEDS,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="grade != null" >
+        GRADE,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="zipCode != null" >
+        ZIP_CODE,
+      </if>
+      <if test="master != null" >
+        MASTER,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="fax != null" >
+        FAX,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="hospitalGrade != null" >
+        HOSPITAL_GRADE,
+      </if>
+      <if test="useable != null" >
+        USEABLE,
+      </if>
+      <if test="legalRepresentative != null" >
+        LEGAL_REPRESENTATIVE,
+      </if>
+      <if test="representPhone != null" >
+        represent_phone,
+      </if>
+      <if test="directorCharge != null" >
+        director_charge,
+      </if>
+      <if test="directorPhone != null" >
+        director_phone,
+      </if>
+      <if test="disputeHead != null" >
+        dispute_head,
+      </if>
+      <if test="disputePhone != null" >
+        dispute_phone,
+      </if>
+      <if test="primaryPerson != null" >
+        PRIMARY_PERSON,
+      </if>
+      <if test="deputyPerson != null" >
+        DEPUTY_PERSON,
+      </if>
+      <if test="isInsured != null" >
+        is_insured,
+      </if>
+      <if test="insuranceCompany != null" >
+        INSURANCE_COMPANY,
+      </if>
+      <if test="insuredTime != null" >
+        insured_time,
+      </if>
+      <if test="insuredEndTime != null" >
+        insured_end_time,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="policyNumber != null" >
+        POLICY_NUMBER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentIds != null" >
+        #{parentIds,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="officeType != null" >
+        #{officeType,jdbcType=CHAR},
+      </if>
+      <if test="beds != null" >
+        #{beds,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=CHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="master != null" >
+        #{master,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalGrade != null" >
+        #{hospitalGrade,jdbcType=CHAR},
+      </if>
+      <if test="useable != null" >
+        #{useable,jdbcType=VARCHAR},
+      </if>
+      <if test="legalRepresentative != null" >
+        #{legalRepresentative,jdbcType=VARCHAR},
+      </if>
+      <if test="representPhone != null" >
+        #{representPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="directorCharge != null" >
+        #{directorCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="directorPhone != null" >
+        #{directorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="disputeHead != null" >
+        #{disputeHead,jdbcType=VARCHAR},
+      </if>
+      <if test="disputePhone != null" >
+        #{disputePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="primaryPerson != null" >
+        #{primaryPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="deputyPerson != null" >
+        #{deputyPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="isInsured != null" >
+        #{isInsured,jdbcType=CHAR},
+      </if>
+      <if test="insuranceCompany != null" >
+        #{insuranceCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="insuredTime != null" >
+        #{insuredTime,jdbcType=VARCHAR},
+      </if>
+      <if test="insuredEndTime != null" >
+        #{insuredEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="policyNumber != null" >
+        #{policyNumber,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sayee.sxsy.newModules.office.entity.SysOfficeExample" resultType="java.lang.Integer" >
+    select count(*) from SYS_OFFICE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update SYS_OFFICE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentId != null" >
+        PARENT_ID = #{record.parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentIds != null" >
+        PARENT_IDS = #{record.parentIds,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sort != null" >
+        SORT = #{record.sort,jdbcType=DECIMAL},
+      </if>
+      <if test="record.areaId != null" >
+        AREA_ID = #{record.areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.officeType != null" >
+        OFFICE_TYPE = #{record.officeType,jdbcType=CHAR},
+      </if>
+      <if test="record.beds != null" >
+        BEDS = #{record.beds,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null" >
+        CODE = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        TYPE = #{record.type,jdbcType=CHAR},
+      </if>
+      <if test="record.grade != null" >
+        GRADE = #{record.grade,jdbcType=CHAR},
+      </if>
+      <if test="record.address != null" >
+        ADDRESS = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zipCode != null" >
+        ZIP_CODE = #{record.zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.master != null" >
+        MASTER = #{record.master,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null" >
+        PHONE = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fax != null" >
+        FAX = #{record.fax,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        EMAIL = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hospitalGrade != null" >
+        HOSPITAL_GRADE = #{record.hospitalGrade,jdbcType=CHAR},
+      </if>
+      <if test="record.useable != null" >
+        USEABLE = #{record.useable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.legalRepresentative != null" >
+        LEGAL_REPRESENTATIVE = #{record.legalRepresentative,jdbcType=VARCHAR},
+      </if>
+      <if test="record.representPhone != null" >
+        represent_phone = #{record.representPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.directorCharge != null" >
+        director_charge = #{record.directorCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="record.directorPhone != null" >
+        director_phone = #{record.directorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disputeHead != null" >
+        dispute_head = #{record.disputeHead,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disputePhone != null" >
+        dispute_phone = #{record.disputePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.primaryPerson != null" >
+        PRIMARY_PERSON = #{record.primaryPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deputyPerson != null" >
+        DEPUTY_PERSON = #{record.deputyPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isInsured != null" >
+        is_insured = #{record.isInsured,jdbcType=CHAR},
+      </if>
+      <if test="record.insuranceCompany != null" >
+        INSURANCE_COMPANY = #{record.insuranceCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="record.insuredTime != null" >
+        insured_time = #{record.insuredTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.insuredEndTime != null" >
+        insured_end_time = #{record.insuredEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remarks != null" >
+        REMARKS = #{record.remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="record.delFlag != null" >
+        DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.policyNumber != null" >
+        POLICY_NUMBER = #{record.policyNumber,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update SYS_OFFICE
+    set ID = #{record.id,jdbcType=VARCHAR},
+      PARENT_ID = #{record.parentId,jdbcType=VARCHAR},
+      PARENT_IDS = #{record.parentIds,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      SORT = #{record.sort,jdbcType=DECIMAL},
+      AREA_ID = #{record.areaId,jdbcType=VARCHAR},
+      OFFICE_TYPE = #{record.officeType,jdbcType=CHAR},
+      BEDS = #{record.beds,jdbcType=VARCHAR},
+      CODE = #{record.code,jdbcType=VARCHAR},
+      TYPE = #{record.type,jdbcType=CHAR},
+      GRADE = #{record.grade,jdbcType=CHAR},
+      ADDRESS = #{record.address,jdbcType=VARCHAR},
+      ZIP_CODE = #{record.zipCode,jdbcType=VARCHAR},
+      MASTER = #{record.master,jdbcType=VARCHAR},
+      PHONE = #{record.phone,jdbcType=VARCHAR},
+      FAX = #{record.fax,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      HOSPITAL_GRADE = #{record.hospitalGrade,jdbcType=CHAR},
+      USEABLE = #{record.useable,jdbcType=VARCHAR},
+      LEGAL_REPRESENTATIVE = #{record.legalRepresentative,jdbcType=VARCHAR},
+      represent_phone = #{record.representPhone,jdbcType=VARCHAR},
+      director_charge = #{record.directorCharge,jdbcType=VARCHAR},
+      director_phone = #{record.directorPhone,jdbcType=VARCHAR},
+      dispute_head = #{record.disputeHead,jdbcType=VARCHAR},
+      dispute_phone = #{record.disputePhone,jdbcType=VARCHAR},
+      PRIMARY_PERSON = #{record.primaryPerson,jdbcType=VARCHAR},
+      DEPUTY_PERSON = #{record.deputyPerson,jdbcType=VARCHAR},
+      is_insured = #{record.isInsured,jdbcType=CHAR},
+      INSURANCE_COMPANY = #{record.insuranceCompany,jdbcType=VARCHAR},
+      insured_time = #{record.insuredTime,jdbcType=VARCHAR},
+      insured_end_time = #{record.insuredEndTime,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      REMARKS = #{record.remarks,jdbcType=VARCHAR},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      POLICY_NUMBER = #{record.policyNumber,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sayee.sxsy.newModules.office.entity.SysOffice" >
+    update SYS_OFFICE
+    <set >
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentIds != null" >
+        PARENT_IDS = #{parentIds,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        SORT = #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="areaId != null" >
+        AREA_ID = #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="officeType != null" >
+        OFFICE_TYPE = #{officeType,jdbcType=CHAR},
+      </if>
+      <if test="beds != null" >
+        BEDS = #{beds,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=CHAR},
+      </if>
+      <if test="grade != null" >
+        GRADE = #{grade,jdbcType=CHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        ZIP_CODE = #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="master != null" >
+        MASTER = #{master,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        FAX = #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalGrade != null" >
+        HOSPITAL_GRADE = #{hospitalGrade,jdbcType=CHAR},
+      </if>
+      <if test="useable != null" >
+        USEABLE = #{useable,jdbcType=VARCHAR},
+      </if>
+      <if test="legalRepresentative != null" >
+        LEGAL_REPRESENTATIVE = #{legalRepresentative,jdbcType=VARCHAR},
+      </if>
+      <if test="representPhone != null" >
+        represent_phone = #{representPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="directorCharge != null" >
+        director_charge = #{directorCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="directorPhone != null" >
+        director_phone = #{directorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="disputeHead != null" >
+        dispute_head = #{disputeHead,jdbcType=VARCHAR},
+      </if>
+      <if test="disputePhone != null" >
+        dispute_phone = #{disputePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="primaryPerson != null" >
+        PRIMARY_PERSON = #{primaryPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="deputyPerson != null" >
+        DEPUTY_PERSON = #{deputyPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="isInsured != null" >
+        is_insured = #{isInsured,jdbcType=CHAR},
+      </if>
+      <if test="insuranceCompany != null" >
+        INSURANCE_COMPANY = #{insuranceCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="insuredTime != null" >
+        insured_time = #{insuredTime,jdbcType=VARCHAR},
+      </if>
+      <if test="insuredEndTime != null" >
+        insured_end_time = #{insuredEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="policyNumber != null" >
+        POLICY_NUMBER = #{policyNumber,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sayee.sxsy.newModules.office.entity.SysOffice" >
+    update SYS_OFFICE
+    set PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      PARENT_IDS = #{parentIds,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      SORT = #{sort,jdbcType=DECIMAL},
+      AREA_ID = #{areaId,jdbcType=VARCHAR},
+      OFFICE_TYPE = #{officeType,jdbcType=CHAR},
+      BEDS = #{beds,jdbcType=VARCHAR},
+      CODE = #{code,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=CHAR},
+      GRADE = #{grade,jdbcType=CHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      ZIP_CODE = #{zipCode,jdbcType=VARCHAR},
+      MASTER = #{master,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      FAX = #{fax,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      HOSPITAL_GRADE = #{hospitalGrade,jdbcType=CHAR},
+      USEABLE = #{useable,jdbcType=VARCHAR},
+      LEGAL_REPRESENTATIVE = #{legalRepresentative,jdbcType=VARCHAR},
+      represent_phone = #{representPhone,jdbcType=VARCHAR},
+      director_charge = #{directorCharge,jdbcType=VARCHAR},
+      director_phone = #{directorPhone,jdbcType=VARCHAR},
+      dispute_head = #{disputeHead,jdbcType=VARCHAR},
+      dispute_phone = #{disputePhone,jdbcType=VARCHAR},
+      PRIMARY_PERSON = #{primaryPerson,jdbcType=VARCHAR},
+      DEPUTY_PERSON = #{deputyPerson,jdbcType=VARCHAR},
+      is_insured = #{isInsured,jdbcType=CHAR},
+      INSURANCE_COMPANY = #{insuranceCompany,jdbcType=VARCHAR},
+      insured_time = #{insuredTime,jdbcType=VARCHAR},
+      insured_end_time = #{insuredEndTime,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      REMARKS = #{remarks,jdbcType=VARCHAR},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      POLICY_NUMBER = #{policyNumber,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

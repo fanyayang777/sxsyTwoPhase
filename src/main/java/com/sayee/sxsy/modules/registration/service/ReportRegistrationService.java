@@ -14,6 +14,10 @@ import com.sayee.sxsy.common.utils.StringUtils;
 import com.sayee.sxsy.common.utils.WordExportUtil;
 import com.sayee.sxsy.modules.act.entity.Act;
 import com.sayee.sxsy.modules.act.service.ActTaskService;
+import com.sayee.sxsy.modules.complaint.dao.ComplaintInfoDao;
+import com.sayee.sxsy.modules.complaint.entity.ComplaintInfo;
+import com.sayee.sxsy.modules.complaintdetail.dao.ComplaintMainDetailDao;
+import com.sayee.sxsy.modules.complaintdetail.entity.ComplaintMainDetail;
 import com.sayee.sxsy.modules.complaintdetail.service.ComplaintMainDetailService;
 import com.sayee.sxsy.modules.complaintmain.dao.ComplaintMainDao;
 import com.sayee.sxsy.modules.complaintmain.entity.ComplaintMain;
@@ -25,6 +29,7 @@ import com.sayee.sxsy.modules.sys.entity.User;
 import com.sayee.sxsy.modules.sys.utils.DictUtils;
 import com.sayee.sxsy.modules.sys.utils.UserUtils;
 import com.sayee.sxsy.modules.typeinfo.entity.TypeInfo;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +59,10 @@ public class ReportRegistrationService extends CrudService<ReportRegistrationDao
 	private PreOperativeConsentService preOperativeConsentService;
 	@Autowired
 	ComplaintMainService complaintMainService;
+	@Autowired
+	ComplaintMainDetailDao complaintMainDetailDao;
+	@Autowired
+	ComplaintInfoDao complaintInfoDao;
 
 	public ReportRegistration get(String id) {
 		return super.get(id);
@@ -149,14 +158,13 @@ public class ReportRegistrationService extends CrudService<ReportRegistrationDao
 		complaintMainDao.update(complaintMain);
 		//保存附件
 		this.savefj(request,reportRegistration);
+
 //		super.save(reportRegistration);
 		if ("yes".equals(reportRegistration.getComplaintMain().getAct().getFlag())){
-			List<Act> list = actTaskService.todoList(reportRegistration.getComplaintMain().getAct());
 
 			Map<String,Object> var=new HashMap<String, Object>();
-			var.put("pass","0");
-			User assigness=UserUtils.get(reportRegistration.getNextLinkMan());
-			var.put("check_user",assigness.getLoginName());
+			var.put("pass","1");
+			var.put("datamember_user", "lhh_admin");
 			// 执行流程
 			actTaskService.complete(reportRegistration.getComplaintMain().getAct().getTaskId(), reportRegistration.getComplaintMain().getAct().getProcInsId(), reportRegistration.getComplaintMain().getAct().getComment(), reportRegistration.getComplaintMain().getCaseNumber(), var);
 		}
@@ -205,6 +213,13 @@ public class ReportRegistrationService extends CrudService<ReportRegistrationDao
 		String savaPath=path;
 		String pdfPath=path;
 		Map<String, Object> params = new HashMap<String, Object>();
+		String area="";
+		User user=UserUtils.getUser();
+		if ("广东省".equals(user.getAreaName())){
+			params.put("area",user.getCompany().getName().substring(0,3));
+		}else {
+			params.put("area",user.getAreaName());
+		}
 		//判断有无案件编号
 		String num=null;
 		if(reportRegistration.getComplaintMain()!=null){
@@ -222,7 +237,7 @@ public class ReportRegistrationService extends CrudService<ReportRegistrationDao
 				params.put("g","");//机构等级
 			}
 
-			params.put("area",reportRegistration.getComplaintMain()==null?"":reportRegistration.getComplaintMain().getHospital().getArea().getName());//所属城市
+			params.put("areaName",reportRegistration.getComplaintMain()==null?"":reportRegistration.getComplaintMain().getHospital().getArea().getName());//所属城市
 			params.put("reportEmp",reportRegistration.getReportEmp()==null?"":reportRegistration.getReportEmp());//报案人姓名
 			params.put("pName",reportRegistration.getComplaintMain()==null?"":reportRegistration.getComplaintMain().getPatientName());//患者姓名
 			if(reportRegistration.getComplaintMain() !=null){

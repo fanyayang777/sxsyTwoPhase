@@ -8,7 +8,7 @@
 		if(a.summary_of_disputes IS NULL,r.summary_of_disputes,a.summary_of_disputes) AS "summaryOfDisputes",
 		a.case_source AS "caseSource",
 		a.guarantee_time AS "guaranteeTime",
-		a.insurance_company AS "insuranceCompany",
+		if(a.insurance_company IS NULL,o.insurance_company,a.insurance_company) AS "insuranceCompany",
 		if(a.policy_number IS NULL,r.policy_number,a.policy_number)AS "policyNumber",
 		a.diagnosis_mode AS "diagnosisMode",
 		a.treatment_outcome AS "treatmentOutcome",

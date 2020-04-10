@@ -115,7 +115,7 @@
 
 			<td style="text-align:center;">${assessAppraisal.complaintMain.hospital.name}</td>
 			<td style="text-align:center;">
-                    ${assessAppraisal.auditAcceptance.insuranceCompany}
+					${fns:getDictLabel(assessAppraisal.auditAcceptance.insuranceCompany, 'sys_office_form',assessAppraisal.auditAcceptance.insuranceCompany)}
 			</td>
 
 			<td style="text-align:center;">${assessAppraisal.auditAcceptance.treatmentOutcome}</td>

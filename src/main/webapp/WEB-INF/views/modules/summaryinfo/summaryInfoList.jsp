@@ -125,7 +125,7 @@
 				<td style="text-align: center;">${summaryInfo.complaintMain.patientName}</td>
 				<td style="text-align: center;">${summaryInfo.complaintMain.hospital.name}</td>
 				<td style="text-align: center;">
-						${summaryInfo.auditAcceptance.insuranceCompany}
+						${fns:getDictLabel(summaryInfo.auditAcceptance.insuranceCompany, 'sys_office_form',summaryInfo.auditAcceptance.insuranceCompany)}
 				</td>
 				<%--<td style="text-align: center;">${summaryInfo.auditAcceptance.summaryOfDisputes}</td>--%>
 				<td style="text-align: center;">${summaryInfo.complaintMainDetail.typeName}</td>

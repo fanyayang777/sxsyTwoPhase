@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sayee.sxsy.newModules.middleutils.dao.ComuserComplaintinfoidMapper" >
+  <resultMap id="BaseResultMap" type="com.sayee.sxsy.newModules.middleutils.entity.ComuserComplaintinfoidKey" >
+    <id column="COMUSER_ID" property="comuserId" jdbcType="VARCHAR" />
+    <id column="COMPLAINT_INFO_ID" property="complaintInfoId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    COMUSER_ID, COMPLAINT_INFO_ID
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sayee.sxsy.newModules.middleutils.entity.ComuserComplaintinfoidExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from COMUSER_COMPLAINTINFOID
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.sayee.sxsy.newModules.middleutils.entity.ComuserComplaintinfoidKey" >
+    delete from COMUSER_COMPLAINTINFOID
+    where COMUSER_ID = #{comuserId,jdbcType=VARCHAR}
+      and COMPLAINT_INFO_ID = #{complaintInfoId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sayee.sxsy.newModules.middleutils.entity.ComuserComplaintinfoidExample" >
+    delete from COMUSER_COMPLAINTINFOID
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sayee.sxsy.newModules.middleutils.entity.ComuserComplaintinfoidKey" >
+    insert into COMUSER_COMPLAINTINFOID (COMUSER_ID, COMPLAINT_INFO_ID)
+    values (#{comuserId,jdbcType=VARCHAR}, #{complaintInfoId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sayee.sxsy.newModules.middleutils.entity.ComuserComplaintinfoidKey" >
+    insert into COMUSER_COMPLAINTINFOID
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="comuserId != null" >
+        COMUSER_ID,
+      </if>
+      <if test="complaintInfoId != null" >
+        COMPLAINT_INFO_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="comuserId != null" >
+        #{comuserId,jdbcType=VARCHAR},
+      </if>
+      <if test="complaintInfoId != null" >
+        #{complaintInfoId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sayee.sxsy.newModules.middleutils.entity.ComuserComplaintinfoidExample" resultType="java.lang.Integer" >
+    select count(*) from COMUSER_COMPLAINTINFOID
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update COMUSER_COMPLAINTINFOID
+    <set >
+      <if test="record.comuserId != null" >
+        COMUSER_ID = #{record.comuserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.complaintInfoId != null" >
+        COMPLAINT_INFO_ID = #{record.complaintInfoId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update COMUSER_COMPLAINTINFOID
+    set COMUSER_ID = #{record.comuserId,jdbcType=VARCHAR},
+      COMPLAINT_INFO_ID = #{record.complaintInfoId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

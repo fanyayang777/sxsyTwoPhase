@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sayee.sxsy.modules.insuranceslip.dao.InsuranceSlipDao">
+    
+	<sql id="insuranceSlipColumns">
+		a.insurance_policy_id AS "insurancePolicyId",
+		a.policy_holder AS "policyHolder",
+		a.policy_phone AS "policyPhone",
+		a.site_postcode AS "sitePostcode",
+		a.email_address AS "emailAddress",
+		a.the_insured AS "theInsured",
+		a.the_insured_phone AS "theInsuredPhone",
+		a.the_insured_site AS "theInsuredSite",
+		a.postal_code AS "postalCode",
+		a.insure_area AS "insureArea",
+		a.category AS "category",
+		a.creation_time AS "creationTime",
+		a.practice_number AS "practiceNumber",
+		a.grade AS "grade",
+		a.mold AS "mold",
+		a.nature AS "nature",
+		a.department AS "department",
+		a.sickbed_number AS "sickbedNumber",
+		a.people_number AS "peopleNumber",
+		a.medical_staff_number AS "medicalStaffNumber",
+		a.everyone_quota AS "everyoneQuota",
+		a.spirit_quota AS "spiritQuota",
+		a.everytime_quota AS "everytimeQuota",
+		a.accumulated_quota AS "accumulatedQuota",
+		a.law_everytime_quota AS "lawEverytimeQuota",
+		a.law_accumulated_quota AS "lawAccumulatedQuota",
+		a.append_everytime_quota AS "appendEverytimeQuota",
+		a.append_accumulated_quota AS "appendAccumulatedQuota",
+		a.bed_premium AS "bedPremium",
+		a.medical_premium AS "medicalPremium",
+		a.all_way AS "allWay",
+		a.sel_way AS "selWay",
+		a.all_medical_number AS "allMedicalNumber",
+		a.all_everyone_premium AS "allEveryonePremium",
+		a.all_premium_total AS "allPremiumTotal",
+		a.sel_everyone_premium AS "selEveryonePremium",
+		a.sel_clinic_operation_number AS "selClinicOperationNumber",
+		a.sel_clinic_notoperation_number AS "selClinicNotoperationNumber",
+		a.sel_medical_laboratory_number AS "selMedicalLaboratoryNumber",
+		a.sel_premium_total AS "selPremiumTotal",
+		a.basic_premium_total AS "basicPremiumTotal",
+		a.add_reduce AS "addReduce",
+		a.enchance_deduction AS "enchanceDeduction",
+		a.risk_float AS "riskFloat",
+		a.asleft_premium AS "asleftPremium",
+		a.addittion_risk AS "addittionRisk",
+		a.addittion_premium AS "addittionPremium",
+		a.computational_formula AS "computationalFormula",
+		a.oddicial_receipts_permium AS "oddicialReceiptsPermium",
+		a.insurance_date AS "insuranceDate",
+		a.insurance_start_time AS "insuranceStartTime",
+		a.insurance_end_time AS "insuranceEndTime",
+		a.retroactive_date AS "retroactiveDate",
+		a.retroactive_strat_date AS "retroactiveStratDate",
+		a.retroactive_end_date AS "retroactiveEndDate",
+		a.premium_delicery_time AS "premiumDeliceryTime",
+		a.dispute AS "dispute",
+		a.arbitrator AS "arbitrator",
+		a.insure_conditions AS "insureConditions",
+		a.accident_conditions AS "accidentConditions",
+		a.special_agreement AS "specialAgreement",
+		a.signature AS "signature",
+		a.insure_date AS "insureDate",
+		a.assume_nature AS "assumeNature",
+		a.agency_code AS "agencyCode",
+		a.agency_name AS "agencyName",
+		a.state AS "state",
+		a.reject AS "reject",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="insuranceSlipJoins">
+		LEFT JOIN SYS_OFFICE o2 ON o2.id = a.policy_holder
+	</sql>
+    
+	<select id="get" resultType="InsuranceSlip">
+		SELECT 
+			<include refid="insuranceSlipColumns"/>
+		FROM INSURANCE_SLIP a
+		<include refid="insuranceSlipJoins"/>
+		WHERE a.insurance_policy_id = #{insurancePolicyId}
+	</select>
+	
+	<select id="findList" resultType="InsuranceSlip">
+		SELECT 
+			<include refid="insuranceSlipColumns"/>
+		FROM INSURANCE_SLIP a
+		<include refid="insuranceSlipJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="policyHolder != null and policyHolder != ''">
+				AND a.policy_holder LIKE 
+					<if test="dbName == 'oracle'">'%'||#{policyHolder}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{policyHolder}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{policyHolder},'%')</if>
+			</if>
+			<if test="policyPhone != null and policyPhone != ''">
+				AND a.policy_phone LIKE 
+					<if test="dbName == 'oracle'">'%'||#{policyPhone}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{policyPhone}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{policyPhone},'%')</if>
+			</if>
+			<if test="sitePostcode != null and sitePostcode != ''">
+				AND a.site_postcode LIKE 
+					<if test="dbName == 'oracle'">'%'||#{sitePostcode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{sitePostcode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{sitePostcode},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="InsuranceSlip">
+		SELECT 
+			<include refid="insuranceSlipColumns"/>
+		FROM INSURANCE_SLIP a
+		<include refid="insuranceSlipJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO INSURANCE_SLIP(
+			insurance_policy_id,
+			policy_holder,
+			policy_phone,
+			site_postcode,
+			email_address,
+			the_insured,
+			the_insured_phone,
+			the_insured_site,
+			postal_code,
+			insure_area,
+			category,
+			creation_time,
+			practice_number,
+			grade,
+			mold,
+			nature,
+			department,
+			sickbed_number,
+			people_number,
+			medical_staff_number,
+			everyone_quota,
+			spirit_quota,
+			everytime_quota,
+			accumulated_quota,
+			law_everytime_quota,
+			law_accumulated_quota,
+			append_everytime_quota,
+			append_accumulated_quota,
+			bed_premium,
+			medical_premium,
+			all_way,
+			sel_way,
+			all_medical_number,
+			all_everyone_premium,
+			all_premium_total,
+			sel_everyone_premium,
+			sel_clinic_operation_number,
+			sel_clinic_notoperation_number,
+			sel_medical_laboratory_number,
+			sel_premium_total,
+			basic_premium_total,
+			add_reduce,
+			enchance_deduction,
+			risk_float,
+			asleft_premium,
+			addittion_risk,
+			addittion_premium,
+			computational_formula,
+			oddicial_receipts_permium,
+			insurance_date,
+			insurance_start_time,
+			insurance_end_time,
+			retroactive_date,
+			retroactive_strat_date,
+			retroactive_end_date,
+			premium_delicery_time,
+			dispute,
+			arbitrator,
+			insure_conditions,
+			accident_conditions,
+			special_agreement,
+			signature,
+			insure_date,
+			assume_nature,
+			agency_code,
+			agency_name,
+			state,
+			reject,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag
+		) VALUES (
+			#{insurancePolicyId},
+			#{policyHolder},
+			#{policyPhone},
+			#{sitePostcode},
+			#{emailAddress},
+			#{theInsured},
+			#{theInsuredPhone},
+			#{theInsuredSite},
+			#{postalCode},
+			#{insureArea},
+			#{category},
+			#{creationTime},
+			#{practiceNumber},
+			#{grade},
+			#{mold},
+			#{nature},
+			#{department},
+			#{sickbedNumber},
+			#{peopleNumber},
+			#{medicalStaffNumber},
+			#{everyoneQuota},
+			#{spiritQuota},
+			#{everytimeQuota},
+			#{accumulatedQuota},
+			#{lawEverytimeQuota},
+			#{lawAccumulatedQuota},
+			#{appendEverytimeQuota},
+			#{appendAccumulatedQuota},
+			#{bedPremium},
+			#{medicalPremium},
+			#{allWay},
+			#{selWay},
+			#{allMedicalNumber},
+			#{allEveryonePremium},
+			#{allPremiumTotal},
+			#{selEveryonePremium},
+			#{selClinicOperationNumber},
+			#{selClinicNotoperationNumber},
+			#{selMedicalLaboratoryNumber},
+			#{selPremiumTotal},
+			#{basicPremiumTotal},
+			#{addReduce},
+			#{enchanceDeduction},
+			#{riskFloat},
+			#{asleftPremium},
+			#{addittionRisk},
+			#{addittionPremium},
+			#{computationalFormula},
+			#{oddicialReceiptsPermium},
+			#{insuranceDate},
+			#{insuranceStartTime},
+			#{insuranceEndTime},
+			#{retroactiveDate},
+			#{retroactiveStratDate},
+			#{retroactiveEndDate},
+			#{premiumDeliceryTime},
+			#{dispute},
+			#{arbitrator},
+			#{insureConditions},
+			#{accidentConditions},
+			#{specialAgreement},
+			#{signature},
+			#{insureDate},
+			#{assumeNature},
+			#{agencyCode},
+			#{agencyName},
+			#{state},
+			#{reject},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE INSURANCE_SLIP SET
+			insurance_policy_id = #{insurancePolicyId},
+			policy_holder = #{policyHolder},
+			policy_phone = #{policyPhone},
+			site_postcode = #{sitePostcode},
+			email_address = #{emailAddress},
+			the_insured = #{theInsured},
+			the_insured_phone = #{theInsuredPhone},
+			the_insured_site = #{theInsuredSite},
+			postal_code = #{postalCode},
+			insure_area = #{insureArea},
+			category = #{category},
+			creation_time = #{creationTime},
+			practice_number = #{practiceNumber},
+			grade = #{grade},
+			mold = #{mold},
+			nature = #{nature},
+			department = #{department},
+			sickbed_number = #{sickbedNumber},
+			people_number = #{peopleNumber},
+			medical_staff_number = #{medicalStaffNumber},
+			everyone_quota = #{everyoneQuota},
+			spirit_quota = #{spiritQuota},
+			everytime_quota = #{everytimeQuota},
+			accumulated_quota = #{accumulatedQuota},
+			law_everytime_quota = #{lawEverytimeQuota},
+			law_accumulated_quota = #{lawAccumulatedQuota},
+			append_everytime_quota = #{appendEverytimeQuota},
+			append_accumulated_quota = #{appendAccumulatedQuota},
+			bed_premium = #{bedPremium},
+			medical_premium = #{medicalPremium},
+			all_way = #{allWay},
+			sel_way = #{selWay},
+			all_medical_number = #{allMedicalNumber},
+			all_everyone_premium = #{allEveryonePremium},
+			all_premium_total = #{allPremiumTotal},
+			sel_everyone_premium = #{selEveryonePremium},
+			sel_clinic_operation_number = #{selClinicOperationNumber},
+			sel_clinic_notoperation_number = #{selClinicNotoperationNumber},
+			sel_medical_laboratory_number = #{selMedicalLaboratoryNumber},
+			sel_premium_total = #{selPremiumTotal},
+			basic_premium_total = #{basicPremiumTotal},
+			add_reduce = #{addReduce},
+			enchance_deduction = #{enchanceDeduction},
+			risk_float = #{riskFloat},
+			asleft_premium = #{asleftPremium},
+			addittion_risk = #{addittionRisk},
+			addittion_premium = #{addittionPremium},
+			computational_formula = #{computationalFormula},
+			oddicial_receipts_permium = #{oddicialReceiptsPermium},
+			insurance_date = #{insuranceDate},
+			insurance_start_time = #{insuranceStartTime},
+			insurance_end_time = #{insuranceEndTime},
+			retroactive_date = #{retroactiveDate},
+			retroactive_strat_date = #{retroactiveStratDate},
+			retroactive_end_date = #{retroactiveEndDate},
+			premium_delicery_time = #{premiumDeliceryTime},
+			dispute = #{dispute},
+			arbitrator = #{arbitrator},
+			insure_conditions = #{insureConditions},
+			accident_conditions = #{accidentConditions},
+			special_agreement = #{specialAgreement},
+			signature = #{signature},
+			insure_date = #{insureDate},
+			assume_nature = #{assumeNature},
+			agency_code = #{agencyCode},
+			agency_name = #{agencyName},
+			state = #{state},
+			reject = #{reject},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE insurance_policy_id = #{insurancePolicyId}
+	</update>
+	
+	<update id="delete">
+		UPDATE INSURANCE_SLIP SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE insurance_policy_id = #{insurancePolicyId}
+	</update>
+	
+</mapper>

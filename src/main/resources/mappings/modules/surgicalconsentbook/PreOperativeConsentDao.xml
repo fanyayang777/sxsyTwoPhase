@@ -256,10 +256,11 @@
 		WHERE id = #{id}
 	</update>
 	<select id="selectCreatby" resultType="java.util.Map">
-		SELECT count(1) sq,a.witness_time visitor_date,a.create_by,u.name,u.office_id,o.name AS deptName
+		SELECT count(1) sq,a.witness_time visitor_date,a.create_by,u.name,u.office_id,o.name AS deptName,sa.parent_ids,sa.id,sa.name AS areaName
 		FROM PRE_PERATIVE_CONSENT a
 		LEFT JOIN SYS_USER u on u.id=a.create_by
 		LEFT JOIN SYS_OFFICE o ON o.id=u.office_id
+		LEFT JOIN SYS_AREA sa on o.AREA_ID=sa.id
 		WHERE a.del_flag ='0'
 		<choose>
 			<when test="visitorDate !=null and visitorDate !='' and visitorDateEnd !=null and visitorDateEnd !='' and visitorDate!=visitorDateEnd">

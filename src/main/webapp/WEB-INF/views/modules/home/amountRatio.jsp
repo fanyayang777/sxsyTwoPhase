@@ -19,6 +19,7 @@
 
 
 <body>
+
 <form:form id="searchForm" action="${ctx}/complaintmain/complaintMain/head?type=tj&newType=amout" method="post" class="breadcrumb form-search">
     <ul class="ul-form" style="height: 35px;">
         <li id="year" style="">
@@ -241,13 +242,13 @@
                     }
                 },
                 <%--data: ${areaList.name},--%>
-                data: ['朔州', '长治', '吕梁', '大同', '晋中', '太原', '晋城','临汾','阳泉','运城']
+                data: ${name}
             }
         ],
         yAxis: [
             {
                 type: 'value',
-                name: '单位：万元',
+                name: '单位：元',
                 axisLabel: {
                     show: true,
                     interval: 'auto',
@@ -278,7 +279,7 @@
                 },
 
                 <%--data: ${areaTableInfo},--%>
-                data: [13.4 , 13.3 , 10.6 , 9.6 , 8.8 , 7.2 , 6.2 , 6.2 , 5.9 , 5.7]
+                data: ${cityMap}
             }
         ]
     };
@@ -347,15 +348,17 @@
                     show: true,
                     textStyle:{
                         color: 'black', //---x线下字的颜色
-                    }
+                    },
+                    interval:0,
+                    rotate:40
                 },
-                data: ['神外', '呼吸', '普外', '产科', '心内', '神内', '儿科','急诊','妇科','骨科']
+                data: ${departmentName}
             }
         ],
         yAxis: [
             {
                 type: 'value',
-                name: '单位：万元',
+                name: '单位：元',
                 nameLocation: 'end', //---单位的位置
                 axisLabel: {
                     show: true,
@@ -388,7 +391,7 @@
                 },
 
 
-                data: [12.8 , 10.5 , 9.5 , 9.2 , 8.8 , 8.7 , 8.5 , 7.7 , 7.1 , 6.9]
+                data: ${departmentMap}
             }
         ]
     };
@@ -402,7 +405,7 @@
             textAlign: 'left',
             textStyle:{
                 color:'rgb(0,0,0)',
-                fontSize:20,
+                fontSize:20
 
             }
         },
@@ -459,7 +462,7 @@
                         color: 'black', //---x线下字的颜色
                     }
                 },
-                data: ['2万元以下', '2-10万元', '10-50万元', '50万元以上']
+                data: ${keyList}
             }
         ],
         yAxis: [
@@ -493,28 +496,10 @@
                     position: 'top',
                     formatter: '{c}%',　　　　//这是关键，在需要的地方加上就行了
                     fontSize: '15',
-                    color: 'black',
+                    color: 'black'
                 },
-
-
-                data: [13.41 , 13.3 , 10.6 , 9.6 , 8.8 , 7.2 , 6.2 , 6.2 , 5.9 , 5.7]
-            },
-            {
-                name: '均赔额年度比例',
-                type: 'bar',
-                barWidth: '30%',    //---设置柱形的宽度
-                color: '#E86074',
-                label: {
-                    show: true,
-                    position: 'top',
-                    formatter: '{c}%',　　　　//这是关键，在需要的地方加上就行了
-                    fontSize: '15',
-                    color: 'black',
-                },
-
-
-                data: [13.4 , 13.3 , 10.6 , 9.6 , 8.8 , 7.2 , 6.2 , 6.2 , 5.9 , 5.7]
-            },
+                data: ${amountTableInfo}
+            }
         ]
     };
 
@@ -535,7 +520,7 @@
         // },
         toolbox: {
             show: true,
-            feature: {
+            /*feature: {
                 dataZoom: {
                     yAxisIndex: 'none'
                 }, //区域缩放，区域缩放还原
@@ -553,7 +538,7 @@
                 normal:{
                     color:'blue',//设置颜色
                 }
-            }
+            }*/
 
         },
         series: [
@@ -569,12 +554,31 @@
                     fontSize: '15',
                     color: 'black',
                 },
-                data: [
-                    {value: 335, name: '2万元以下'},
-                    {value: 310, name: '2-10万元'},
-                    {value: 234, name: '10-50万元'},
-                    {value: 135, name: '50万以上'},
-                ],
+                data: ${amountTableInfo},
+                itemStyle:{
+                  normal:{
+                      label:{
+                          show:function(value){
+                              if(value==0){
+                                  return false;
+                              }else{
+                                  return true;
+                              }
+                          }(),
+                          formatter: '{b}:{d}%'
+                      },
+                      labelLine:{
+                          show:function(value){
+                              if(value == 0){
+                                  return false;
+                              }else{
+                                  return true;
+                              }
+                          }()
+                      }
+                  }
+                },
+
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -588,7 +592,6 @@
 
     optionBT2 = {
         title: {
-            text: '2019年',
             // subtext: '纯属虚构',
             left: 'center'
         },
@@ -603,7 +606,7 @@
         // },
         toolbox: {
             show: true,
-            feature: {
+            /*feature: {
                 dataZoom: {
                     yAxisIndex: 'none'
                 }, //区域缩放，区域缩放还原
@@ -621,7 +624,7 @@
                 normal:{
                     color:'blue',//设置颜色
                 }
-            }
+            }*/
 
         },
         series: [
@@ -637,12 +640,30 @@
                     fontSize: '15',
                     color: 'black',
                 },
-                data: [
-                    {value: 335, name: '2万元以下'},
-                    {value: 310, name: '2-10万元'},
-                    {value: 234, name: '10-50万元'},
-                    {value: 135, name: '50万以上'},
-                ],
+                data: ${amountTableInfo},
+                itemStyle:{
+                    normal:{
+                        label:{
+                            show:function(value){
+                                if(value==0){
+                                    return false;
+                                }else{
+                                    return true;
+                                }
+                            }(),
+                            formatter: '{b}:{d}%'
+                        },
+                        labelLine:{
+                            show:function(value){
+                                if(value == 0){
+                                    return false;
+                                }else{
+                                    return true;
+                                }
+                            }()
+                        }
+                    }
+                },
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -657,20 +678,19 @@
     optionQS = {
         backgroundColor:'rgba(0, 0, 0, 0)', //rgba设置透明度0.1
         title : {
-            text: '近五年来三类医疗机构赔付金额趋势',
+            text: '近五年来赔付金额趋势',
             x: 'center',    //---主题居中
             y: 'top',
             textAlign: 'left',
             textStyle:{
                 color:'rgb(0,0,0)',
-                fontSize:20,
+                fontSize:20
             }
         },
         legend: {
             orient: 'vertical',
             left: 'left',
             // padding: [100,0,0,100],
-            data: ['三级医院', '二级医院', '其他（一级、民营、诊所）']
         },
         xAxis: {
             type: 'category',
@@ -687,12 +707,12 @@
                     color: 'black', //---x线下字的颜色
                 }
             },
-            data: ['2016年', '2017年', '2018年', '2019年', '2020年']
+            data: ${yearName}
         },
         yAxis: {
 
             type: 'value',
-            name:'单位：万元',
+            name:'单位：元',
             nameLocation: 'end', //---位置居中
             // nameGap:60,             //---与y轴距离
             // nameRotate: 90,         //---角度
@@ -743,8 +763,7 @@
         },
         series: [
             {
-                name: '三级医院',
-                data: ['29.04','20.0','51.45','14.05','6.87'],
+                data: ${fiveYearInfo},
                 type: 'line',
                 label: {
                     show: true,
@@ -764,8 +783,8 @@
                 //         {type:'min',name:'最小值'},
                 //     ]
                 // }
-            },
-            {
+            }
+            /*{
                 name: '二级医院',
                 data: ['25.04','21.60','21.45','24.05','10.87'],
                 type: 'line',
@@ -810,7 +829,7 @@
                 //         {type:'min',name:'最小值'},
                 //     ]
                 // }
-            }
+            }*/
 
         ]
     };

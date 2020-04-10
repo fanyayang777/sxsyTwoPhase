@@ -147,7 +147,7 @@
                     color: 'black', //---x线下字的颜色
                 }
             },
-            data: ['三等甲级', '三等乙级', '二等甲级', '民营机构', '其他机构']
+            data: ${name}
         },
         yAxis: {
             type: 'value',
@@ -201,15 +201,17 @@
 
         },
         series: [{
-            data: ['25.04','2.60','51.45','14.05','6.87'],
+            data: ${list},
             <%--data: ${dutyNum},--%>
-            type: 'line',
+            type: 'bar',
+            barWidth: 30,
             label: {
                 show: true,
                 position: 'top',
                 formatter: '{c}%',　　　　//这是关键，在需要的地方加上就行了
                 fontSize: '15',
                 color: 'black',
+
             },
             showSymbol:true,
             symbol:'circle',    //设定为实心点

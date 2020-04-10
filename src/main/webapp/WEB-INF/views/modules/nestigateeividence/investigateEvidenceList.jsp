@@ -130,7 +130,7 @@
 					${investigateEvidence.complaintMain.hospital.name}
 				</td>
 				<td style="text-align: center;">
-                        ${investigateEvidence.auditAcceptance.insuranceCompany}
+						${fns:getDictLabel(investigateEvidence.auditAcceptance.insuranceCompany, 'sys_office_form',investigateEvidence.auditAcceptance.insuranceCompany)}
 				</td>
 				<td style="text-align:center;">
 						${investigateEvidence.auditAcceptance.treatmentOutcome}

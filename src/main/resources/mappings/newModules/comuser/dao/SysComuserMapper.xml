@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sayee.sxsy.newModules.comuser.dao.SysComuserMapper" >
+  <resultMap id="BaseResultMap" type="com.sayee.sxsy.newModules.comuser.entity.SysComuser" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="IDENTITY_TYPE" property="identityType" jdbcType="CHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PAPERS_TYPE" property="papersType" jdbcType="CHAR" />
+    <result column="PAPERS_NUM" property="papersNum" jdbcType="CHAR" />
+    <result column="AGE" property="age" jdbcType="CHAR" />
+    <result column="SEX" property="sex" jdbcType="CHAR" />
+    <result column="BIRTHDAY" property="birthday" jdbcType="CHAR" />
+    <result column="RESIDENCE" property="residence" jdbcType="CHAR" />
+    <result column="CENSUS" property="census" jdbcType="CHAR" />
+    <result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="USER_TYPE" property="userType" jdbcType="CHAR" />
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+    <result column="OFFICE" property="office" jdbcType="VARCHAR" />
+    <result column="DUTY" property="duty" jdbcType="VARCHAR" />
+    <result column="WEIXI" property="weixi" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="SCHOOL" property="school" jdbcType="VARCHAR" />
+    <result column="SPECIALTY" property="specialty" jdbcType="VARCHAR" />
+    <result column="REPLENISH_PAPERS_TYPE" property="replenishPapersType" jdbcType="CHAR" />
+    <result column="REPLENISH_NUM" property="replenishNum" jdbcType="CHAR" />
+    <result column="LOGIN_IP" property="loginIp" jdbcType="VARCHAR" />
+    <result column="LOGIN_DATE" property="loginDate" jdbcType="TIMESTAMP" />
+    <result column="LOGIN_FLAG" property="loginFlag" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, IDENTITY_TYPE, NAME, PAPERS_TYPE, PAPERS_NUM, AGE, SEX, BIRTHDAY, RESIDENCE, 
+    CENSUS, LOGIN_NAME, PASSWORD, USER_TYPE, COMPANY, OFFICE, DUTY, WEIXI, EMAIL, SCHOOL, 
+    SPECIALTY, REPLENISH_PAPERS_TYPE, REPLENISH_NUM, LOGIN_IP, LOGIN_DATE, LOGIN_FLAG, 
+    CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE, DEL_FLAG
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sayee.sxsy.newModules.comuser.entity.SysComuserExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from SYS_COMUSER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_COMUSER
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from SYS_COMUSER
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sayee.sxsy.newModules.comuser.entity.SysComuserExample" >
+    delete from SYS_COMUSER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sayee.sxsy.newModules.comuser.entity.SysComuser" >
+    insert into SYS_COMUSER (ID, IDENTITY_TYPE, NAME, 
+      PAPERS_TYPE, PAPERS_NUM, AGE, 
+      SEX, BIRTHDAY, RESIDENCE, CENSUS, 
+      LOGIN_NAME, PASSWORD, USER_TYPE, 
+      COMPANY, OFFICE, DUTY, 
+      WEIXI, EMAIL, SCHOOL, 
+      SPECIALTY, REPLENISH_PAPERS_TYPE, REPLENISH_NUM, 
+      LOGIN_IP, LOGIN_DATE, LOGIN_FLAG, 
+      CREATE_BY, CREATE_DATE, UPDATE_BY, 
+      UPDATE_DATE, DEL_FLAG)
+    values (#{id,jdbcType=INTEGER}, #{identityType,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, 
+      #{papersType,jdbcType=CHAR}, #{papersNum,jdbcType=CHAR}, #{age,jdbcType=CHAR}, 
+      #{sex,jdbcType=CHAR}, #{birthday,jdbcType=CHAR}, #{residence,jdbcType=CHAR}, #{census,jdbcType=CHAR}, 
+      #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{userType,jdbcType=CHAR}, 
+      #{company,jdbcType=VARCHAR}, #{office,jdbcType=VARCHAR}, #{duty,jdbcType=VARCHAR}, 
+      #{weixi,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR}, 
+      #{specialty,jdbcType=VARCHAR}, #{replenishPapersType,jdbcType=CHAR}, #{replenishNum,jdbcType=CHAR}, 
+      #{loginIp,jdbcType=VARCHAR}, #{loginDate,jdbcType=TIMESTAMP}, #{loginFlag,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sayee.sxsy.newModules.comuser.entity.SysComuser" >
+    insert into SYS_COMUSER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="identityType != null" >
+        IDENTITY_TYPE,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="papersType != null" >
+        PAPERS_TYPE,
+      </if>
+      <if test="papersNum != null" >
+        PAPERS_NUM,
+      </if>
+      <if test="age != null" >
+        AGE,
+      </if>
+      <if test="sex != null" >
+        SEX,
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY,
+      </if>
+      <if test="residence != null" >
+        RESIDENCE,
+      </if>
+      <if test="census != null" >
+        CENSUS,
+      </if>
+      <if test="loginName != null" >
+        LOGIN_NAME,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="userType != null" >
+        USER_TYPE,
+      </if>
+      <if test="company != null" >
+        COMPANY,
+      </if>
+      <if test="office != null" >
+        OFFICE,
+      </if>
+      <if test="duty != null" >
+        DUTY,
+      </if>
+      <if test="weixi != null" >
+        WEIXI,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="school != null" >
+        SCHOOL,
+      </if>
+      <if test="specialty != null" >
+        SPECIALTY,
+      </if>
+      <if test="replenishPapersType != null" >
+        REPLENISH_PAPERS_TYPE,
+      </if>
+      <if test="replenishNum != null" >
+        REPLENISH_NUM,
+      </if>
+      <if test="loginIp != null" >
+        LOGIN_IP,
+      </if>
+      <if test="loginDate != null" >
+        LOGIN_DATE,
+      </if>
+      <if test="loginFlag != null" >
+        LOGIN_FLAG,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="identityType != null" >
+        #{identityType,jdbcType=CHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="papersType != null" >
+        #{papersType,jdbcType=CHAR},
+      </if>
+      <if test="papersNum != null" >
+        #{papersNum,jdbcType=CHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=CHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=CHAR},
+      </if>
+      <if test="residence != null" >
+        #{residence,jdbcType=CHAR},
+      </if>
+      <if test="census != null" >
+        #{census,jdbcType=CHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=CHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="office != null" >
+        #{office,jdbcType=VARCHAR},
+      </if>
+      <if test="duty != null" >
+        #{duty,jdbcType=VARCHAR},
+      </if>
+      <if test="weixi != null" >
+        #{weixi,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="school != null" >
+        #{school,jdbcType=VARCHAR},
+      </if>
+      <if test="specialty != null" >
+        #{specialty,jdbcType=VARCHAR},
+      </if>
+      <if test="replenishPapersType != null" >
+        #{replenishPapersType,jdbcType=CHAR},
+      </if>
+      <if test="replenishNum != null" >
+        #{replenishNum,jdbcType=CHAR},
+      </if>
+      <if test="loginIp != null" >
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null" >
+        #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFlag != null" >
+        #{loginFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sayee.sxsy.newModules.comuser.entity.SysComuserExample" resultType="java.lang.Integer" >
+    select count(*) from SYS_COMUSER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update SYS_COMUSER
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.identityType != null" >
+        IDENTITY_TYPE = #{record.identityType,jdbcType=CHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.papersType != null" >
+        PAPERS_TYPE = #{record.papersType,jdbcType=CHAR},
+      </if>
+      <if test="record.papersNum != null" >
+        PAPERS_NUM = #{record.papersNum,jdbcType=CHAR},
+      </if>
+      <if test="record.age != null" >
+        AGE = #{record.age,jdbcType=CHAR},
+      </if>
+      <if test="record.sex != null" >
+        SEX = #{record.sex,jdbcType=CHAR},
+      </if>
+      <if test="record.birthday != null" >
+        BIRTHDAY = #{record.birthday,jdbcType=CHAR},
+      </if>
+      <if test="record.residence != null" >
+        RESIDENCE = #{record.residence,jdbcType=CHAR},
+      </if>
+      <if test="record.census != null" >
+        CENSUS = #{record.census,jdbcType=CHAR},
+      </if>
+      <if test="record.loginName != null" >
+        LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        PASSWORD = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userType != null" >
+        USER_TYPE = #{record.userType,jdbcType=CHAR},
+      </if>
+      <if test="record.company != null" >
+        COMPANY = #{record.company,jdbcType=VARCHAR},
+      </if>
+      <if test="record.office != null" >
+        OFFICE = #{record.office,jdbcType=VARCHAR},
+      </if>
+      <if test="record.duty != null" >
+        DUTY = #{record.duty,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weixi != null" >
+        WEIXI = #{record.weixi,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        EMAIL = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.school != null" >
+        SCHOOL = #{record.school,jdbcType=VARCHAR},
+      </if>
+      <if test="record.specialty != null" >
+        SPECIALTY = #{record.specialty,jdbcType=VARCHAR},
+      </if>
+      <if test="record.replenishPapersType != null" >
+        REPLENISH_PAPERS_TYPE = #{record.replenishPapersType,jdbcType=CHAR},
+      </if>
+      <if test="record.replenishNum != null" >
+        REPLENISH_NUM = #{record.replenishNum,jdbcType=CHAR},
+      </if>
+      <if test="record.loginIp != null" >
+        LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginDate != null" >
+        LOGIN_DATE = #{record.loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.loginFlag != null" >
+        LOGIN_FLAG = #{record.loginFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null" >
+        DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update SYS_COMUSER
+    set ID = #{record.id,jdbcType=INTEGER},
+      IDENTITY_TYPE = #{record.identityType,jdbcType=CHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      PAPERS_TYPE = #{record.papersType,jdbcType=CHAR},
+      PAPERS_NUM = #{record.papersNum,jdbcType=CHAR},
+      AGE = #{record.age,jdbcType=CHAR},
+      SEX = #{record.sex,jdbcType=CHAR},
+      BIRTHDAY = #{record.birthday,jdbcType=CHAR},
+      RESIDENCE = #{record.residence,jdbcType=CHAR},
+      CENSUS = #{record.census,jdbcType=CHAR},
+      LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
+      PASSWORD = #{record.password,jdbcType=VARCHAR},
+      USER_TYPE = #{record.userType,jdbcType=CHAR},
+      COMPANY = #{record.company,jdbcType=VARCHAR},
+      OFFICE = #{record.office,jdbcType=VARCHAR},
+      DUTY = #{record.duty,jdbcType=VARCHAR},
+      WEIXI = #{record.weixi,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      SCHOOL = #{record.school,jdbcType=VARCHAR},
+      SPECIALTY = #{record.specialty,jdbcType=VARCHAR},
+      REPLENISH_PAPERS_TYPE = #{record.replenishPapersType,jdbcType=CHAR},
+      REPLENISH_NUM = #{record.replenishNum,jdbcType=CHAR},
+      LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR},
+      LOGIN_DATE = #{record.loginDate,jdbcType=TIMESTAMP},
+      LOGIN_FLAG = #{record.loginFlag,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sayee.sxsy.newModules.comuser.entity.SysComuser" >
+    update SYS_COMUSER
+    <set >
+      <if test="identityType != null" >
+        IDENTITY_TYPE = #{identityType,jdbcType=CHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="papersType != null" >
+        PAPERS_TYPE = #{papersType,jdbcType=CHAR},
+      </if>
+      <if test="papersNum != null" >
+        PAPERS_NUM = #{papersNum,jdbcType=CHAR},
+      </if>
+      <if test="age != null" >
+        AGE = #{age,jdbcType=CHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY = #{birthday,jdbcType=CHAR},
+      </if>
+      <if test="residence != null" >
+        RESIDENCE = #{residence,jdbcType=CHAR},
+      </if>
+      <if test="census != null" >
+        CENSUS = #{census,jdbcType=CHAR},
+      </if>
+      <if test="loginName != null" >
+        LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        USER_TYPE = #{userType,jdbcType=CHAR},
+      </if>
+      <if test="company != null" >
+        COMPANY = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="office != null" >
+        OFFICE = #{office,jdbcType=VARCHAR},
+      </if>
+      <if test="duty != null" >
+        DUTY = #{duty,jdbcType=VARCHAR},
+      </if>
+      <if test="weixi != null" >
+        WEIXI = #{weixi,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="school != null" >
+        SCHOOL = #{school,jdbcType=VARCHAR},
+      </if>
+      <if test="specialty != null" >
+        SPECIALTY = #{specialty,jdbcType=VARCHAR},
+      </if>
+      <if test="replenishPapersType != null" >
+        REPLENISH_PAPERS_TYPE = #{replenishPapersType,jdbcType=CHAR},
+      </if>
+      <if test="replenishNum != null" >
+        REPLENISH_NUM = #{replenishNum,jdbcType=CHAR},
+      </if>
+      <if test="loginIp != null" >
+        LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null" >
+        LOGIN_DATE = #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFlag != null" >
+        LOGIN_FLAG = #{loginFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sayee.sxsy.newModules.comuser.entity.SysComuser" >
+    update SYS_COMUSER
+    set IDENTITY_TYPE = #{identityType,jdbcType=CHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      PAPERS_TYPE = #{papersType,jdbcType=CHAR},
+      PAPERS_NUM = #{papersNum,jdbcType=CHAR},
+      AGE = #{age,jdbcType=CHAR},
+      SEX = #{sex,jdbcType=CHAR},
+      BIRTHDAY = #{birthday,jdbcType=CHAR},
+      RESIDENCE = #{residence,jdbcType=CHAR},
+      CENSUS = #{census,jdbcType=CHAR},
+      LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      USER_TYPE = #{userType,jdbcType=CHAR},
+      COMPANY = #{company,jdbcType=VARCHAR},
+      OFFICE = #{office,jdbcType=VARCHAR},
+      DUTY = #{duty,jdbcType=VARCHAR},
+      WEIXI = #{weixi,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      SCHOOL = #{school,jdbcType=VARCHAR},
+      SPECIALTY = #{specialty,jdbcType=VARCHAR},
+      REPLENISH_PAPERS_TYPE = #{replenishPapersType,jdbcType=CHAR},
+      REPLENISH_NUM = #{replenishNum,jdbcType=CHAR},
+      LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      LOGIN_DATE = #{loginDate,jdbcType=TIMESTAMP},
+      LOGIN_FLAG = #{loginFlag,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

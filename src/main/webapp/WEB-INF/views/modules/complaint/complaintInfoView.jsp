@@ -544,7 +544,7 @@
                 <tr>
                     <td class="tit"><font color="red">*</font>填表人签名:</td>
                     <td colspan="3">
-                            ${empty complaintInfo.reportRegistration.djEmployee.name ?  fns:getUser().name : complaintInfo.reportRegistration.djEmployee.name}
+                            ${fns:getUserById(complaintInfo.reportRegistration.registrationEmp).name }
                     </td>
                     <td class="tit"><font color="red">*</font>填表日期:</td>
                     <td colspan="3">
@@ -791,6 +791,13 @@
                     <form:textarea path="complaintMain.act.comment" htmlEscape="false" rows="4" maxlength="200" class="required input-xxlarge"/>
                 </div>
             </div>
+            <div class="control-group">
+                <label class="control-label">分配员:</label>
+                <div class="controls">
+                    <sys:treeselect id="nextLinkMan" name="nextLinkMan" value="${complaintInfo.nextLinkMan}" labelName="link.name" labelValue="${complaintInfo.nextLinkMan}"
+                                    title="用户" url="/sys/office/treeData?type=2&officeType=1" isAll="true" role="anjianfenpeiyuan" cssClass="required" dataMsgRequired="请选择下一环节处理人" allowClear="true" notAllowSelectParent="true"/>
+                </div>
+            </div>
         </c:if>
         <c:if test="${node eq 'fpy' }">
             <div class="control-group">
@@ -800,7 +807,7 @@
                                     title="用户" url="/sys/office/treeData?type=3&officeType=1" isAll="true"  cssClass="required" dataMsgRequired="请选择下一环节处理人" allowClear="true" notAllowSelectParent="true"/>
                 </div>
             </div>
-            </c:if>
+        </c:if>
 
 
     </table>
@@ -809,8 +816,8 @@
     <c:if test="${empty show2}">
         <div class="form-actions">
             <c:if test="${node eq 'sjy' }">
-                <input id="btnSubmit" class="btn btn-success" type="submit" value="通 过" onclick="$('#status').val('0')"/>&nbsp;
-                <input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#status').val('1')"/>&nbsp;
+                <input id="btnSubmit" class="btn btn-success" type="submit" value="通 过" onclick="$('#status').val('0');addCssClass()"/>&nbsp;
+                <input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#status').val('1');removeCssClass()"/>&nbsp;
             </c:if>
             <c:if test="${node eq 'fpy' }">
                 <input id="btnSubmit" class="btn btn-success" type="submit" value="通 过" onclick="$('#status').val('0')"/>&nbsp;

@@ -163,6 +163,28 @@ public class Global {
 	}
 
 	/**
+	 * 获取阿里云key
+	 */
+	public static String getSccessKeyId() {
+		return getConfig("sccessKeyId");
+	}
+
+	/**
+	 * 获取阿里云value
+	 */
+	public static String getSecert() {
+		return getConfig("secert");
+	}
+
+	/**
+	 * 获取阿里云签名
+	 */
+	public static String getSingName() {
+		return getConfig("singName");
+	}
+
+
+	/**
 	 * 获取工程路径
 	 * 
 	 * @return

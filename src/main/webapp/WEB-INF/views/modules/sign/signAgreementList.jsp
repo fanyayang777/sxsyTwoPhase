@@ -128,7 +128,7 @@
 						${signAgreement.complaintMain.hospital.name}
 				</td>
 				<td style="text-align:center;">
-						${signAgreement.auditAcceptance.insuranceCompany}
+						${fns:getDictLabel(signAgreement.auditAcceptance.insuranceCompany, 'sys_office_form',signAgreement.auditAcceptance.insuranceCompany)}
 				</td>
 				<td style="text-align:center;">
 						${signAgreement.auditAcceptance.treatmentOutcome}
@@ -146,7 +146,7 @@
 						${signAgreement.ratifyAccord}
 				</td>
 				<td style="text-align:center;">
-						${signAgreement.agreementNumber}
+							${signAgreement.agreementNumber}
 				</td>
 				<td style="text-align:center;">
 						${signAgreement.agreementAmount}

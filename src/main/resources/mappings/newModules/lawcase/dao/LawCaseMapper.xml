@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sayee.sxsy.newModules.lawcase.dao.LawCaseMapper" >
+  <resultMap id="BaseResultMap" type="com.sayee.sxsy.newModules.lawcase.entity.LawCase" >
+    <id column="LAW_CASE_ID" property="lawCaseId" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="CHAR" />
+    <result column="PUBLISH_TIME" property="publishTime" jdbcType="VARCHAR" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="CHAR" />
+    <result column="LAW_TYPE" property="lawType" jdbcType="CHAR" />
+    <result column="DISPUTE_TYPE" property="disputeType" jdbcType="CHAR" />
+    <result column="MAJOR_TYPE" property="majorType" jdbcType="CHAR" />
+    <result column="CORE_SYSTEM_TYPE" property="coreSystemType" jdbcType="CHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.sayee.sxsy.newModules.lawcase.entity.LawCase" extends="BaseResultMap" >
+    <result column="CONTENT" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    LAW_CASE_ID, TYPE, PUBLISH_TIME, TITLE, REMARKS, CREATE_BY, CREATE_DATE, UPDATE_BY, 
+    UPDATE_DATE, DEL_FLAG, LAW_TYPE, DISPUTE_TYPE, MAJOR_TYPE, CORE_SYSTEM_TYPE
+  </sql>
+  <sql id="Blob_Column_List" >
+    CONTENT
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.sayee.sxsy.newModules.lawcase.entity.LawCaseExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from LAW_CASE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sayee.sxsy.newModules.lawcase.entity.LawCaseExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from LAW_CASE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from LAW_CASE
+    where LAW_CASE_ID = #{lawCaseId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LAW_CASE
+    where LAW_CASE_ID = #{lawCaseId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sayee.sxsy.newModules.lawcase.entity.LawCaseExample" >
+    delete from LAW_CASE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sayee.sxsy.newModules.lawcase.entity.LawCase" >
+    insert into LAW_CASE (LAW_CASE_ID, TYPE, PUBLISH_TIME, 
+      TITLE, REMARKS, CREATE_BY, 
+      CREATE_DATE, UPDATE_BY, UPDATE_DATE, 
+      DEL_FLAG, LAW_TYPE, DISPUTE_TYPE, 
+      MAJOR_TYPE, CORE_SYSTEM_TYPE, CONTENT
+      )
+    values (#{lawCaseId,jdbcType=VARCHAR}, #{type,jdbcType=CHAR}, #{publishTime,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=CHAR}, #{lawType,jdbcType=CHAR}, #{disputeType,jdbcType=CHAR}, 
+      #{majorType,jdbcType=CHAR}, #{coreSystemType,jdbcType=CHAR}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sayee.sxsy.newModules.lawcase.entity.LawCase" >
+    insert into LAW_CASE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lawCaseId != null" >
+        LAW_CASE_ID,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="lawType != null" >
+        LAW_TYPE,
+      </if>
+      <if test="disputeType != null" >
+        DISPUTE_TYPE,
+      </if>
+      <if test="majorType != null" >
+        MAJOR_TYPE,
+      </if>
+      <if test="coreSystemType != null" >
+        CORE_SYSTEM_TYPE,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lawCaseId != null" >
+        #{lawCaseId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="lawType != null" >
+        #{lawType,jdbcType=CHAR},
+      </if>
+      <if test="disputeType != null" >
+        #{disputeType,jdbcType=CHAR},
+      </if>
+      <if test="majorType != null" >
+        #{majorType,jdbcType=CHAR},
+      </if>
+      <if test="coreSystemType != null" >
+        #{coreSystemType,jdbcType=CHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sayee.sxsy.newModules.lawcase.entity.LawCaseExample" resultType="java.lang.Integer" >
+    select count(*) from LAW_CASE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update LAW_CASE
+    <set >
+      <if test="record.lawCaseId != null" >
+        LAW_CASE_ID = #{record.lawCaseId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        TYPE = #{record.type,jdbcType=CHAR},
+      </if>
+      <if test="record.publishTime != null" >
+        PUBLISH_TIME = #{record.publishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null" >
+        TITLE = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remarks != null" >
+        REMARKS = #{record.remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null" >
+        DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.lawType != null" >
+        LAW_TYPE = #{record.lawType,jdbcType=CHAR},
+      </if>
+      <if test="record.disputeType != null" >
+        DISPUTE_TYPE = #{record.disputeType,jdbcType=CHAR},
+      </if>
+      <if test="record.majorType != null" >
+        MAJOR_TYPE = #{record.majorType,jdbcType=CHAR},
+      </if>
+      <if test="record.coreSystemType != null" >
+        CORE_SYSTEM_TYPE = #{record.coreSystemType,jdbcType=CHAR},
+      </if>
+      <if test="record.content != null" >
+        CONTENT = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update LAW_CASE
+    set LAW_CASE_ID = #{record.lawCaseId,jdbcType=VARCHAR},
+      TYPE = #{record.type,jdbcType=CHAR},
+      PUBLISH_TIME = #{record.publishTime,jdbcType=VARCHAR},
+      TITLE = #{record.title,jdbcType=VARCHAR},
+      REMARKS = #{record.remarks,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      LAW_TYPE = #{record.lawType,jdbcType=CHAR},
+      DISPUTE_TYPE = #{record.disputeType,jdbcType=CHAR},
+      MAJOR_TYPE = #{record.majorType,jdbcType=CHAR},
+      CORE_SYSTEM_TYPE = #{record.coreSystemType,jdbcType=CHAR},
+      CONTENT = #{record.content,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update LAW_CASE
+    set LAW_CASE_ID = #{record.lawCaseId,jdbcType=VARCHAR},
+      TYPE = #{record.type,jdbcType=CHAR},
+      PUBLISH_TIME = #{record.publishTime,jdbcType=VARCHAR},
+      TITLE = #{record.title,jdbcType=VARCHAR},
+      REMARKS = #{record.remarks,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      LAW_TYPE = #{record.lawType,jdbcType=CHAR},
+      DISPUTE_TYPE = #{record.disputeType,jdbcType=CHAR},
+      MAJOR_TYPE = #{record.majorType,jdbcType=CHAR},
+      CORE_SYSTEM_TYPE = #{record.coreSystemType,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sayee.sxsy.newModules.lawcase.entity.LawCase" >
+    update LAW_CASE
+    <set >
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=CHAR},
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME = #{publishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="lawType != null" >
+        LAW_TYPE = #{lawType,jdbcType=CHAR},
+      </if>
+      <if test="disputeType != null" >
+        DISPUTE_TYPE = #{disputeType,jdbcType=CHAR},
+      </if>
+      <if test="majorType != null" >
+        MAJOR_TYPE = #{majorType,jdbcType=CHAR},
+      </if>
+      <if test="coreSystemType != null" >
+        CORE_SYSTEM_TYPE = #{coreSystemType,jdbcType=CHAR},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where LAW_CASE_ID = #{lawCaseId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sayee.sxsy.newModules.lawcase.entity.LawCase" >
+    update LAW_CASE
+    set TYPE = #{type,jdbcType=CHAR},
+      PUBLISH_TIME = #{publishTime,jdbcType=VARCHAR},
+      TITLE = #{title,jdbcType=VARCHAR},
+      REMARKS = #{remarks,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      LAW_TYPE = #{lawType,jdbcType=CHAR},
+      DISPUTE_TYPE = #{disputeType,jdbcType=CHAR},
+      MAJOR_TYPE = #{majorType,jdbcType=CHAR},
+      CORE_SYSTEM_TYPE = #{coreSystemType,jdbcType=CHAR},
+      CONTENT = #{content,jdbcType=LONGVARCHAR}
+    where LAW_CASE_ID = #{lawCaseId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sayee.sxsy.newModules.lawcase.entity.LawCase" >
+    update LAW_CASE
+    set TYPE = #{type,jdbcType=CHAR},
+      PUBLISH_TIME = #{publishTime,jdbcType=VARCHAR},
+      TITLE = #{title,jdbcType=VARCHAR},
+      REMARKS = #{remarks,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      LAW_TYPE = #{lawType,jdbcType=CHAR},
+      DISPUTE_TYPE = #{disputeType,jdbcType=CHAR},
+      MAJOR_TYPE = #{majorType,jdbcType=CHAR},
+      CORE_SYSTEM_TYPE = #{coreSystemType,jdbcType=CHAR}
+    where LAW_CASE_ID = #{lawCaseId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sayee.sxsy.newModules.complaintinfo.dao.ComplaintInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfo" >
+    <id column="COMPLAINT_ID" property="complaintId" jdbcType="VARCHAR" />
+    <result column="COMPLAINT_MAIN_ID" property="complaintMainId" jdbcType="VARCHAR" />
+    <result column="VISITOR_NAME" property="visitorName" jdbcType="VARCHAR" />
+    <result column="VISITOR_MOBILE" property="visitorMobile" jdbcType="VARCHAR" />
+    <result column="PATIENT_RELATION" property="patientRelation" jdbcType="VARCHAR" />
+    <result column="VISITOR_NUMBER" property="visitorNumber" jdbcType="VARCHAR" />
+    <result column="PATIENT_NAME" property="patientName" jdbcType="VARCHAR" />
+    <result column="PATIENT_SEX" property="patientSex" jdbcType="VARCHAR" />
+    <result column="PATIENT_AGE" property="patientAge" jdbcType="TINYINT" />
+    <result column="INVOLVE_HOSPITAL" property="involveHospital" jdbcType="VARCHAR" />
+    <result column="INVOLVE_DEPARTMENT" property="involveDepartment" jdbcType="VARCHAR" />
+    <result column="INVOLVE_EMPLOYEE" property="involveEmployee" jdbcType="VARCHAR" />
+    <result column="CASE_NUMBER" property="caseNumber" jdbcType="VARCHAR" />
+    <result column="VISITOR_DATE" property="visitorDate" jdbcType="VARCHAR" />
+    <result column="COMPLAINT_MODE" property="complaintMode" jdbcType="CHAR" />
+    <result column="IS_MAJOR" property="isMajor" jdbcType="CHAR" />
+    <result column="RECEPTION_EMPLOYEE" property="receptionEmployee" jdbcType="VARCHAR" />
+    <result column="RECEPTION_DATE" property="receptionDate" jdbcType="VARCHAR" />
+    <result column="IS_MEDIATE" property="isMediate" jdbcType="CHAR" />
+    <result column="COMPLAINT_TYPE" property="complaintType" jdbcType="VARCHAR" />
+    <result column="HANDLE_WAY" property="handleWay" jdbcType="CHAR" />
+    <result column="SHIFT_HANDLE" property="shiftHandle" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <result column="EXPECTED_CLOSURE" property="expectedClosure" jdbcType="VARCHAR" />
+    <result column="CLOSING_METHOD" property="closingMethod" jdbcType="VARCHAR" />
+    <result column="AMOUNT_INVOLVED" property="amountInvolved" jdbcType="DECIMAL" />
+    <result column="NEXT_LINK" property="nextLink" jdbcType="VARCHAR" />
+    <result column="NEXT_LINK_MAN" property="nextLinkMan" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfoWithBLOBs" extends="BaseResultMap" >
+    <result column="SUMMARY_OF_DISPUTES" property="summaryOfDisputes" jdbcType="LONGVARCHAR" />
+    <result column="APPEAL" property="appeal" jdbcType="LONGVARCHAR" />
+    <result column="HANDLE_PASS" property="handlePass" jdbcType="LONGVARCHAR" />
+    <result column="HANDLE_RESULT" property="handleResult" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    COMPLAINT_ID, COMPLAINT_MAIN_ID, VISITOR_NAME, VISITOR_MOBILE, PATIENT_RELATION, 
+    VISITOR_NUMBER, PATIENT_NAME, PATIENT_SEX, PATIENT_AGE, INVOLVE_HOSPITAL, INVOLVE_DEPARTMENT, 
+    INVOLVE_EMPLOYEE, CASE_NUMBER, VISITOR_DATE, COMPLAINT_MODE, IS_MAJOR, RECEPTION_EMPLOYEE, 
+    RECEPTION_DATE, IS_MEDIATE, COMPLAINT_TYPE, HANDLE_WAY, SHIFT_HANDLE, STATUS, EXPECTED_CLOSURE, 
+    CLOSING_METHOD, AMOUNT_INVOLVED, NEXT_LINK, NEXT_LINK_MAN, CREATE_BY, CREATE_DATE, 
+    UPDATE_BY, UPDATE_DATE, DEL_FLAG
+  </sql>
+  <sql id="Blob_Column_List" >
+    SUMMARY_OF_DISPUTES, APPEAL, HANDLE_PASS, HANDLE_RESULT
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from COMPLAINT_INFO
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from COMPLAINT_INFO
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from COMPLAINT_INFO
+    where COMPLAINT_ID = #{complaintId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from COMPLAINT_INFO
+    where COMPLAINT_ID = #{complaintId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfoExample" >
+    delete from COMPLAINT_INFO
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfoWithBLOBs" >
+    insert into COMPLAINT_INFO (COMPLAINT_ID, COMPLAINT_MAIN_ID, VISITOR_NAME, 
+      VISITOR_MOBILE, PATIENT_RELATION, VISITOR_NUMBER, 
+      PATIENT_NAME, PATIENT_SEX, PATIENT_AGE, 
+      INVOLVE_HOSPITAL, INVOLVE_DEPARTMENT, INVOLVE_EMPLOYEE, 
+      CASE_NUMBER, VISITOR_DATE, COMPLAINT_MODE, 
+      IS_MAJOR, RECEPTION_EMPLOYEE, RECEPTION_DATE, 
+      IS_MEDIATE, COMPLAINT_TYPE, HANDLE_WAY, 
+      SHIFT_HANDLE, STATUS, EXPECTED_CLOSURE, 
+      CLOSING_METHOD, AMOUNT_INVOLVED, NEXT_LINK, 
+      NEXT_LINK_MAN, CREATE_BY, CREATE_DATE, 
+      UPDATE_BY, UPDATE_DATE, DEL_FLAG, 
+      SUMMARY_OF_DISPUTES, APPEAL, HANDLE_PASS, 
+      HANDLE_RESULT)
+    values (#{complaintId,jdbcType=VARCHAR}, #{complaintMainId,jdbcType=VARCHAR}, #{visitorName,jdbcType=VARCHAR}, 
+      #{visitorMobile,jdbcType=VARCHAR}, #{patientRelation,jdbcType=VARCHAR}, #{visitorNumber,jdbcType=VARCHAR}, 
+      #{patientName,jdbcType=VARCHAR}, #{patientSex,jdbcType=VARCHAR}, #{patientAge,jdbcType=TINYINT}, 
+      #{involveHospital,jdbcType=VARCHAR}, #{involveDepartment,jdbcType=VARCHAR}, #{involveEmployee,jdbcType=VARCHAR}, 
+      #{caseNumber,jdbcType=VARCHAR}, #{visitorDate,jdbcType=VARCHAR}, #{complaintMode,jdbcType=CHAR}, 
+      #{isMajor,jdbcType=CHAR}, #{receptionEmployee,jdbcType=VARCHAR}, #{receptionDate,jdbcType=VARCHAR}, 
+      #{isMediate,jdbcType=CHAR}, #{complaintType,jdbcType=VARCHAR}, #{handleWay,jdbcType=CHAR}, 
+      #{shiftHandle,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{expectedClosure,jdbcType=VARCHAR}, 
+      #{closingMethod,jdbcType=VARCHAR}, #{amountInvolved,jdbcType=DECIMAL}, #{nextLink,jdbcType=VARCHAR}, 
+      #{nextLinkMan,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR}, 
+      #{summaryOfDisputes,jdbcType=LONGVARCHAR}, #{appeal,jdbcType=LONGVARCHAR}, #{handlePass,jdbcType=LONGVARCHAR}, 
+      #{handleResult,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfoWithBLOBs" >
+    insert into COMPLAINT_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="complaintId != null" >
+        COMPLAINT_ID,
+      </if>
+      <if test="complaintMainId != null" >
+        COMPLAINT_MAIN_ID,
+      </if>
+      <if test="visitorName != null" >
+        VISITOR_NAME,
+      </if>
+      <if test="visitorMobile != null" >
+        VISITOR_MOBILE,
+      </if>
+      <if test="patientRelation != null" >
+        PATIENT_RELATION,
+      </if>
+      <if test="visitorNumber != null" >
+        VISITOR_NUMBER,
+      </if>
+      <if test="patientName != null" >
+        PATIENT_NAME,
+      </if>
+      <if test="patientSex != null" >
+        PATIENT_SEX,
+      </if>
+      <if test="patientAge != null" >
+        PATIENT_AGE,
+      </if>
+      <if test="involveHospital != null" >
+        INVOLVE_HOSPITAL,
+      </if>
+      <if test="involveDepartment != null" >
+        INVOLVE_DEPARTMENT,
+      </if>
+      <if test="involveEmployee != null" >
+        INVOLVE_EMPLOYEE,
+      </if>
+      <if test="caseNumber != null" >
+        CASE_NUMBER,
+      </if>
+      <if test="visitorDate != null" >
+        VISITOR_DATE,
+      </if>
+      <if test="complaintMode != null" >
+        COMPLAINT_MODE,
+      </if>
+      <if test="isMajor != null" >
+        IS_MAJOR,
+      </if>
+      <if test="receptionEmployee != null" >
+        RECEPTION_EMPLOYEE,
+      </if>
+      <if test="receptionDate != null" >
+        RECEPTION_DATE,
+      </if>
+      <if test="isMediate != null" >
+        IS_MEDIATE,
+      </if>
+      <if test="complaintType != null" >
+        COMPLAINT_TYPE,
+      </if>
+      <if test="handleWay != null" >
+        HANDLE_WAY,
+      </if>
+      <if test="shiftHandle != null" >
+        SHIFT_HANDLE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="expectedClosure != null" >
+        EXPECTED_CLOSURE,
+      </if>
+      <if test="closingMethod != null" >
+        CLOSING_METHOD,
+      </if>
+      <if test="amountInvolved != null" >
+        AMOUNT_INVOLVED,
+      </if>
+      <if test="nextLink != null" >
+        NEXT_LINK,
+      </if>
+      <if test="nextLinkMan != null" >
+        NEXT_LINK_MAN,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="summaryOfDisputes != null" >
+        SUMMARY_OF_DISPUTES,
+      </if>
+      <if test="appeal != null" >
+        APPEAL,
+      </if>
+      <if test="handlePass != null" >
+        HANDLE_PASS,
+      </if>
+      <if test="handleResult != null" >
+        HANDLE_RESULT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="complaintId != null" >
+        #{complaintId,jdbcType=VARCHAR},
+      </if>
+      <if test="complaintMainId != null" >
+        #{complaintMainId,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorName != null" >
+        #{visitorName,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorMobile != null" >
+        #{visitorMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="patientRelation != null" >
+        #{patientRelation,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorNumber != null" >
+        #{visitorNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName != null" >
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="patientSex != null" >
+        #{patientSex,jdbcType=VARCHAR},
+      </if>
+      <if test="patientAge != null" >
+        #{patientAge,jdbcType=TINYINT},
+      </if>
+      <if test="involveHospital != null" >
+        #{involveHospital,jdbcType=VARCHAR},
+      </if>
+      <if test="involveDepartment != null" >
+        #{involveDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="involveEmployee != null" >
+        #{involveEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="caseNumber != null" >
+        #{caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorDate != null" >
+        #{visitorDate,jdbcType=VARCHAR},
+      </if>
+      <if test="complaintMode != null" >
+        #{complaintMode,jdbcType=CHAR},
+      </if>
+      <if test="isMajor != null" >
+        #{isMajor,jdbcType=CHAR},
+      </if>
+      <if test="receptionEmployee != null" >
+        #{receptionEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="receptionDate != null" >
+        #{receptionDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isMediate != null" >
+        #{isMediate,jdbcType=CHAR},
+      </if>
+      <if test="complaintType != null" >
+        #{complaintType,jdbcType=VARCHAR},
+      </if>
+      <if test="handleWay != null" >
+        #{handleWay,jdbcType=CHAR},
+      </if>
+      <if test="shiftHandle != null" >
+        #{shiftHandle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="expectedClosure != null" >
+        #{expectedClosure,jdbcType=VARCHAR},
+      </if>
+      <if test="closingMethod != null" >
+        #{closingMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="amountInvolved != null" >
+        #{amountInvolved,jdbcType=DECIMAL},
+      </if>
+      <if test="nextLink != null" >
+        #{nextLink,jdbcType=VARCHAR},
+      </if>
+      <if test="nextLinkMan != null" >
+        #{nextLinkMan,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="summaryOfDisputes != null" >
+        #{summaryOfDisputes,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="appeal != null" >
+        #{appeal,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="handlePass != null" >
+        #{handlePass,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="handleResult != null" >
+        #{handleResult,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfoExample" resultType="java.lang.Integer" >
+    select count(*) from COMPLAINT_INFO
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update COMPLAINT_INFO
+    <set >
+      <if test="record.complaintId != null" >
+        COMPLAINT_ID = #{record.complaintId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.complaintMainId != null" >
+        COMPLAINT_MAIN_ID = #{record.complaintMainId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.visitorName != null" >
+        VISITOR_NAME = #{record.visitorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.visitorMobile != null" >
+        VISITOR_MOBILE = #{record.visitorMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientRelation != null" >
+        PATIENT_RELATION = #{record.patientRelation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.visitorNumber != null" >
+        VISITOR_NUMBER = #{record.visitorNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientName != null" >
+        PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientSex != null" >
+        PATIENT_SEX = #{record.patientSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientAge != null" >
+        PATIENT_AGE = #{record.patientAge,jdbcType=TINYINT},
+      </if>
+      <if test="record.involveHospital != null" >
+        INVOLVE_HOSPITAL = #{record.involveHospital,jdbcType=VARCHAR},
+      </if>
+      <if test="record.involveDepartment != null" >
+        INVOLVE_DEPARTMENT = #{record.involveDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.involveEmployee != null" >
+        INVOLVE_EMPLOYEE = #{record.involveEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="record.caseNumber != null" >
+        CASE_NUMBER = #{record.caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.visitorDate != null" >
+        VISITOR_DATE = #{record.visitorDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.complaintMode != null" >
+        COMPLAINT_MODE = #{record.complaintMode,jdbcType=CHAR},
+      </if>
+      <if test="record.isMajor != null" >
+        IS_MAJOR = #{record.isMajor,jdbcType=CHAR},
+      </if>
+      <if test="record.receptionEmployee != null" >
+        RECEPTION_EMPLOYEE = #{record.receptionEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receptionDate != null" >
+        RECEPTION_DATE = #{record.receptionDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isMediate != null" >
+        IS_MEDIATE = #{record.isMediate,jdbcType=CHAR},
+      </if>
+      <if test="record.complaintType != null" >
+        COMPLAINT_TYPE = #{record.complaintType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handleWay != null" >
+        HANDLE_WAY = #{record.handleWay,jdbcType=CHAR},
+      </if>
+      <if test="record.shiftHandle != null" >
+        SHIFT_HANDLE = #{record.shiftHandle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=CHAR},
+      </if>
+      <if test="record.expectedClosure != null" >
+        EXPECTED_CLOSURE = #{record.expectedClosure,jdbcType=VARCHAR},
+      </if>
+      <if test="record.closingMethod != null" >
+        CLOSING_METHOD = #{record.closingMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="record.amountInvolved != null" >
+        AMOUNT_INVOLVED = #{record.amountInvolved,jdbcType=DECIMAL},
+      </if>
+      <if test="record.nextLink != null" >
+        NEXT_LINK = #{record.nextLink,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nextLinkMan != null" >
+        NEXT_LINK_MAN = #{record.nextLinkMan,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null" >
+        DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.summaryOfDisputes != null" >
+        SUMMARY_OF_DISPUTES = #{record.summaryOfDisputes,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.appeal != null" >
+        APPEAL = #{record.appeal,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.handlePass != null" >
+        HANDLE_PASS = #{record.handlePass,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.handleResult != null" >
+        HANDLE_RESULT = #{record.handleResult,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update COMPLAINT_INFO
+    set COMPLAINT_ID = #{record.complaintId,jdbcType=VARCHAR},
+      COMPLAINT_MAIN_ID = #{record.complaintMainId,jdbcType=VARCHAR},
+      VISITOR_NAME = #{record.visitorName,jdbcType=VARCHAR},
+      VISITOR_MOBILE = #{record.visitorMobile,jdbcType=VARCHAR},
+      PATIENT_RELATION = #{record.patientRelation,jdbcType=VARCHAR},
+      VISITOR_NUMBER = #{record.visitorNumber,jdbcType=VARCHAR},
+      PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      PATIENT_SEX = #{record.patientSex,jdbcType=VARCHAR},
+      PATIENT_AGE = #{record.patientAge,jdbcType=TINYINT},
+      INVOLVE_HOSPITAL = #{record.involveHospital,jdbcType=VARCHAR},
+      INVOLVE_DEPARTMENT = #{record.involveDepartment,jdbcType=VARCHAR},
+      INVOLVE_EMPLOYEE = #{record.involveEmployee,jdbcType=VARCHAR},
+      CASE_NUMBER = #{record.caseNumber,jdbcType=VARCHAR},
+      VISITOR_DATE = #{record.visitorDate,jdbcType=VARCHAR},
+      COMPLAINT_MODE = #{record.complaintMode,jdbcType=CHAR},
+      IS_MAJOR = #{record.isMajor,jdbcType=CHAR},
+      RECEPTION_EMPLOYEE = #{record.receptionEmployee,jdbcType=VARCHAR},
+      RECEPTION_DATE = #{record.receptionDate,jdbcType=VARCHAR},
+      IS_MEDIATE = #{record.isMediate,jdbcType=CHAR},
+      COMPLAINT_TYPE = #{record.complaintType,jdbcType=VARCHAR},
+      HANDLE_WAY = #{record.handleWay,jdbcType=CHAR},
+      SHIFT_HANDLE = #{record.shiftHandle,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=CHAR},
+      EXPECTED_CLOSURE = #{record.expectedClosure,jdbcType=VARCHAR},
+      CLOSING_METHOD = #{record.closingMethod,jdbcType=VARCHAR},
+      AMOUNT_INVOLVED = #{record.amountInvolved,jdbcType=DECIMAL},
+      NEXT_LINK = #{record.nextLink,jdbcType=VARCHAR},
+      NEXT_LINK_MAN = #{record.nextLinkMan,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      SUMMARY_OF_DISPUTES = #{record.summaryOfDisputes,jdbcType=LONGVARCHAR},
+      APPEAL = #{record.appeal,jdbcType=LONGVARCHAR},
+      HANDLE_PASS = #{record.handlePass,jdbcType=LONGVARCHAR},
+      HANDLE_RESULT = #{record.handleResult,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update COMPLAINT_INFO
+    set COMPLAINT_ID = #{record.complaintId,jdbcType=VARCHAR},
+      COMPLAINT_MAIN_ID = #{record.complaintMainId,jdbcType=VARCHAR},
+      VISITOR_NAME = #{record.visitorName,jdbcType=VARCHAR},
+      VISITOR_MOBILE = #{record.visitorMobile,jdbcType=VARCHAR},
+      PATIENT_RELATION = #{record.patientRelation,jdbcType=VARCHAR},
+      VISITOR_NUMBER = #{record.visitorNumber,jdbcType=VARCHAR},
+      PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      PATIENT_SEX = #{record.patientSex,jdbcType=VARCHAR},
+      PATIENT_AGE = #{record.patientAge,jdbcType=TINYINT},
+      INVOLVE_HOSPITAL = #{record.involveHospital,jdbcType=VARCHAR},
+      INVOLVE_DEPARTMENT = #{record.involveDepartment,jdbcType=VARCHAR},
+      INVOLVE_EMPLOYEE = #{record.involveEmployee,jdbcType=VARCHAR},
+      CASE_NUMBER = #{record.caseNumber,jdbcType=VARCHAR},
+      VISITOR_DATE = #{record.visitorDate,jdbcType=VARCHAR},
+      COMPLAINT_MODE = #{record.complaintMode,jdbcType=CHAR},
+      IS_MAJOR = #{record.isMajor,jdbcType=CHAR},
+      RECEPTION_EMPLOYEE = #{record.receptionEmployee,jdbcType=VARCHAR},
+      RECEPTION_DATE = #{record.receptionDate,jdbcType=VARCHAR},
+      IS_MEDIATE = #{record.isMediate,jdbcType=CHAR},
+      COMPLAINT_TYPE = #{record.complaintType,jdbcType=VARCHAR},
+      HANDLE_WAY = #{record.handleWay,jdbcType=CHAR},
+      SHIFT_HANDLE = #{record.shiftHandle,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=CHAR},
+      EXPECTED_CLOSURE = #{record.expectedClosure,jdbcType=VARCHAR},
+      CLOSING_METHOD = #{record.closingMethod,jdbcType=VARCHAR},
+      AMOUNT_INVOLVED = #{record.amountInvolved,jdbcType=DECIMAL},
+      NEXT_LINK = #{record.nextLink,jdbcType=VARCHAR},
+      NEXT_LINK_MAN = #{record.nextLinkMan,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfoWithBLOBs" >
+    update COMPLAINT_INFO
+    <set >
+      <if test="complaintMainId != null" >
+        COMPLAINT_MAIN_ID = #{complaintMainId,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorName != null" >
+        VISITOR_NAME = #{visitorName,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorMobile != null" >
+        VISITOR_MOBILE = #{visitorMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="patientRelation != null" >
+        PATIENT_RELATION = #{patientRelation,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorNumber != null" >
+        VISITOR_NUMBER = #{visitorNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName != null" >
+        PATIENT_NAME = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="patientSex != null" >
+        PATIENT_SEX = #{patientSex,jdbcType=VARCHAR},
+      </if>
+      <if test="patientAge != null" >
+        PATIENT_AGE = #{patientAge,jdbcType=TINYINT},
+      </if>
+      <if test="involveHospital != null" >
+        INVOLVE_HOSPITAL = #{involveHospital,jdbcType=VARCHAR},
+      </if>
+      <if test="involveDepartment != null" >
+        INVOLVE_DEPARTMENT = #{involveDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="involveEmployee != null" >
+        INVOLVE_EMPLOYEE = #{involveEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="caseNumber != null" >
+        CASE_NUMBER = #{caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorDate != null" >
+        VISITOR_DATE = #{visitorDate,jdbcType=VARCHAR},
+      </if>
+      <if test="complaintMode != null" >
+        COMPLAINT_MODE = #{complaintMode,jdbcType=CHAR},
+      </if>
+      <if test="isMajor != null" >
+        IS_MAJOR = #{isMajor,jdbcType=CHAR},
+      </if>
+      <if test="receptionEmployee != null" >
+        RECEPTION_EMPLOYEE = #{receptionEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="receptionDate != null" >
+        RECEPTION_DATE = #{receptionDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isMediate != null" >
+        IS_MEDIATE = #{isMediate,jdbcType=CHAR},
+      </if>
+      <if test="complaintType != null" >
+        COMPLAINT_TYPE = #{complaintType,jdbcType=VARCHAR},
+      </if>
+      <if test="handleWay != null" >
+        HANDLE_WAY = #{handleWay,jdbcType=CHAR},
+      </if>
+      <if test="shiftHandle != null" >
+        SHIFT_HANDLE = #{shiftHandle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+      <if test="expectedClosure != null" >
+        EXPECTED_CLOSURE = #{expectedClosure,jdbcType=VARCHAR},
+      </if>
+      <if test="closingMethod != null" >
+        CLOSING_METHOD = #{closingMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="amountInvolved != null" >
+        AMOUNT_INVOLVED = #{amountInvolved,jdbcType=DECIMAL},
+      </if>
+      <if test="nextLink != null" >
+        NEXT_LINK = #{nextLink,jdbcType=VARCHAR},
+      </if>
+      <if test="nextLinkMan != null" >
+        NEXT_LINK_MAN = #{nextLinkMan,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="summaryOfDisputes != null" >
+        SUMMARY_OF_DISPUTES = #{summaryOfDisputes,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="appeal != null" >
+        APPEAL = #{appeal,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="handlePass != null" >
+        HANDLE_PASS = #{handlePass,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="handleResult != null" >
+        HANDLE_RESULT = #{handleResult,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where COMPLAINT_ID = #{complaintId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfoWithBLOBs" >
+    update COMPLAINT_INFO
+    set COMPLAINT_MAIN_ID = #{complaintMainId,jdbcType=VARCHAR},
+      VISITOR_NAME = #{visitorName,jdbcType=VARCHAR},
+      VISITOR_MOBILE = #{visitorMobile,jdbcType=VARCHAR},
+      PATIENT_RELATION = #{patientRelation,jdbcType=VARCHAR},
+      VISITOR_NUMBER = #{visitorNumber,jdbcType=VARCHAR},
+      PATIENT_NAME = #{patientName,jdbcType=VARCHAR},
+      PATIENT_SEX = #{patientSex,jdbcType=VARCHAR},
+      PATIENT_AGE = #{patientAge,jdbcType=TINYINT},
+      INVOLVE_HOSPITAL = #{involveHospital,jdbcType=VARCHAR},
+      INVOLVE_DEPARTMENT = #{involveDepartment,jdbcType=VARCHAR},
+      INVOLVE_EMPLOYEE = #{involveEmployee,jdbcType=VARCHAR},
+      CASE_NUMBER = #{caseNumber,jdbcType=VARCHAR},
+      VISITOR_DATE = #{visitorDate,jdbcType=VARCHAR},
+      COMPLAINT_MODE = #{complaintMode,jdbcType=CHAR},
+      IS_MAJOR = #{isMajor,jdbcType=CHAR},
+      RECEPTION_EMPLOYEE = #{receptionEmployee,jdbcType=VARCHAR},
+      RECEPTION_DATE = #{receptionDate,jdbcType=VARCHAR},
+      IS_MEDIATE = #{isMediate,jdbcType=CHAR},
+      COMPLAINT_TYPE = #{complaintType,jdbcType=VARCHAR},
+      HANDLE_WAY = #{handleWay,jdbcType=CHAR},
+      SHIFT_HANDLE = #{shiftHandle,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=CHAR},
+      EXPECTED_CLOSURE = #{expectedClosure,jdbcType=VARCHAR},
+      CLOSING_METHOD = #{closingMethod,jdbcType=VARCHAR},
+      AMOUNT_INVOLVED = #{amountInvolved,jdbcType=DECIMAL},
+      NEXT_LINK = #{nextLink,jdbcType=VARCHAR},
+      NEXT_LINK_MAN = #{nextLinkMan,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      SUMMARY_OF_DISPUTES = #{summaryOfDisputes,jdbcType=LONGVARCHAR},
+      APPEAL = #{appeal,jdbcType=LONGVARCHAR},
+      HANDLE_PASS = #{handlePass,jdbcType=LONGVARCHAR},
+      HANDLE_RESULT = #{handleResult,jdbcType=LONGVARCHAR}
+    where COMPLAINT_ID = #{complaintId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sayee.sxsy.newModules.complaintinfo.entity.ComplaintInfo" >
+    update COMPLAINT_INFO
+    set COMPLAINT_MAIN_ID = #{complaintMainId,jdbcType=VARCHAR},
+      VISITOR_NAME = #{visitorName,jdbcType=VARCHAR},
+      VISITOR_MOBILE = #{visitorMobile,jdbcType=VARCHAR},
+      PATIENT_RELATION = #{patientRelation,jdbcType=VARCHAR},
+      VISITOR_NUMBER = #{visitorNumber,jdbcType=VARCHAR},
+      PATIENT_NAME = #{patientName,jdbcType=VARCHAR},
+      PATIENT_SEX = #{patientSex,jdbcType=VARCHAR},
+      PATIENT_AGE = #{patientAge,jdbcType=TINYINT},
+      INVOLVE_HOSPITAL = #{involveHospital,jdbcType=VARCHAR},
+      INVOLVE_DEPARTMENT = #{involveDepartment,jdbcType=VARCHAR},
+      INVOLVE_EMPLOYEE = #{involveEmployee,jdbcType=VARCHAR},
+      CASE_NUMBER = #{caseNumber,jdbcType=VARCHAR},
+      VISITOR_DATE = #{visitorDate,jdbcType=VARCHAR},
+      COMPLAINT_MODE = #{complaintMode,jdbcType=CHAR},
+      IS_MAJOR = #{isMajor,jdbcType=CHAR},
+      RECEPTION_EMPLOYEE = #{receptionEmployee,jdbcType=VARCHAR},
+      RECEPTION_DATE = #{receptionDate,jdbcType=VARCHAR},
+      IS_MEDIATE = #{isMediate,jdbcType=CHAR},
+      COMPLAINT_TYPE = #{complaintType,jdbcType=VARCHAR},
+      HANDLE_WAY = #{handleWay,jdbcType=CHAR},
+      SHIFT_HANDLE = #{shiftHandle,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=CHAR},
+      EXPECTED_CLOSURE = #{expectedClosure,jdbcType=VARCHAR},
+      CLOSING_METHOD = #{closingMethod,jdbcType=VARCHAR},
+      AMOUNT_INVOLVED = #{amountInvolved,jdbcType=DECIMAL},
+      NEXT_LINK = #{nextLink,jdbcType=VARCHAR},
+      NEXT_LINK_MAN = #{nextLinkMan,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR}
+    where COMPLAINT_ID = #{complaintId,jdbcType=VARCHAR}
+  </update>
+</mapper>

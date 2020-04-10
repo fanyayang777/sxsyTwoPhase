@@ -496,7 +496,9 @@
                         保险公司：
                     </td>
                     <td>
-                            ${auditAcceptance.insuranceCompany}
+                        <form:select path="insuranceCompany" class="input-medium" disabled="true">
+                            <form:options items="${fns:getDictList('sys_office_form')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+                        </form:select>
                     </td>
                     <td class="tit">
                         保单号：

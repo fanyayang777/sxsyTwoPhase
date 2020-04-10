@@ -117,10 +117,14 @@
 	</select>
 	
 	<select id="findList" resultType="ComplaintInfo">
-		SELECT 
+		SELECT
+		pc.ns as "nameCount",
 			<include refid="complaintInfoColumns"/>
 		FROM COMPLAINT_INFO a
 		<include refid="complaintInfoJoins"/>
+		right JOIN (select PATIENT_NAME,COUNT(*) as ns FROM COMPLAINT_INFO c
+		where DEL_FLAG=0
+		GROUP BY PATIENT_NAME) pc on a.PATIENT_NAME=pc.PATIENT_NAME
 		<where>
             a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="node != null and node != '' and node=='sjy'">
@@ -330,7 +334,10 @@
 	</update>
 	
 	<update id="delete">
-		DELETE FROM COMPLAINT_INFO
+		/*DELETE FROM COMPLAINT_INFO
+		WHERE complaint_id = #{complaintId}*/
+		UPDATE COMPLAINT_INFO SET
+		del_flag = #{DEL_FLAG_DELETE}
 		WHERE complaint_id = #{complaintId}
 	</update>
 
@@ -355,10 +362,11 @@
 
 	<!--工作量统计  先查找 今天所有人的-->
 	<select id="selectEveryOne" resultType="java.util.Map">
-		SELECT a.create_by,u.office_id,u.name,a.visitor_date,count(1) amount,o.name AS deptName
+		SELECT a.create_by,u.office_id,u.name,a.visitor_date,count(1) amount,o.name AS deptName,sa.parent_ids,sa.id,sa.name AS areaName
 		FROM COMPLAINT_INFO a
 		LEFT JOIN SYS_USER u on u.id=a.create_by
 		LEFT JOIN SYS_OFFICE o ON o.id=u.office_id
+		LEFT JOIN SYS_AREA sa on o.AREA_ID=sa.id
 		WHERE a.del_flag ='0'
 		<choose>
 			<when test="visitorDate !=null and visitorDate !='' and visitorDateEnd !=null and visitorDateEnd !='' and visitorDate!=visitorDateEnd">
@@ -401,9 +409,9 @@
 	<!--工作量统计  根据人员id去过滤-->
 	<select id="selectPerson" resultType="java.util.Map">
 		select
-		Max(case a.handle_way when '0' then a.amount else 0 end ) 'ytw',
-		Max(case a.handle_way when '1' then a.amount else 0 end ) 'dm',
-		Max(case a.handle_way when '2' then a.amount else 0 end ) 'zb'
+		Max(case a.handle_way when '2' then a.amount else 0 end ) 'ytw',
+		Max(case a.handle_way when '0' then a.amount else 0 end ) 'dm',
+		Max(case a.handle_way when '1' then a.amount else 0 end ) 'zb'
 		FROM (
 			SELECT count(1)AS amount,cc.handle_way
 			FROM COMPLAINT_INFO cc

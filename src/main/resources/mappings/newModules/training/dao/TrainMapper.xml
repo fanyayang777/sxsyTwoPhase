@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sayee.sxsy.newModules.training.dao.TrainMapper" >
+  <resultMap id="BaseResultMap" type="com.sayee.sxsy.newModules.training.entity.Train" >
+    <id column="TRAIN_ID" property="trainId" jdbcType="VARCHAR" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="VIDIO_TYPE" property="vidioType" jdbcType="CHAR" />
+    <result column="DEPARTMENT" property="department" jdbcType="VARCHAR" />
+    <result column="PATH" property="path" jdbcType="VARCHAR" />
+    <result column="SEND" property="send" jdbcType="VARCHAR" />
+    <result column="INTRODUCE" property="introduce" jdbcType="VARCHAR" />
+    <result column="SCORE" property="score" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="CHAR" />
+    <result column="PICTURE_PATH" property="picturePath" jdbcType="VARCHAR" />
+    <result column="PAYMENT" property="payment" jdbcType="CHAR" />
+    <result column="COURSE_CHAPTER" property="courseChapter" jdbcType="VARCHAR" />
+    <result column="BUY_NUMBER" property="buyNumber" jdbcType="VARCHAR" />
+    <result column="VIDEO_PRICE" property="videoPrice" jdbcType="DECIMAL" />
+    <result column="INTENDED_FOR" property="intendedFor" jdbcType="VARCHAR" />
+    <result column="PREKNOWLEDGE" property="preknowledge" jdbcType="VARCHAR" />
+    <result column="LECTURER_NAME" property="lecturerName" jdbcType="VARCHAR" />
+    <result column="LECTURER_COMPANY" property="lecturerCompany" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    TRAIN_ID, TITLE, VIDIO_TYPE, DEPARTMENT, PATH, SEND, INTRODUCE, SCORE, CREATE_BY, 
+    CREATE_DATE, UPDATE_BY, UPDATE_DATE, DEL_FLAG, PICTURE_PATH, PAYMENT, COURSE_CHAPTER, 
+    BUY_NUMBER, VIDEO_PRICE, INTENDED_FOR, PREKNOWLEDGE, LECTURER_NAME, LECTURER_COMPANY
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sayee.sxsy.newModules.training.entity.TrainExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from TRAIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TRAIN
+    where TRAIN_ID = #{trainId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TRAIN
+    where TRAIN_ID = #{trainId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sayee.sxsy.newModules.training.entity.TrainExample" >
+    delete from TRAIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sayee.sxsy.newModules.training.entity.Train" >
+    insert into TRAIN (TRAIN_ID, TITLE, VIDIO_TYPE, 
+      DEPARTMENT, PATH, SEND, 
+      INTRODUCE, SCORE, CREATE_BY, 
+      CREATE_DATE, UPDATE_BY, UPDATE_DATE, 
+      DEL_FLAG, PICTURE_PATH, PAYMENT, 
+      COURSE_CHAPTER, BUY_NUMBER, VIDEO_PRICE, 
+      INTENDED_FOR, PREKNOWLEDGE, LECTURER_NAME, 
+      LECTURER_COMPANY)
+    values (#{trainId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{vidioType,jdbcType=CHAR}, 
+      #{department,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{send,jdbcType=VARCHAR}, 
+      #{introduce,jdbcType=VARCHAR}, #{score,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=CHAR}, #{picturePath,jdbcType=VARCHAR}, #{payment,jdbcType=CHAR}, 
+      #{courseChapter,jdbcType=VARCHAR}, #{buyNumber,jdbcType=VARCHAR}, #{videoPrice,jdbcType=DECIMAL}, 
+      #{intendedFor,jdbcType=VARCHAR}, #{preknowledge,jdbcType=VARCHAR}, #{lecturerName,jdbcType=VARCHAR}, 
+      #{lecturerCompany,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sayee.sxsy.newModules.training.entity.Train" >
+    insert into TRAIN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="trainId != null" >
+        TRAIN_ID,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="vidioType != null" >
+        VIDIO_TYPE,
+      </if>
+      <if test="department != null" >
+        DEPARTMENT,
+      </if>
+      <if test="path != null" >
+        PATH,
+      </if>
+      <if test="send != null" >
+        SEND,
+      </if>
+      <if test="introduce != null" >
+        INTRODUCE,
+      </if>
+      <if test="score != null" >
+        SCORE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="picturePath != null" >
+        PICTURE_PATH,
+      </if>
+      <if test="payment != null" >
+        PAYMENT,
+      </if>
+      <if test="courseChapter != null" >
+        COURSE_CHAPTER,
+      </if>
+      <if test="buyNumber != null" >
+        BUY_NUMBER,
+      </if>
+      <if test="videoPrice != null" >
+        VIDEO_PRICE,
+      </if>
+      <if test="intendedFor != null" >
+        INTENDED_FOR,
+      </if>
+      <if test="preknowledge != null" >
+        PREKNOWLEDGE,
+      </if>
+      <if test="lecturerName != null" >
+        LECTURER_NAME,
+      </if>
+      <if test="lecturerCompany != null" >
+        LECTURER_COMPANY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="trainId != null" >
+        #{trainId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="vidioType != null" >
+        #{vidioType,jdbcType=CHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="send != null" >
+        #{send,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null" >
+        #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="picturePath != null" >
+        #{picturePath,jdbcType=VARCHAR},
+      </if>
+      <if test="payment != null" >
+        #{payment,jdbcType=CHAR},
+      </if>
+      <if test="courseChapter != null" >
+        #{courseChapter,jdbcType=VARCHAR},
+      </if>
+      <if test="buyNumber != null" >
+        #{buyNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="videoPrice != null" >
+        #{videoPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="intendedFor != null" >
+        #{intendedFor,jdbcType=VARCHAR},
+      </if>
+      <if test="preknowledge != null" >
+        #{preknowledge,jdbcType=VARCHAR},
+      </if>
+      <if test="lecturerName != null" >
+        #{lecturerName,jdbcType=VARCHAR},
+      </if>
+      <if test="lecturerCompany != null" >
+        #{lecturerCompany,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sayee.sxsy.newModules.training.entity.TrainExample" resultType="java.lang.Integer" >
+    select count(*) from TRAIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update TRAIN
+    <set >
+      <if test="record.trainId != null" >
+        TRAIN_ID = #{record.trainId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null" >
+        TITLE = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.vidioType != null" >
+        VIDIO_TYPE = #{record.vidioType,jdbcType=CHAR},
+      </if>
+      <if test="record.department != null" >
+        DEPARTMENT = #{record.department,jdbcType=VARCHAR},
+      </if>
+      <if test="record.path != null" >
+        PATH = #{record.path,jdbcType=VARCHAR},
+      </if>
+      <if test="record.send != null" >
+        SEND = #{record.send,jdbcType=VARCHAR},
+      </if>
+      <if test="record.introduce != null" >
+        INTRODUCE = #{record.introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="record.score != null" >
+        SCORE = #{record.score,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null" >
+        DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.picturePath != null" >
+        PICTURE_PATH = #{record.picturePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payment != null" >
+        PAYMENT = #{record.payment,jdbcType=CHAR},
+      </if>
+      <if test="record.courseChapter != null" >
+        COURSE_CHAPTER = #{record.courseChapter,jdbcType=VARCHAR},
+      </if>
+      <if test="record.buyNumber != null" >
+        BUY_NUMBER = #{record.buyNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.videoPrice != null" >
+        VIDEO_PRICE = #{record.videoPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.intendedFor != null" >
+        INTENDED_FOR = #{record.intendedFor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.preknowledge != null" >
+        PREKNOWLEDGE = #{record.preknowledge,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lecturerName != null" >
+        LECTURER_NAME = #{record.lecturerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lecturerCompany != null" >
+        LECTURER_COMPANY = #{record.lecturerCompany,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update TRAIN
+    set TRAIN_ID = #{record.trainId,jdbcType=VARCHAR},
+      TITLE = #{record.title,jdbcType=VARCHAR},
+      VIDIO_TYPE = #{record.vidioType,jdbcType=CHAR},
+      DEPARTMENT = #{record.department,jdbcType=VARCHAR},
+      PATH = #{record.path,jdbcType=VARCHAR},
+      SEND = #{record.send,jdbcType=VARCHAR},
+      INTRODUCE = #{record.introduce,jdbcType=VARCHAR},
+      SCORE = #{record.score,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      PICTURE_PATH = #{record.picturePath,jdbcType=VARCHAR},
+      PAYMENT = #{record.payment,jdbcType=CHAR},
+      COURSE_CHAPTER = #{record.courseChapter,jdbcType=VARCHAR},
+      BUY_NUMBER = #{record.buyNumber,jdbcType=VARCHAR},
+      VIDEO_PRICE = #{record.videoPrice,jdbcType=DECIMAL},
+      INTENDED_FOR = #{record.intendedFor,jdbcType=VARCHAR},
+      PREKNOWLEDGE = #{record.preknowledge,jdbcType=VARCHAR},
+      LECTURER_NAME = #{record.lecturerName,jdbcType=VARCHAR},
+      LECTURER_COMPANY = #{record.lecturerCompany,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sayee.sxsy.newModules.training.entity.Train" >
+    update TRAIN
+    <set >
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="vidioType != null" >
+        VIDIO_TYPE = #{vidioType,jdbcType=CHAR},
+      </if>
+      <if test="department != null" >
+        DEPARTMENT = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        PATH = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="send != null" >
+        SEND = #{send,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null" >
+        INTRODUCE = #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        SCORE = #{score,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="picturePath != null" >
+        PICTURE_PATH = #{picturePath,jdbcType=VARCHAR},
+      </if>
+      <if test="payment != null" >
+        PAYMENT = #{payment,jdbcType=CHAR},
+      </if>
+      <if test="courseChapter != null" >
+        COURSE_CHAPTER = #{courseChapter,jdbcType=VARCHAR},
+      </if>
+      <if test="buyNumber != null" >
+        BUY_NUMBER = #{buyNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="videoPrice != null" >
+        VIDEO_PRICE = #{videoPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="intendedFor != null" >
+        INTENDED_FOR = #{intendedFor,jdbcType=VARCHAR},
+      </if>
+      <if test="preknowledge != null" >
+        PREKNOWLEDGE = #{preknowledge,jdbcType=VARCHAR},
+      </if>
+      <if test="lecturerName != null" >
+        LECTURER_NAME = #{lecturerName,jdbcType=VARCHAR},
+      </if>
+      <if test="lecturerCompany != null" >
+        LECTURER_COMPANY = #{lecturerCompany,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TRAIN_ID = #{trainId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sayee.sxsy.newModules.training.entity.Train" >
+    update TRAIN
+    set TITLE = #{title,jdbcType=VARCHAR},
+      VIDIO_TYPE = #{vidioType,jdbcType=CHAR},
+      DEPARTMENT = #{department,jdbcType=VARCHAR},
+      PATH = #{path,jdbcType=VARCHAR},
+      SEND = #{send,jdbcType=VARCHAR},
+      INTRODUCE = #{introduce,jdbcType=VARCHAR},
+      SCORE = #{score,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      PICTURE_PATH = #{picturePath,jdbcType=VARCHAR},
+      PAYMENT = #{payment,jdbcType=CHAR},
+      COURSE_CHAPTER = #{courseChapter,jdbcType=VARCHAR},
+      BUY_NUMBER = #{buyNumber,jdbcType=VARCHAR},
+      VIDEO_PRICE = #{videoPrice,jdbcType=DECIMAL},
+      INTENDED_FOR = #{intendedFor,jdbcType=VARCHAR},
+      PREKNOWLEDGE = #{preknowledge,jdbcType=VARCHAR},
+      LECTURER_NAME = #{lecturerName,jdbcType=VARCHAR},
+      LECTURER_COMPANY = #{lecturerCompany,jdbcType=VARCHAR}
+    where TRAIN_ID = #{trainId,jdbcType=VARCHAR}
+  </update>
+</mapper>

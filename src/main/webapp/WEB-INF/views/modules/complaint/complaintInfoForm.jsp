@@ -11,8 +11,8 @@
 				submitHandler: function(form){
 					var aa=$("#export").val();
 					getRepeat(aa,form);
-					loading('正在提交，请稍等...');
-					form.submit();
+					/*loading('正在提交，请稍等...');
+					form.submit();*/
 				},
 				errorContainer: "#messageBox",
 				errorPlacement: function(error, element) {
@@ -150,8 +150,12 @@
 
         function exportWord() {
             var aa=$("#export").val();
+			loading('正在生成文件，请稍等...');
+			setTimeout(function(){
+				closeTip();
+			}, 3000);
             var path="${ctx}/registration/reportRegistration/pass";
-            $.post(path,{'reportRegistrationId':'${reportRegistration.reportRegistrationId}','export':aa,"print":"true"},function(res){
+            $.post(path,{'reportRegistrationId':'${complaintInfo.reportRegistration.reportRegistrationId}','export':aa,"print":"true"},function(res){
                 if(res.data.url!=''){
                     var url='${pageContext.request.contextPath}'+res.data.url;
                     <%--window.location.href='${pageContext.request.contextPath}'+res.data.url ;--%>
@@ -163,29 +167,44 @@
         }
 
         function getRepeat(aa,form) {//在保存前 根据身份证号 和 医院 进行去重验证
-            var hospital=$("#complaintMain\\.involveHospital").val();
+            var hospital=$("#involveHospitalId").val();
             var card=$("#complaintMain\\.patientCard").val();
             var complaintMainId=$("#complaintMainId").val();
-            var path="${ctx}/complaintmain/complaintMain/getRepeat";
-            $.ajaxSettings.async = false;//ajax 要设置成同步，异步的情况下sucess方法里面设值还没成功，方法就先返回了，这样也取不到值
-            $.post(path,{'hospital':hospital,'card':card,'complaintMainId':complaintMainId},function(res){
-                if(res.status=='1'){
-                    top.$.jBox.confirm("身份证号为    “"+card+"”   的患者已与   “"+res.data.name+"”   发生纠纷，案件编号为   "+res.data.number+"    请确认是否为新发生案件？","系统提示",function(v,h,f){
-                        if(v=="ok"){
-                            if(aa=='no') {
-                                loading('正在提交，请稍等...');
-                            }
-                            form.submit();
-                        }
-                    },{buttonsFocus:1, closed:function(){
-                        }});
-                }else{
-                    if(aa=='no') {
-                        loading('正在提交，请稍等...');
-                    }
-                    form.submit();
-                }
-            },"json");
+            var handleWay=$("#handleWay select").val();
+            if(handleWay=='2' && aa=='no'){//转医调委处理
+				var path="${ctx}/complaintmain/complaintMain/getRepeat";
+				$.ajaxSettings.async = false;//ajax 要设置成同步，异步的情况下sucess方法里面设值还没成功，方法就先返回了，这样也取不到值
+				$.post(path,{'hospital':hospital,'card':card,'complaintMainId':complaintMainId},function(res){
+					if(res.status=='1'){
+						top.$.jBox.confirm("身份证号为    “"+card+"”   的患者已与   “"+res.data.name+"”   发生纠纷，案件编号为   "+res.data.number+"    请确认是否为新发生案件？","系统提示",function(v,h,f){
+							if(v=="ok"){
+								if(aa=='no') {
+									loading('正在提交，请稍等...');
+								}
+								form.submit();
+							}
+						},{buttonsFocus:1, closed:function(){
+							}});
+					}else{
+						if(aa=='no') {
+							loading('正在提交，请稍等...');
+						}
+						form.submit();
+					}
+				},"json");
+			}else{
+				if(aa=='no') {
+					loading('正在提交，请稍等...');
+					form.submit();
+				}else{
+					loading('正在生成文件，请稍等...');
+					setTimeout(function(){
+						closeTip();
+					}, 3000);
+					form.submit();
+				}
+			}
+
         }
 
         //导出打印提示
@@ -224,7 +243,7 @@
             if(age!=null && age!=undefined && age!='${reportRegistration.complaintMain.patientAge}'){
                 alertx("年龄校验，由'"+'${reportRegistration.complaintMain.patientAge}'+"'改为'"+age+"'！");
                 $("#age").text(age);
-                $("#complaintMain\\.patientAge").val(age);
+                $("#patientAge").val(age);
             }
             return age;
         }
@@ -379,7 +398,8 @@
 					<tr >
 						<td class="tit" width="160px"><font color="red">*</font>涉及医院：</td>
 						<td width="476px">
-							<sys:treeselect id="involveHospital" name="involveHospital" value="${complaintInfo.involveHospital}" labelName="hospitalName" labelValue="${complaintInfo.hospitalName}"
+							<c:set var="company" value="${fns:getUser().company}"/>
+							<sys:treeselect id="involveHospital" name="involveHospital" value="${company.officeType eq '2' ? company.id : complaintInfo.involveHospital}" labelName="hospitalName" labelValue="${company.officeType eq '2' ? company.name : complaintInfo.hospitalName}"
 											title="机构" url="/sys/office/treeData?type=1&officeType=2" isAll="true" cssClass="required" dataMsgRequired="请选择医院" allowClear="true" notAllowSelectParent="false" />
 						</td>
 						<td class="tit" width="180px"><font color="red">*</font>涉及科室：</td>
@@ -400,7 +420,7 @@
 						<td class="tit">涉及人员：</td>
 						<td>
                                     <form:input path="involveEmployee" htmlEscape="false" onchange="relation(this.value,'chuxianyisheng')"
-                                                class="input-xlarge " value="${empty complaintInfo.employeeName?complaintInfo.involveEmployee:complaintInfo.employeeName}"/>
+                                                class="input-xlarge "/>
 							<%--<sys:treeselect id="involveEmployee" name="involveEmployee" value="${complaintInfo.involveEmployee}" labelName="employeeName" labelValue="${complaintInfo.employeeName}"--%>
 											<%--title="用户" url="/sys/office/treeData?type=3&officeType=2" pid="involveDepartment" isAll="true" cssClass="required" dataMsgRequired="请选择人员" allowClear="true" notAllowSelectParent="true"/>--%>
 						</td>
@@ -528,8 +548,9 @@
 						<td class="tit">
 							<font color="red">*</font>纠纷焦点:
 						</td>
-						<td  colspan="7" id="focus">
-								${complaintInfo.summaryOfDisputes}
+						<td  colspan="7" ><%--id="focus"--%>
+							<form:textarea path="reportRegistration.focus" htmlEscape="false" class="input-xlarge required" style="margin: 0px;width: 99%;font-size: 16px;" rows="5" />
+								<%--${complaintInfo.summaryOfDisputes}--%>
 						</td>
 					</tr>
 					<tr>
@@ -537,6 +558,7 @@
 							<font color="red">*</font>患方要求:
 						</td>
 						<td id="patientAsk" colspan="7">
+
 							${complaintInfo.reportRegistration.patientAsk}
 						</td>
 					</tr>
@@ -792,8 +814,10 @@
 		</tr>
 	</table>
 		<div class="form-actions">
-			<shiro:hasPermission name="complaint:complaintInfo:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存" onclick="$('#flag').val('no')"/>&nbsp;</shiro:hasPermission>
-			<shiro:hasPermission name="complaint:complaintInfo:edit"><input id="btnSubmit1" class="btn btn-primary" type="submit" value="下一步" onclick="$('#flag').val('yes')"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="complaint:complaintInfo:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存" onclick="$('#flag').val('no');$('#export').val('no')"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="complaint:complaintInfo:edit"><input id="btnSubmit1" class="btn btn-primary" type="submit" value="下一步" onclick="$('#flag').val('yes');$('#export').val('no')"/>&nbsp;</shiro:hasPermission>
+			<input id="reportExport" class="btn btn-primary" type="submit" value="导 出" onclick="$('#export').val('reportDis')" data-toggle="tooltip" data-placement="top" title="<h4 style='color:yellow;'>在导出数据之前请先保存数据。</h4>" />
+			<input id="reportPrint" class="btn btn-primary" type="button" value="打 印" onclick="$('#export').val('reportDis');exportWord();" data-toggle="tooltip" data-placement="top" title="<h4 style='color:yellow;'>在打印数据之前请先保存数据。</h4>" />
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

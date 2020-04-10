@@ -3,8 +3,10 @@
  */
 package com.sayee.sxsy.modules.sys.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.sayee.sxsy.modules.sys.entity.Dict;
 import org.apache.commons.lang3.StringUtils;
@@ -81,7 +83,45 @@ public class DictUtils {
 		}
 		return dictList;
 	}
-	
+
+	/**
+	 * 获取比这个数大一位的数
+	 * @param value 比较的数
+	 * @param type 类型
+	 * @param defaultLabel 默认值
+	 * @return fyy
+	 */
+	public static String big(String value,String type,String defaultLabel){
+//		Map<String, List<Dict>> dictMap = (Map<String, List<Dict>>)CacheUtils.get(CACHE_DICT_MAP);
+		List<Dict> dictList = getDictList(type);
+		if (dictList != null){
+            List<String> valueList = new ArrayList<>();
+            for (int i = 0; i < dictList.size() - 1; i++){
+                String value1 = dictList.get(i).getValue();
+                valueList.add(value1);
+            }
+			List<String> newDictList = valueList
+					.stream()	//得到流
+					.distinct()	//去重
+					.sorted()	//自然排序
+					.collect(Collectors.toList()); //收集返回
+            int aa;    //定义下标的数
+            for (int a = 0; a < newDictList.size() - 1; a++){
+                if (newDictList.get(a).equals(value)){
+                    aa = a;
+                    if (aa <= newDictList.size() - 1){
+                        String dict = newDictList.get(aa + 1); //获取大一位的数
+                        return dict;
+                    }else {
+                        String dict = newDictList.get(aa);
+                        return dict;
+                    }
+                }
+            }
+//			CacheUtils.put(CACHE_DICT_MAP, dict);
+		}
+		return defaultLabel;
+	}
 	/**
 	 * 返回字典列表（JSON）
 	 * @param type

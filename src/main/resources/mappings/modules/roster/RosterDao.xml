@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sayee.sxsy.modules.roster.dao.RosterDao">
+    
+	<sql id="rosterColumns">
+		a.roster_id AS "rosterId",
+		a.insurance_slip_id AS "insuranceSlipId",
+		a.hospital AS "hospital",
+		a.name AS "name",
+		a.identity_card AS "identityCard",
+		a.post AS "post",
+		a.practice_number AS "practiceNumber",
+		a.phone AS "phone",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="rosterJoins">
+	</sql>
+    
+	<select id="get" resultType="Roster">
+		SELECT 
+			<include refid="rosterColumns"/>
+		FROM ROSTER a
+		<include refid="rosterJoins"/>
+		WHERE a.roster_id = #{rosterId}
+	</select>
+	
+	<select id="findList" resultType="Roster">
+		SELECT 
+			<include refid="rosterColumns"/>
+		FROM ROSTER a
+		<include refid="rosterJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="hospital != null and hospital != ''">
+				AND a.hospital LIKE 
+					<if test="dbName == 'oracle'">'%'||#{hospital}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{hospital}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{hospital},'%')</if>
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone LIKE 
+					<if test="dbName == 'oracle'">'%'||#{phone}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{phone}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{phone},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Roster">
+		SELECT 
+			<include refid="rosterColumns"/>
+		FROM ROSTER a
+		<include refid="rosterJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ROSTER(
+			roster_id,
+			insurance_slip_id,
+			hospital,
+			name,
+			identity_card,
+			post,
+			practice_number,
+			phone,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag
+		) VALUES (
+			#{rosterId},
+			#{insuranceSlipId},
+			#{hospital},
+			#{name},
+			#{identityCard},
+			#{post},
+			#{practiceNumber},
+			#{phone},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ROSTER SET
+			roster_id = #{rosterId},
+			insurance_slip_id = #{insuranceSlipId},
+			hospital = #{hospital},
+			name = #{name},
+			identity_card = #{identityCard},
+			post = #{post},
+			practice_number = #{practiceNumber},
+			phone = #{phone},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE roster_id = #{rosterId}
+	</update>
+	
+	<update id="delete">
+		UPDATE ROSTER SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE roster_id = #{rosterId}
+	</update>
+	<select id="checkpracticeNumber" resultType="com.sayee.sxsy.modules.roster.entity.Roster">
+		SELECT
+		<include refid="rosterColumns"/>
+		FROM ROSTER a
+		<include refid="rosterJoins"/>
+		WHERE a.practice_number = #{practiceNumber}
+	</select>
+
+	<select id="findRoster" resultType="Roster">
+		SELECT
+		<include refid="rosterColumns"/>
+		FROM ROSTER a
+		<include refid="rosterJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL} AND
+			A.insurance_slip_id = #{insuranceSlipId}
+		</where>
+	</select>
+
+</mapper>

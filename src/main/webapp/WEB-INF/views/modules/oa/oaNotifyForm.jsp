@@ -6,7 +6,10 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			//$("#name").focus();
+			var send = '${oaNotify.send}';
+			var arr=send.split(",");
+			$("#send").val(arr).trigger('change');
+
 			$("#inputForm").validate({
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');

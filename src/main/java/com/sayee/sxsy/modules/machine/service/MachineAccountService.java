@@ -50,24 +50,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Lazy(value = true)
 @Transactional(readOnly = true)
 public class MachineAccountService extends CrudService<MachineAccountDao, MachineAccount> {
-    @Autowired
-    private ReportRegistrationService reportRegistrationService;
-    @Autowired
-    private AuditAcceptanceService auditAcceptanceService;
-    @Autowired
-    private InvestigateEvidenceService investigateEvidenceService;
-    @Autowired
-    private MediateEvidenceService mediateEvidenceService;
-    @Autowired
-    private AssessAppraisalService assessAppraisalService;
-    @Autowired
-    private SignAgreementService signAgreementService;
-    @Autowired
-    private SummaryInfoService summaryInfoService;
+//    @Autowired
+//    private ReportRegistrationService reportRegistrationService;
+//    @Autowired
+//    private AuditAcceptanceService auditAcceptanceService;
+//    @Autowired
+//    private InvestigateEvidenceService investigateEvidenceService;
+//    @Autowired
+//    private MediateEvidenceService mediateEvidenceService;
+//    @Autowired
+//    private AssessAppraisalService assessAppraisalService;
+//    @Autowired
+//    private SignAgreementService signAgreementService;
+//    @Autowired
+//    private SummaryInfoService summaryInfoService;
     @Autowired
     private MachineAccountDao machineAccountDao;
-    @Autowired
-    private PerformAgreementService performAgreementService;
+//    @Autowired
+//    private PerformAgreementService performAgreementService;
     public MachineAccount get(String id) {
         String machineAccountId=id;
         return machineAccountDao.getDetail(machineAccountId);
@@ -81,6 +81,10 @@ public class MachineAccountService extends CrudService<MachineAccountDao, Machin
     }
 
     public Page<MachineAccount> findPage(Page<MachineAccount> page, MachineAccount machineAccount) {
+        //卫计委
+        Area area=new Area();
+        area.setName(machineAccount.getArea()!=null && StringUtils.isNotBlank(machineAccount.getArea().getName()) ? machineAccount.getArea().getName() : "");
+        //非 卫计委
         User user = UserUtils.getUser();
         Area ar=user.getCompany().getArea();
         machineAccount.setArea(ar);
@@ -91,7 +95,6 @@ public class MachineAccountService extends CrudService<MachineAccountDao, Machin
         }
         if ("3".equals(user.getCompany().getOfficeType())){
             //卫计委人员
-            Area area=new Area();
             area.setId(StringUtils.isBlank(user.getPost()) ? "123456" : user.getPost());
             machineAccount.setArea(area);
         }

@@ -70,7 +70,25 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
         User user=UserUtils.getUser();
         if (user.isAdmin() || aa.contains("quanshengtiaojiebuzhuren") || aa.contains("yitiaoweizhuren")
                 || aa.contains("yitiaoweifuzhuren")|| aa.contains("shengzhitiaojiebuzhuren/fuzhuren")|| aa.contains("yitiaoweizhuren")
-        ){    //!aa.contains("dept") &&
+        ){
+            //最大权限的人员 也看 区域
+            if (!"山西省".equals(user.getAreaName())){
+                //工作站 主任 副主任 看自己 的员工
+                List<String> list=new ArrayList<String>();
+                List<User> listUser=UserUtils.getUserByOffice(user.getOffice().getId());
+                for (User people:listUser) {
+                    list.add(people.getLoginName());
+                }
+                if (list.size()>0){
+                    investigateEvidence.setList(list);
+                }else {
+                    list.add(user.getLoginName());
+                    investigateEvidence.setList(list);
+                }
+            }
+
+
+
         }else if(aa.contains("szcz") || aa.contains("szjc") || aa.contains("szjz") || aa.contains("szgj") ||aa.contains("szyq") ||aa.contains("szsz") ||aa.contains("szxc") || aa.contains("szdt") || aa.contains("szll") ||aa.contains("szxy") || aa.contains("szyc") ||aa.contains("szlf") ||aa.contains("szybzg") ||aa.contains("szebzg")){
             List<Office> officeList = Lists.newArrayList();// 按明细设置数据范围s
             for (Role role:roleList) {
@@ -260,6 +278,13 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
         String savaPath=path;
         String pdfPath=path;
         Map<String, Object> params = new HashMap<String, Object>();
+        String area="";
+        User user=UserUtils.getUser();
+        if ("广东省".equals(user.getAreaName())){
+            params.put("area",user.getCompany().getName().substring(0,3));
+        }else {
+            params.put("area",user.getAreaName());
+        }
         //判断有无案件编号
         String num=null;
         if(investigateEvidence.getComplaintMain()!=null){
@@ -338,7 +363,10 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     }else{
                         params.put("post","");//职务
                     }
-
+                    params.put("bdcr1","被调查人身份："+params.get("respondentIdentity")+"\r\n"
+                            +"姓名："+params.get("name")+" "+"性别："+params.get("sex")+" "+"年龄："+params.get("age")+" "+"联系方式："+params.get("phone")+"\r\n"
+                            +"工作单位："+params.get("respondentWorkUnit")+"\r\n"+"职务："+params.get("post")
+                    );
                 }else{
                     params.put("respondentIdentity","");
                     params.put("name","");//姓名
@@ -347,10 +375,90 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     params.put("phone","");//联系方式
                     params.put("respondentWorkUnit","");//工作单位
                     params.put("post","");//职务
+                    params.put("bdcr1","");
                 }
 
 
                 params.put("content",investigateEvidence.getContent());//笔录内容
+                //被调查人2
+                if (investigateEvidence.getRespondentInfo2() != null) {
+                    // 身份
+                    if ("hz".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "患者本人");
+                    } else if ("hzxdjm".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "患者兄弟姐妹");
+                    } else if ("hzfq".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "患者夫妻");
+                    } else if ("hparent".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "患者父母");
+                    } else if ("hzn".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "患者子女");
+                    } else if ("hzqs".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "患者亲属");
+                    } else if ("other".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "其他人员");
+                    } else if ("hfdlr".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "患方代理人");
+                    } else if ("jzys".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "经治医师");
+                    } else if ("kszr".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "科室主任");
+                    } else if ("yfdl".equals(investigateEvidence.getRespondentInfo2().getRespondentIdentity())) {
+                        params.put("respondentIdentity1", "医方代理");
+                    } else {
+                        params.put("respondentIdentity1", "");
+                    }
+                    if (StringUtils.isNotBlank(investigateEvidence.getRespondentInfo2().getRespondentName())) {
+                        params.put("name1", investigateEvidence.getRespondentInfo2().getRespondentName());//姓名
+                    } else {
+                        params.put("name1", "");//姓名
+                    }
+
+                    //性别
+                    if ("1".equals(investigateEvidence.getRespondentInfo2().getRespondentSex())) {
+                        params.put("sex1", "男");
+                    } else if ("2".equals(investigateEvidence.getRespondentInfo2().getRespondentSex())) {
+                        params.put("sex1", "女");
+                    } else {
+                        params.put("sex1", "");
+                    }
+                    if (StringUtils.isNotBlank(investigateEvidence.getRespondentInfo2().getRespondentAge())) {
+                        params.put("age1", investigateEvidence.getRespondentInfo2().getRespondentAge());//年龄
+                    } else {
+                        params.put("age1", "");//年龄
+                    }
+                    if (StringUtils.isNotBlank(investigateEvidence.getRespondentInfo2().getRespondentMobile())) {
+                        params.put("phone1", investigateEvidence.getRespondentInfo2().getRespondentMobile());//联系方式
+                    } else {
+                        params.put("phone1", "");//联系方式
+                    }
+                    if (StringUtils.isNotBlank(investigateEvidence.getRespondentInfo2().getRespondentWorkUnit())) {
+                        params.put("respondentWorkUnit1", investigateEvidence.getRespondentInfo2().getRespondentWorkUnit());//工作单位
+                    } else {
+                        params.put("respondentWorkUnit1", "");//工作单位
+                    }
+                    if (StringUtils.isNotBlank(investigateEvidence.getRespondentInfo2().getRespondentPost())) {
+                        params.put("post1", investigateEvidence.getRespondentInfo2().getRespondentPost());//职务
+                    } else {
+                        params.put("post1", "");//职务
+                    }
+                    params.put("bdcr2","被调查人身份："+params.get("respondentIdentity1")+"\r\n"
+                            +"姓名："+params.get("name1")+" "+"性别："+params.get("sex1")+" "+"年龄："+params.get("age1")+" "+"联系方式："+params.get("phone1")+"\r\n"
+                            +"工作单位："+params.get("respondentWorkUnit1")+"\r\n"+"职务："+params.get("post1")
+                    );
+
+                } else {
+                    params.put("respondentIdentity1", "");
+                    params.put("name1", "");//姓名
+                    params.put("sex1", "");
+                    params.put("age1", "");//年龄
+                    params.put("phone1", "");//联系方式
+                    params.put("respondentWorkUnit1", "");//工作单位
+                    params.put("post1", "");//职务
+                    params.put("bdcr2","");
+                }
+
+                params.put("content1",investigateEvidence.getContent()==null?"":investigateEvidence.getContent());//笔录内容
 
                 path += "/doc/recordOne.docx";  //模板文件位置
                 modelPath += "/doc/recordOne.docx";
@@ -427,6 +535,11 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     } else {
                         params.put("post", "");//职务
                     }
+                    params.put("bdcr1","被调查人身份："+params.get("respondentIdentity")+"\r\n"
+                            +"姓名："+params.get("name")+" "+"性别："+params.get("sex")+" "+"年龄："+params.get("age")+" "+"联系方式："+params.get("phone")+"\r\n"
+                            +"工作单位："+params.get("respondentWorkUnit")+"\r\n"
+                            +"职务："+params.get("post")
+                    );
 
                 } else {
                     params.put("respondentIdentity", "");
@@ -436,6 +549,7 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     params.put("phone", "");//联系方式
                     params.put("respondentWorkUnit", "");//工作单位
                     params.put("post", "");//职务
+                    params.put("bdcr1","");
                 }
 
                 params.put("content", investigateEvidence.getContent());//笔录内容
@@ -501,6 +615,11 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     } else {
                         params.put("post1", "");//职务
                     }
+                    params.put("bdcr2","被调查人身份："+params.get("respondentIdentity1")+"\r\n"
+                            +"姓名："+params.get("name1")+" "+"性别："+params.get("sex1")+" "+"年龄："+params.get("age1")+" "+"联系方式："+params.get("phone1")+"\r\n"
+                            +"工作单位："+params.get("respondentWorkUnit1")+"\r\n"
+                            +"职务："+params.get("post1")
+                    );
 
                 } else {
                     params.put("respondentIdentity1", "");
@@ -510,9 +629,10 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     params.put("phone1", "");//联系方式
                     params.put("respondentWorkUnit1", "");//工作单位
                     params.put("post1", "");//职务
+                    params.put("bdcr2","");
                 }
 
-//            params.put("content1",investigateEvidence.getContent()==null?"":investigateEvidence.getContent());//笔录内容
+                params.put("content1",investigateEvidence.getContent()==null?"":investigateEvidence.getContent());//笔录内容
                 path += "/doc/record.docx";  //模板文件位置
                 modelPath += "/doc/record.docx";
                 savaPath += "/userfiles/investigateEvidence/" + num + "record.docx";
@@ -591,6 +711,11 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     } else {
                         params.put("post", "");//职务
                     }
+                    params.put("bdcr1","被调查人身份："+params.get("respondentIdentity")+"\r\n"
+                            +"姓名："+params.get("name")+" "+"性别："+params.get("sex")+" "+"年龄："+params.get("age")+" "+"联系方式："+params.get("phone")+"\r\n"
+                            +"工作单位："+params.get("respondentWorkUnit")+"\r\n"
+                            +"职务："+params.get("post")
+                    );
 
                 } else {
                     params.put("respondentIdentity", "");
@@ -600,6 +725,7 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     params.put("phone", "");//联系方式
                     params.put("respondentWorkUnit", "");//工作单位
                     params.put("post", "");//职务
+                    params.put("bdcr1","");
                 }
                 params.put("content", investigateEvidence.getInvestigateEvidence().getContent());//笔录内容
                 path += "/doc/recordOne.docx";  //模板文件位置
@@ -677,7 +803,11 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     } else {
                         params.put("post", "");//职务
                     }
-
+                    params.put("bdcr1","被调查人身份："+params.get("respondentIdentity")+"\r\n"
+                            +"姓名："+params.get("name")+" "+"性别："+params.get("sex")+" "+"年龄："+params.get("age")+" "+"联系方式："+params.get("phone")+"\r\n"
+                            +"工作单位："+params.get("respondentWorkUnit")+"\r\n"
+                            +"职务："+params.get("post")
+                    );
                 } else {
                     params.put("respondentIdentity", "");
                     params.put("name", "");//姓名
@@ -686,6 +816,7 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     params.put("phone", "");//联系方式
                     params.put("respondentWorkUnit", "");//工作单位
                     params.put("post", "");//职务
+                    params.put("bdcr1","");
                 }
                 params.put("content", investigateEvidence.getInvestigateEvidence().getContent());//笔录内容
                 //医方被调查人2
@@ -750,6 +881,11 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     } else {
                         params.put("post1", "");//职务
                     }
+                    params.put("bdcr2","被调查人身份："+params.get("respondentIdentity1")+"\r\n"
+                            +"姓名："+params.get("name1")+" "+"性别："+params.get("sex1")+" "+"年龄："+params.get("age1")+" "+"联系方式："+params.get("phone1")+"\r\n"
+                            +"工作单位："+params.get("respondentWorkUnit1")+"\r\n"
+                            +"职务："+params.get("post1")
+                    );
 
                 } else {
                     params.put("respondentIdentity1", "");
@@ -759,6 +895,7 @@ public class InvestigateEvidenceService extends CrudService<InvestigateEvidenceD
                     params.put("phone1", "");//联系方式
                     params.put("respondentWorkUnit1", "");//工作单位
                     params.put("post1", "");//职务
+                    params.put("bdcr2","");
                 }
 //            params.put("content1",investigateEvidence.getInvestigateEvidence().getContent()==null?"":investigateEvidence.getInvestigateEvidence().getContent());//笔录内容
                 path += "/doc/record.docx";  //模板文件位置

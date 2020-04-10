@@ -82,6 +82,10 @@
 		</choose>
 	</select>
 
+	<select id="rootFindUserId" resultType="String">
+		select u.LOGIN_NAME from SYS_OFFICE o LEFT JOIN SYS_USER u on u.OFFICE_ID = o.ID where o.OFFICE_TYPE = '1';
+	</select>
+
 	<select id="findAllList" resultType="ComplaintMain">
 		SELECT
 		<include refid="complaintMainColumns"/>
@@ -236,12 +240,19 @@
 		a.create_date AS "createDate"
 		FROM MACHINE_ACCOUNT a
 		LEFT JOIN SYS_OFFICE o4 ON o4.id = a.hospital_id
+		LEFT JOIN SYS_AREA sa ON sa.id = o4.area_id
 		LEFT JOIN COMPLAINT_MAIN c on c.complaint_main_id=a.complaint_main_id
 		LEFT JOIN ACT_RU_TASK t on t.PROC_INST_ID_=c.PROC_INS_ID
 		<where>
 			a.del_flag = 0 and a.case_number is not null and a.case_number!=''
 			<if test="reportingTime != null and reportingTime != '' or  endReportingTime != null and endReportingTime != ''">
 				AND (a.reporting_time BETWEEN #{reportingTime} AND #{endReportingTime})
+			</if>
+			<if test="areaId !=null and areaId !=''">
+				AND sa.parent_id like concat('%',#{areaId},'%') or sa.id= #{areaId}
+			</if>
+			<if test="hospitalId != null and hospitalId != ''">
+				AND a.hospital_id LIKE concat('%',#{hospitalId},'%')
 			</if>
 		</where>
 		limit 0,10
@@ -312,6 +323,8 @@
 		FROM COMPLAINT_MAIN_DETAIL c
 		LEFT JOIN TEST_TREE t on c.is_major=t.id
 		LEFT JOIN COMPLAINT_MAIN cc on c.complaint_main_id=cc.complaint_main_id
+        LEFT JOIN SYS_OFFICE so on cc.involve_hospital = so.id
+        LEFT JOIN SYS_AREA sa on so.area_id = sa.id
 		WHERE t.name is not null
 		<choose>
 			<when test="year !=null and year !=''">
@@ -330,9 +343,9 @@
 				AND c.visitor_date like concat('%',#{endMonthDate},'%')
 			</otherwise>
 		</choose>
-		<if test="officeId !=null and officeId !=''">
-			AND cc.involve_hospital = #{officeId}
-		</if>
+        <if test="officeId !=null and officeId !=''">
+            AND sa.parent_id like concat('%',#{officeId},'%') or sa.id= #{officeId}
+        </if>
 		GROUP BY t.name
 	</select>
 
@@ -373,6 +386,8 @@
 		SELECT CONCAT(if(cc.hospital_grade='1','三级甲等',if(cc.hospital_grade='2','三级乙等',if(cc.hospital_grade='3','二级甲等',if(cc.hospital_grade='4','二级乙等',if(cc.hospital_grade='5','乡镇卫生院',if(cc.hospital_grade='6','社区服务站',if(cc.hospital_grade='7','民营医院',if(cc.hospital_grade='8','门诊',''))))))))) name,COUNT(cc.hospital_grade) value
 		FROM COMPLAINT_MAIN_DETAIL c
 		LEFT JOIN COMPLAINT_MAIN cc ON cc.complaint_main_id=c.complaint_main_id
+        LEFT JOIN SYS_OFFICE so ON so.id=cc.INVOLVE_HOSPITAL
+        LEFT JOIN SYS_AREA sa ON so.area_id = sa.id
 		WHERE
 		<choose>
 			<when test="year !=null and year !=''">
@@ -391,10 +406,10 @@
 				c.visitor_date like concat('%',#{endMonthDate},'%')
 			</otherwise>
 		</choose>
-		<if test="officeId !=null and officeId !=''">
-			AND cc.involve_hospital = #{officeId}
-		</if>
-		AND cc.hospital_grade is NOT NULL AND cc.hospital_grade !=''
+        AND cc.hospital_grade is NOT NULL AND cc.hospital_grade !=''
+        <if test="officeId !=null and officeId !=''">
+            AND sa.parent_id LIKE  concat('%',#{officeId},'%') or sa.id= #{officeId}
+        </if>
 		GROUP BY cc.hospital_grade
 	</select>
 
@@ -422,7 +437,7 @@
 			</otherwise>
 		</choose>
 		<if test="officeId !=null and officeId !=''">
-			AND c.hospital_id = #{officeId}
+			AND sa.parent_id LIKE  concat('%',#{officeId},'%') or sa.id= #{officeId}
 		</if>
 		GROUP BY cc.hospital_grade
 	</select>
@@ -506,9 +521,9 @@
 				AND c.visitor_date like concat('%',#{endMonthDate},'%')
 			</otherwise>
 		</choose>
-		<if test="officeId !=null and officeId !=''">
-			AND a.involve_hospital = #{officeId}
-		</if>
+        <if test="officeId !=null and officeId !=''">
+            AND sa.PARENT_ID LIKE CONCAT('%', #{officeId}, '%') or sa.id= #{officeId}
+        </if>
 		GROUP BY sa.`name`
 	</select>
 
@@ -537,7 +552,6 @@
 		</choose>
 		<if test="officeId !=null and officeId !=''">
 			AND sa.PARENT_ID LIKE CONCAT('%', #{officeId}, '%') or sa.id= #{officeId}
-
 		</if>
 		GROUP BY sa.`name`
 	</select>
@@ -547,6 +561,8 @@
 		FROM COMPLAINT_MAIN_DETAIL c
 		LEFT JOIN COMPLAINT_MAIN a on c.complaint_main_id=a.complaint_main_id
 		LEFT JOIN TEST_TREE t ON t.id = a.involve_department
+		LEFT JOIN SYS_OFFICE so ON a.INVOLVE_HOSPITAL = so.ID
+		LEFT JOIN SYS_AREA sa ON so.AREA_ID = sa.ID
 		WHERE a.del_flag = '0' AND t.id is not null
 		<choose>
 			<when test="year !=null and year !=''">
@@ -566,7 +582,7 @@
 			</otherwise>
 		</choose>
 		<if test="officeId !=null and officeId !=''">
-			AND a.involve_hospital = #{officeId}
+            AND sa.parent_id LIKE CONCAT('%', #{officeId}, '%') or sa.id= #{officeId}
 		</if>
 		GROUP BY a.involve_department
 		ORDER BY count(a.involve_department) ASC
@@ -575,13 +591,13 @@
 	<select id="findDepartmentTj" resultType="java.util.Map">
 		SELECT concat('\'',IF(c.name is null or c.name='','无涉及专业',c.name),'\'') AS name,COUNT(1) AS department from(
 		SELECT
-		sa.paremt_id as 'pa',sa.id AS 'areaId',substring_index( substring_index( trim(REPLACE(REPLACE(a.related_major, CHAR(10), ''), CHAR(13), '')), ',', b.help_topic_id + 1 ), ',',- 1 ) NAME ,a.reporting_time,a.hospital_id
+		sa.id as 'areaId',substring_index( substring_index( trim(REPLACE(REPLACE(a.related_major, CHAR(10), ''), CHAR(13), '')), ',', b.help_topic_id + 1 ), ',',- 1 ) NAME ,a.reporting_time,a.hospital_id
 		FROM
 		MACHINE_ACCOUNT a
 		JOIN mysql.HELP_TOPIC b ON b.help_topic_id &lt;( length( a.related_major ) - length( REPLACE ( a.related_major, ',', '' ) ) + 1 )
 		LEFT JOIN SYS_OFFICE so on a.hospital_id = so.id
 		lEFT JOIN SYS_AREA sa on so.area_id = sa.id
-		where a.del_flag ='0' AND sa.parent_id LIKE CONCAT('%f0e2fe4d03834d598121e5ff31abf1d1%') or sa.id= 'f0e2fe4d03834d598121e5ff31abf1d1'
+		where a.del_flag ='0' AND sa.parent_id LIKE CONCAT('%',#{officeId}, '%') or sa.id= #{officeId}
 		)c
 		WHERE
 		<choose>
@@ -601,16 +617,13 @@
                 c.reporting_time like concat('%',#{endMonthDate},'%')
 			</otherwise>
 		</choose>
-		<if test="officeId !=null and officeId !=''">
-			and c.areaId=#{officeId}
-		</if>
-		<if test="officeId !=null and officeId !=''">
-			AND c.pa LIKE CONCAT('%', #{officeId}, '%') or c.areaId=#{officeId}
-		</if>
 		GROUP BY c.name
 	</select>
 
 	<select id="findDepartmentNewName" resultType="TestTree">
+		select t.name from TEST_TREE t where t.id= #{newNameId} AND DEL_FLAG='0';
+	</select>
+    <select id="findDepartmentName" resultType="String">
 		select t.name from TEST_TREE t where t.id= #{newNameId} AND DEL_FLAG='0';
 	</select>
 
@@ -714,7 +727,7 @@
 	</select>
 
 
-	<select id="findAmountRatioTj" resultType="java.util.LinkedHashMap">
+	<select id="findAmountRatioTj" resultType="java.util.Map">
 		SELECT count(CASE WHEN IFNULL(s.agreement_amount, 0) &lt;=20000 THEN s.machine_account_id END ) '2万及以下',
 		count(CASE WHEN IFNULL(s.agreement_amount, 0) &gt;20000 AND IFNULL(s.agreement_amount, 0) &lt;=100000 THEN s.machine_account_id END ) '2万到10万及以下',
 		count(CASE WHEN IFNULL(s.agreement_amount, 0) >&gt;100000 AND IFNULL(s.agreement_amount, 0) &lt;=500000 THEN s.machine_account_id END ) '10万到50万及以下',
@@ -744,5 +757,92 @@
 			AND sa.parent_id LIKE CONCAT('%', #{officeId}, '%') or sa.id= #{officeId}
 		</if>
 	</select>
+
+	<select id="fiveYearAmountRatio" resultType="java.util.Map">
+		SELECT sum(m.agreement_amount) as value
+		FROM MACHINE_ACCOUNT m
+		LEFT JOIN SYS_OFFICE so on m.HOSPITAL_ID = so.ID
+		LEFT JOIN SYS_AREA sa on so.AREA_ID = sa.id
+		where m.agreement_amount is not null
+		<choose>
+			<when test="year !=null and year !=''">
+				AND m.reporting_time like concat('%',#{year},'%')
+			</when>
+			<when test="beginMonthDate !=null and beginMonthDate !='' and endMonthDate !=null and endMonthDate !='' and beginMonthDate!=endMonthDate">
+				AND m.reporting_time &gt;= #{beginMonthDate,jdbcType=VARCHAR} AND m.reporting_time &lt;= #{endMonthDate,jdbcType=VARCHAR}
+			</when>
+			<when test="beginMonthDate !=null and beginMonthDate !='' and endMonthDate !=null and endMonthDate !='' and beginMonthDate==endMonthDate">
+				AND m.reporting_time like concat('%',#{beginMonthDate},'%')
+			</when>
+			<when test="beginMonthDate !=null and beginMonthDate !='' and (endMonthDate ==null or endMonthDate =='')">
+				AND m.reporting_time like concat('%',#{beginMonthDate},'%')
+			</when>
+			<otherwise>
+				AND m.reporting_time like concat('%',#{endMonthDate},'%')
+			</otherwise>
+		</choose>
+		<if test="officeId !=null and officeId !=''">
+			AND sa.parent_id LIKE CONCAT('%', #{officeId}, '%') or sa.id= #{officeId}
+		</if>
+	</select>
+
+	<select id="findCityAmountRatio" resultType="java.util.Map">
+		select sa.`name` as name, sum(m.AGREEMENT_AMOUNT) as value
+		FROM MACHINE_ACCOUNT m
+		LEFT JOIN SYS_OFFICE so on m.HOSPITAL_ID = so.id
+		LEFT JOIN SYS_AREA sa on so.AREA_ID = sa.ID
+		where m.AGREEMENT_AMOUNT is not null
+		<choose>
+			<when test="year !=null and year !=''">
+				AND m.reporting_time like concat('%',#{year},'%')
+			</when>
+			<when test="beginMonthDate !=null and beginMonthDate !='' and endMonthDate !=null and endMonthDate !='' and beginMonthDate!=endMonthDate">
+				AND m.reporting_time &gt;= #{beginMonthDate,jdbcType=VARCHAR} AND m.reporting_time &lt;= #{endMonthDate,jdbcType=VARCHAR}
+			</when>
+			<when test="beginMonthDate !=null and beginMonthDate !='' and endMonthDate !=null and endMonthDate !='' and beginMonthDate==endMonthDate">
+				AND m.reporting_time like concat('%',#{beginMonthDate},'%')
+			</when>
+			<when test="beginMonthDate !=null and beginMonthDate !='' and (endMonthDate ==null or endMonthDate =='')">
+				AND m.reporting_time like concat('%',#{beginMonthDate},'%')
+			</when>
+			<otherwise>
+				AND m.reporting_time like concat('%',#{endMonthDate},'%')
+			</otherwise>
+		</choose>
+		<if test="officeId !=null and officeId !=''">
+			AND sa.parent_id LIKE CONCAT('%', #{officeId}, '%') or sa.id= #{officeId}
+		</if>
+		GROUP BY name
+	</select>
+
+	<select id="findDepartmentAmountRatio" resultType="java.util.Map">
+		select m.RELATED_MAJOR as name, sum(m.AGREEMENT_AMOUNT) as value
+		FROM MACHINE_ACCOUNT m
+		LEFT JOIN SYS_OFFICE so on m.HOSPITAL_ID = so.id
+		LEFT JOIN SYS_AREA sa on so.AREA_ID = sa.ID
+		where m.AGREEMENT_AMOUNT is not null
+		<choose>
+			<when test="year !=null and year !=''">
+				AND m.reporting_time like concat('%',#{year},'%')
+			</when>
+			<when test="beginMonthDate !=null and beginMonthDate !='' and endMonthDate !=null and endMonthDate !='' and beginMonthDate!=endMonthDate">
+				AND m.reporting_time &gt;= #{beginMonthDate,jdbcType=VARCHAR} AND m.reporting_time &lt;= #{endMonthDate,jdbcType=VARCHAR}
+			</when>
+			<when test="beginMonthDate !=null and beginMonthDate !='' and endMonthDate !=null and endMonthDate !='' and beginMonthDate==endMonthDate">
+				AND m.reporting_time like concat('%',#{beginMonthDate},'%')
+			</when>
+			<when test="beginMonthDate !=null and beginMonthDate !='' and (endMonthDate ==null or endMonthDate =='')">
+				AND m.reporting_time like concat('%',#{beginMonthDate},'%')
+			</when>
+			<otherwise>
+				AND m.reporting_time like concat('%',#{endMonthDate},'%')
+			</otherwise>
+		</choose>
+		<if test="officeId !=null and officeId !=''">
+			AND sa.parent_id LIKE CONCAT('%', #{officeId}, '%') or sa.id= #{officeId}
+		</if>
+		GROUP BY name
+	</select>
+
 
 </mapper>

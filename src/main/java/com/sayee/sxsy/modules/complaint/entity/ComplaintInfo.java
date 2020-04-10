@@ -74,8 +74,15 @@ public class ComplaintInfo extends DataEntity<ComplaintInfo> {
 	private String node;//数据员审核 还是 分配员分配
 	private String assignee;//数据员审核 还是 分配员分配 时的操作员
 	private ReportRegistration reportRegistration;//报案登记实体类
+	private String nameCount;//重复名字数量
 
+	public String getNameCount() {
+		return nameCount;
+	}
 
+	public void setNameCount(String nameCount) {
+		this.nameCount = nameCount;
+	}
 	public ComplaintInfo() {
 		super();
 	}

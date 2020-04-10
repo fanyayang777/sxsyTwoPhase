@@ -124,7 +124,7 @@
 					${auditAcceptance.complaintMain.hospital.name}
 				</td>
 				<td style="text-align: center">
-						${auditAcceptance.insuranceCompany}
+						${fns:getDictLabel(auditAcceptance.insuranceCompany, 'sys_office_form',auditAcceptance.insuranceCompany)}
 				</td>
 				<td style="text-align: center">
 					${auditAcceptance.diagnosisMode}

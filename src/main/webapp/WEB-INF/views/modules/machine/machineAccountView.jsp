@@ -49,7 +49,8 @@
 				</tr>
 				<tr>
 					<td class="tit">保险公司：</td>
-					<td>${machineAccount.insuranceCompany}</td>
+					<td>${fns:getDictLabel(machineAccount.insuranceCompany, 'sys_office_form',machineAccount.insuranceCompany)}
+							</td>
 					<td class="tit">保单号：</td>
 					<td>${machineAccount.policyNumber}</td>
 					<td class="tit">起保日期：</td>

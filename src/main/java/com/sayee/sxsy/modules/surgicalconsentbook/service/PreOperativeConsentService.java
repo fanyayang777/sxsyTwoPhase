@@ -53,7 +53,21 @@ public class PreOperativeConsentService extends CrudService<PreOperativeConsentD
 		//如果当前人员角色 是 医调委主任 则看全部数据
 		List<String> aa= ObjectUtils.convert(UserUtils.getRoleList().toArray(),"enname",true);
 		if (aa.contains("yitiaoweizhuren")){//韩主任 医调委主任 看全部数据
-
+			//最大权限的人员 也看 区域
+			if (!"山西省".equals(UserUtils.getUser().getAreaName())){
+				//工作站 主任 副主任 看自己 的员工
+				List<String> list=new ArrayList<String>();
+				List<User> listUser=UserUtils.getUserByOffice(UserUtils.getUser().getOffice().getId());
+				for (User user:listUser) {
+					list.add(user.getId());
+				}
+				if (list.size()>0){
+					preOperativeConsent.setList(list);
+				}else {
+					list.add(UserUtils.getUser().getId());
+					preOperativeConsent.setList(list);
+				}
+			}
 		}else if(aa.contains("jinzhuxingzhengbumenzhuren")){
 			//曹华磊 与韩主任 有全部数据的权限，为了看 看卫健委工作站人员 信息
 			List<String> list=new ArrayList<String>();

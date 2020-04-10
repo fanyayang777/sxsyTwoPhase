@@ -1018,7 +1018,7 @@
                                 labelName=""
                                 labelValue="${empty mediateEvidence.linkEmployee.name?fns:getUser().name:mediateEvidence.linkEmployee.name}"
                                 title="用户" url="/sys/office/treeData?type=3&officeType=1" allowClear="true"
-                                notAllowSelectParent="true" dataMsgRequired="必填信息" isAll="true" cssClass="required"/>
+                               notAllowSelectParent="true" dataMsgRequired="必填信息" isAll="true" cssClass="required"/>
 
             </td>
 
@@ -1077,6 +1077,7 @@
     </div>
     <act:histoicFlow procInsId="${mediateEvidence.complaintMain.procInsId}"/>
 </form:form>
+
 <script type="text/javascript">
     var mediateEvidenceRowIdx = 0,
         mediateEvidenceTpl = $("#mediateEvidenceTpl").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g, "");

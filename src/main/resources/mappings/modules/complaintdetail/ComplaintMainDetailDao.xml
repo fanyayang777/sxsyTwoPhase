@@ -70,7 +70,39 @@
 		<include refid="complaintMainDetailJoins"/>
 		WHERE a.complaint_main_detail_id = #{id}
 	</select>
-	
+
+	<select id="getDe" resultType="ComplaintInfo">
+		SELECT
+		b.case_number AS "caseNumber",
+		a.complaint_main_id AS "complaintMainId",
+		a.visitor_name AS "visitorName",
+		a.visitor_mobile AS "visitorMobile",
+		a.visitor_date AS "visitorDate",
+		a.visitor_number AS "visitorNumber",
+		a.patient_relation AS "patientRelation",
+		b.patient_name AS "patientName",
+		b.patient_sex AS "patientSex",
+		b.patient_age AS "patientAge",
+		b.involve_hospital AS "involveHospital",
+		b.involve_department AS "involveDepartment",
+		b.involve_employee AS "involveEmployee",
+		a.summary_of_disputes AS "summaryOfDisputes",
+		a.complaint_mode AS "complaintMode",
+		'2' AS "handleWay",
+		a.is_major AS "complaintType",
+		a.appeal AS "appeal",
+		a.reception_employee AS "receptionEmployee",
+		a.reception_date AS "receptionDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag"
+		FROM COMPLAINT_MAIN_DETAIL a
+		<include refid="complaintMainDetailJoins"/>
+		WHERE a.complaint_main_id = #{complaintMainId}
+	</select>
+
 	<select id="findList" resultType="ComplaintMainDetail">
 		SELECT 
 			<include refid="complaintMainDetailColumns"/>

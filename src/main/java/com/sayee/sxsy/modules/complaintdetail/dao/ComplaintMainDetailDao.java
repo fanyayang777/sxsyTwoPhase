@@ -5,7 +5,9 @@ package com.sayee.sxsy.modules.complaintdetail.dao;
 
 import com.sayee.sxsy.common.persistence.CrudDao;
 import com.sayee.sxsy.common.persistence.annotation.MyBatisDao;
+import com.sayee.sxsy.modules.complaint.entity.ComplaintInfo;
 import com.sayee.sxsy.modules.complaintdetail.entity.ComplaintMainDetail;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 医调委投诉接待DAO接口
@@ -16,4 +18,6 @@ import com.sayee.sxsy.modules.complaintdetail.entity.ComplaintMainDetail;
 public interface ComplaintMainDetailDao extends CrudDao<ComplaintMainDetail> {
 
     public void saveShift(ComplaintMainDetail complaintMainDetail);
+
+    ComplaintInfo getDe(@Param("complaintMainId") String complaintMainId);
 }

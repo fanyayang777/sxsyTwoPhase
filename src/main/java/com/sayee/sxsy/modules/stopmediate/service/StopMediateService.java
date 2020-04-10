@@ -147,6 +147,13 @@ public class StopMediateService extends CrudService<StopMediateDao, StopMediate>
 		String savaPath=path;
 		String pdfPath=path;
 		Map<String, Object> params = new HashMap<String, Object>();
+		String area="";
+		User user=UserUtils.getUser();
+		if ("广东省".equals(user.getAreaName())){
+			params.put("area",user.getCompany().getName().substring(0,3));
+		}else {
+			params.put("area",user.getAreaName());
+		}
 		if ("yes".equals(export)){
 			params.put("patient", stopMediate ==null ? complaintMain.getPatientName() :stopMediate.getPatientName());
 			params.put("hospital", stopMediate ==null ? complaintMain.getHospital().getName() : stopMediate.getHospital().getName());

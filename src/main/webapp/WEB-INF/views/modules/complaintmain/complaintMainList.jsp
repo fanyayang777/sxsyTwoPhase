@@ -71,7 +71,7 @@
 					${complaintMain.hospital.name}
 				</td>
 				<td>
-					${fns:getDictLabel(complaintMain.involveDepartment, 'department', '未知')}
+					${complaintMain.involveDepartment}
 				</td>
 				<td>
 					${empty complaintMain.employee.name?complaintMain.involveEmployee:complaintMain.employee.name}
@@ -84,9 +84,11 @@
 				</td>
 				<td>
 					<c:if test="${not empty complaintMain.url}">
-						<c:if test="${ complaintMain.nodeName ne '案件反馈' }">
+						<c:if test="${ complaintMain.nodeName ne '案件反馈'}">
+							<c:if test="${num ne '1'}">
 							<a href="${ctx}${complaintMain.url}form?id=${complaintMain.key}">处理</a>
 						</c:if>
+					</c:if>
 						<a href="${ctx}${complaintMain.url}form?id=${complaintMain.key}&type=view">详情</a>
 					</c:if>
 				</td>

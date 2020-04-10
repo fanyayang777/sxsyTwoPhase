@@ -6,13 +6,16 @@ package com.sayee.sxsy.modules.complaint.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sayee.sxsy.common.beanvalidator.BeanValidators;
 import com.sayee.sxsy.common.utils.AjaxHelper;
 import com.sayee.sxsy.common.utils.BaseUtils;
 import com.sayee.sxsy.common.utils.DateUtils;
 import com.sayee.sxsy.common.utils.excel.ExportExcel;
 import com.sayee.sxsy.modules.act.entity.Act;
+import com.sayee.sxsy.modules.auditacceptance.entity.AuditAcceptance;
 import com.sayee.sxsy.modules.complaintmain.entity.ComplaintMain;
 import com.sayee.sxsy.modules.registration.entity.ReportRegistration;
+import com.sayee.sxsy.modules.registration.service.ReportRegistrationService;
 import com.sayee.sxsy.modules.stopmediate.entity.StopMediate;
 import com.sayee.sxsy.modules.sys.entity.Office;
 import com.sayee.sxsy.modules.sys.entity.User;
@@ -39,6 +42,7 @@ import com.sayee.sxsy.modules.complaint.entity.ComplaintInfo;
 import com.sayee.sxsy.modules.complaint.service.ComplaintInfoService;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +58,10 @@ public class ComplaintInfoController extends BaseController {
 
 	@Autowired
 	private ComplaintInfoService complaintInfoService;
-	
+
+    @Autowired
+    private ReportRegistrationService reportRegistrationService;
+
 	@ModelAttribute
 	public ComplaintInfo get(@RequestParam(required=false) String id) {
 		ComplaintInfo entity = null;
@@ -114,20 +121,27 @@ public class ComplaintInfoController extends BaseController {
 
 	@RequiresPermissions("complaint:complaintInfo:edit")
 	@RequestMapping(value = "save")
-	public String save(ComplaintInfo complaintInfo, Model model, RedirectAttributes redirectAttributes,HttpServletRequest request) {
-        ReportRegistration reportRegistration=complaintInfo.getReportRegistration();
-	    if ("yes".equals(request.getParameter("flag")) && !beanValidator(model, reportRegistration ) || !beanValidator(model, complaintInfo )  ){
-			//点击下一步的时候 进行后台字段验证
-		    return form(request,complaintInfo, model);
-		}
-		Act act= complaintInfoService.save(complaintInfo,request);
-		if("false".equals(act.getFlag())){
-			addMessage(model, "案件编号 "+complaintInfo.getCaseNumber()+" 重复");
-			return form(request,complaintInfo, model);
-		}else {
-			addMessage(redirectAttributes, StringUtils.isNotBlank(act.getProcInsId())?"流程启动成功":"保存成功！");
-			return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage";
-		}
+	public String save(ComplaintInfo complaintInfo, Model model, RedirectAttributes redirectAttributes,HttpServletRequest request,HttpServletResponse response) {
+        String export=request.getParameter("export");
+        if (StringUtils.isNotBlank(export) && !export.equals("no")){
+            ReportRegistration reportRegistration=reportRegistrationService.get(complaintInfo.getReportRegistration().getReportRegistrationId());
+            String path=reportRegistrationService.exportWord(reportRegistration,export,"false",request,response);
+            return path;
+        }else{
+            ReportRegistration reportRegistration=complaintInfo.getReportRegistration();
+            if ("yes".equals(request.getParameter("flag")) && !beanValidator(model, reportRegistration ) || !beanValidator(model, complaintInfo )  ){
+                //点击下一步的时候 进行后台字段验证
+                return form(request,complaintInfo, model);
+            }
+            Act act= complaintInfoService.save(complaintInfo,request);
+            if("false".equals(act.getFlag())){
+                addMessage(model, "案件编号 "+complaintInfo.getCaseNumber()+" 重复");
+                return form(request,complaintInfo, model);
+            }else {
+                addMessage(redirectAttributes, StringUtils.isNotBlank(act.getProcInsId())?"流程启动成功":"保存成功！");
+                return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage";
+            }
+        }
 	}
 	
 	@RequiresPermissions("complaint:complaintInfo:edit")
@@ -187,14 +201,20 @@ public class ComplaintInfoController extends BaseController {
 		String status=request.getParameter("status");
 		model.addAttribute("node",node);
 		try {
-			complaintInfoService.audit(complaintInfo,request);
-			if (StringUtils.isNotBlank(status)){
-				addMessage(redirectAttributes, "流程"+("0".equals(status)? "通过" :"驳回")+"成功！");
-				return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage";
+			boolean flag=complaintInfoService.audit(complaintInfo,request,model);
+			if (flag){
+				if (StringUtils.isNotBlank(status)){
+					addMessage(redirectAttributes, "流程"+("0".equals(status)? "通过" :"驳回")+"成功！");
+					return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage&node="+node;
+				}else {
+					model.addAttribute("message","保存失败！");
+					return form(request,complaintInfo, model);
+				}
 			}else {
-				model.addAttribute("message","保存失败！");
-				return form(request,complaintInfo, model);
+				addMessage(redirectAttributes, "所在区域案件分配角色下面没有人员，请联系管理员增加！");
+				return "redirect:"+Global.getAdminPath()+"/complaint/complaintInfo/?repage&node="+node;
 			}
+
 		} catch (Exception e) {
 			logger.error("audit===========：", e);
 			addMessage(redirectAttributes, "系统内部错误,请联系工程师修正！");

@@ -64,9 +64,9 @@ jQuery.validator.addMethod("simplePhone", function(value, element) {
 
 // 电话号码验证     
 jQuery.validator.addMethod("phone", function(value, element) {     
-	var tel = /(^0[1-9]{1}\d{9,10}$)|(^1[3,5,8]\d{9}$)/g;     
+	var tel = /(^0[1-9]{1}\d{9,10}$)|(^1[3,4,5,6,7,8,9]\d{9}$)/g;
 	return this.optional(element) || (tel.test(value));     
-}, "格式为:固话为区号(3-4位)号码(7-9位),手机为:13,15,18号段");	
+}, "格式为:固话为区号(3-4位)号码(7-9位),手机为:13,14,15,16,17,18,19号段");
 
 // 邮政编码验证
 jQuery.validator.addMethod("zipCode", function(value, element) {

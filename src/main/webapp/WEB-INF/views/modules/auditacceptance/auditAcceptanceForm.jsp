@@ -663,8 +663,11 @@
                             保险公司：
                         </td>
                         <td>
-                            <form:input path="insuranceCompany" htmlEscape="false" maxlength="50"
-                                        class="input-xlarge "/>
+                            <form:select path="insuranceCompany" class="input-medium">
+                                <form:options items="${fns:getDictList('sys_office_form')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+                            </form:select>
+                            <%--<form:input path="insuranceCompany" htmlEscape="false" maxlength="50"
+                                        class="input-xlarge "/>--%>
                         </td>
                         <td class="tit">
                             保单号：

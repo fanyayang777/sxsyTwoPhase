@@ -245,6 +245,6 @@
 		WHERE sign_agreement_id = #{signAgreementId}
 	</update>
 	<select id="selectAgreementNumber" resultType="SignAgreement">
-		select si.agreement_number from SIGN_AGREEMENT si where si.del_flag=#{delFlag}
+		select si.agreement_number from SIGN_AGREEMENT si where si.del_flag=0 and si.agreement_number is not null and si.agreement_number!=''
 	</select>
 </mapper>

@@ -19,6 +19,7 @@ import com.sayee.sxsy.test.entity.TestTree;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,7 +57,7 @@ public class ComplaintMainController extends BaseController {
 
 	@Autowired
 	private ComplaintMainService complaintMainService;
-	
+
 	@ModelAttribute
 	public ComplaintMain get(@RequestParam(required=false) String id) {
 		ComplaintMain entity = null;
@@ -134,10 +135,12 @@ public class ComplaintMainController extends BaseController {
 	* */
 	@RequestMapping(value = "index")
 	public String index(OaNotify oaNotify,ComplaintMain complaintMain, HttpServletRequest request, HttpServletResponse response, Model model) {
-		List<ComplaintMain> list=complaintMainDao.selfList(UserUtils.getUser().getLoginName());
+		//案件类表 分3类人 调解员 医院的 其余人
+		User user=UserUtils.getUser();
+		List<ComplaintMain> list=complaintMainDao.selfList(user.getLoginName());
 		complaintMainService.format(list);
 		model.addAttribute("listSize", list.size());
-		List<ComplaintMain> ywcList=complaintMainService.getMyDone(UserUtils.getUser().getLoginName());
+		List<ComplaintMain> ywcList=complaintMainService.getMyDone(user.getLoginName());
 		int ywc=0;
 		for (ComplaintMain complaintMain1 : ywcList) {
 			if ("assess".equals(complaintMain1.getTaskDefKey()) || "feedback".equals(complaintMain1.getTaskDefKey())){
@@ -148,12 +151,19 @@ public class ComplaintMainController extends BaseController {
 		model.addAttribute("list", list.size()>10 ? list.subList(0,10) : list);
 		List<String> aa=ObjectUtils.convert(UserUtils.getRoleList().toArray(),"enname",true);
 		if (  (  aa.contains("quanshengtiaojiebuzhuren") ||aa.contains("yitiaoweizhuren") || aa.contains("yitiaoweifuzhuren")|| aa.contains("yiyuantousubanrenyuan")|| aa.contains("yiyuanxingzhengrenyuan")|| aa.contains("gongzuozhanzhuren/fuzhuren")|| aa.contains("shengzhitiaojiebuzhuren/fuzhuren")|| aa.contains("jinzhuyiyuantiaojieyuan")
-				|| aa.contains("jinzhuxingzhengbumenzhuren") || aa.contains("xingzhengbumenrenyuan") ) && list.isEmpty()){
+				|| aa.contains("jinzhuxingzhengbumenzhuren") || aa.contains("xingzhengbumenrenyuan") ) && list.isEmpty() && "1".equals(user.getCompany().getOfficeType())){//医调委的进
 			int year=Integer.valueOf(DateUtils.getYear())+1;
-			List newList=complaintMainDao.getMachine(DateUtils.getYear(),String.valueOf(year));
+			List newList=complaintMainDao.getMachine(DateUtils.getYear(),String.valueOf(year),user.getCompany().getArea().getId(),"");
 			complaintMainService.format(newList);
 			model.addAttribute("list", newList.size()>10 ? newList.subList(0,10) : newList);
+		}else if("2".equals(user.getCompany().getOfficeType())){ //医院帐号进
+			List newList=complaintMainDao.getMachine("","","",user.getCompany().getId());
+			complaintMainService.format(newList);
+			model.addAttribute("list", newList.size()>10 ? newList.subList(0,10) : newList);
+		}else {
+
 		}
+		//通知
 		oaNotify.setSelf(true);
 		long notifyCount=oaNotifyService.findCount(oaNotify);
 		oaNotify.setReadFlag("0");
@@ -191,6 +201,22 @@ public class ComplaintMainController extends BaseController {
 //		model.addAttribute("complaintMain", list);
 		return "modules/complaintmain/complaintMainList";
 	}
+	/*
+	 * 看工作站整合的案件
+	 *
+	 * */
+	@RequestMapping(value = "workstation")
+	public String workstation(ComplaintMain complaintMain, HttpServletRequest request, HttpServletResponse response, Model model) {
+		//在 task 表中 根据 处理人信息 来查询 当前登录人有几条待办信息，不同的节点返回不同的页面
+		//complaintMain.setUser(UserUtils.getUser());
+		Page<ComplaintMain> page = complaintMainService.workstation(new Page<ComplaintMain>(request, response), complaintMain);
+		model.addAttribute("page", page);
+		model.addAttribute("num","1");
+//    List<Map<String,Object>> list=complaintMainService.selfList(UserUtils.getUser());
+//    model.addAttribute("complaintMain", list);
+		return "modules/complaintmain/complaintMainList";
+	}
+
 
 	//我的已办 列表
 	@RequestMapping(value = "home")
@@ -208,6 +234,12 @@ public class ComplaintMainController extends BaseController {
 		model.addAttribute("ywc", ywc);
 		model.addAttribute("wwc", complaintMainService.findCount(UserUtils.getUser()));
 		return "modules/home/homePage";
+	}
+
+	//
+	@RequestMapping(value = "aa")
+	public String aa(HttpServletRequest request, HttpServletResponse response, Model model) {
+		return "modules/home/aa";
 	}
 
 	/**
@@ -278,7 +310,7 @@ public class ComplaintMainController extends BaseController {
 				//循环 得到总数
 				int sum=0;
 				for (Map sumMap:list) {
-					sum+=MapUtils.getInteger(sumMap,"num",0);
+					sum+=MapUtils.getInteger(sumMap,"value",0);
 				}
 				System.out.println("=========================="+sum);
 				//根据总数 得到百分比
@@ -287,8 +319,8 @@ public class ComplaintMainController extends BaseController {
 					NumberFormat numberFormat = NumberFormat.getInstance();
 					// 设置精确到小数点后2位
 					numberFormat.setMaximumFractionDigits(2);
-					String result = numberFormat.format(MapUtils.getFloat(ratioMap,"num",(float) 0) / (float) sum * 100);
-					ratioMap.put("num",result);
+					String result = numberFormat.format(MapUtils.getFloat(ratioMap,"value",(float) 0) / (float) sum * 100);
+					ratioMap.put("value",result);
 				}
 
                 model.addAttribute("dutyName", this.convert(list.toArray(),"ratio",true) );
@@ -298,14 +330,20 @@ public class ComplaintMainController extends BaseController {
                 for (Object o : name) {
                     newName.add("'"+o+"'");
                 }
+
                 System.out.println(newName);
-                model.addAttribute("name", name);
+                System.out.println(list);
+                model.addAttribute("name", newName);
                 model.addAttribute("dutyNum",toJson);
                 model.addAttribute("dutyTableInfo",list);
 				model.addAttribute("yearDate", year );
                 return "modules/home/duty";
             }else {
                 Map<String,Object> map=new LinkedHashMap<>();
+
+                List<Map<String, String>> cityMap=null;
+                List<Map<String, String>> departmentMap=null;
+                List<Map<String, String>> fiveYearMap=null;
 				if ((StringUtils.isBlank(year) || "2019".equals(year)) && "tj".equals(type)){
 					map.put("2万及以下","165");
 					map.put("2万到10万及以下","88");
@@ -320,17 +358,21 @@ public class ComplaintMainController extends BaseController {
 				}
 				else {
 					map=complaintMainService.findAmountRatio(user,year,beginMonthDate,endMonthDate,type);
+                    cityMap=complaintMainService.findCityAmountRatio(user,year,beginMonthDate,endMonthDate,type);
+                    departmentMap=complaintMainService.findDepartmentAmountRatio(user,year,beginMonthDate,endMonthDate,type);
+                    fiveYearMap=complaintMainService.fiveYearAmountRatio(user,year,beginMonthDate,endMonthDate,type);
 				}
                 List keyList = new ArrayList();
                 List valuesList = new ArrayList();
                 List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 				list.add(map);
+
 				//循环 得到总数
-				int sum=0;
+                int sum=0;
                 for(String key : map.keySet()){
 					sum+=MapUtils.getInteger(map,key,0);
                 }
-				for(String key : map.keySet()) {
+                for(String key : map.keySet()) {
 					// 创建一个数值格式化对象
 					NumberFormat numberFormat = NumberFormat.getInstance();
 					// 设置精确到小数点后2位
@@ -349,7 +391,62 @@ public class ComplaintMainController extends BaseController {
 					valuesList.add(valueList);
 					index++;
 				}
-				model.addAttribute("amountTableInfo", list);
+				String lists = JsonUtil.toJson(list);
+				List name = null;
+				List departmentName = null;
+				List yearNewName = new ArrayList();
+				List newName = new ArrayList();
+                List newDepartmentName = new ArrayList();
+                String newDepartmentMap = null;
+                String newCityMap= null;
+                try {
+                    name = this.convert(cityMap.toArray(), "name", true);
+                    for (Object o : name) {
+                        newName.add("'"+o+"'");
+                    }
+                    newCityMap = JsonUtil.toJson(cityMap);
+
+                    departmentName = this.convert(departmentMap.toArray(), "name", true);
+                    for (Object o : departmentName) {
+                        String s = o.toString();
+                        boolean br = s.matches(".*[a-z]+.*");
+                        if(br==true){
+                            TestTree departmentNewName = testTreeDao.get(s.replaceAll("\'","").replaceAll("\"",""));
+                            newDepartmentName.add(departmentNewName==null ? "" : "'"+departmentNewName.getName()+"'");
+                        }else {
+                            newDepartmentName.add("'" + o + "'");
+                        }
+                    }
+                    newDepartmentMap = JsonUtil.toJson(departmentMap);
+					//5年数据
+					yearNewName = this.convert(fiveYearMap.toArray(), "name", true);
+
+                }catch (Exception e){
+                }
+                //处理年度对比分析
+				List l = new ArrayList();
+				l.add(map);
+				String regEx="[\n`~!@#$%^&*()+|{}':;'\\[\\]<>/?~！@#￥……&*（）——+|{}【】‘；：”“’。， 、？]";
+				String a = "";
+				String s = l.toString().replaceAll(regEx,a);
+
+				List<Map<String,String>> newListMap = new ArrayList<Map<String,String>>();
+				String[] split = s.split(",");
+				for (String s1 : split) {
+					Map<String,String> newMap = new LinkedHashMap<>();
+					String[] split1 = s1.split("=");
+					newMap.put("name",split1[0]);
+					newMap.put("value",split1[1]);
+					newListMap.add(newMap);
+				}
+
+				model.addAttribute("yearName",yearNewName);
+				model.addAttribute("fiveYearInfo",JsonUtil.toJson(fiveYearMap));
+				model.addAttribute("departmentMap",newDepartmentMap);
+                model.addAttribute("departmentName",newDepartmentName);
+                model.addAttribute("cityMap",newCityMap);
+                model.addAttribute("name",newName);
+                model.addAttribute("amountTableInfo", JsonUtil.toJson(newListMap));
 				model.addAttribute("keyList", JsonUtil.toJson(keyList));
 				model.addAttribute("valueList", valuesList);
                 return "modules/home/amountRatio";
@@ -568,9 +665,41 @@ public class ComplaintMainController extends BaseController {
 				}else {
 					gradeList=complaintMainService.findGrade(user, year, beginMonthDate,endMonthDate,type);
 				}
+
+                gradeList.sort(new Comparator<Map<String, Object>>() {
+                    @Override
+                    public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                        Integer i1 = MapUtils.getInteger(o1,"value",0);
+                        Integer i2 = MapUtils.getInteger(o2,"value",0);
+                        return i2.compareTo(i1);
+                    }
+                });
+
+                //循环 得到总数
+                int sum=0;
+                for (Map sumMap:gradeList) {
+                    sum+=MapUtils.getInteger(sumMap,"value",0);
+                }
+                //根据总数 得到百分比
+                for (Map ratioMap:gradeList) {
+                    // 创建一个数值格式化对象
+                    NumberFormat numberFormat = NumberFormat.getInstance();
+                    // 设置精确到小数点后2位
+                    numberFormat.setMaximumFractionDigits(2);
+                    String result = numberFormat.format(MapUtils.getFloat(ratioMap,"value",(float) 0) / (float) sum * 100);
+                    ratioMap.put("value",result);
+                }
+
+
 				String toJson = JsonUtil.toJson(gradeList);
-				model.addAttribute("asdf",toJson);
-				model.addAttribute("yydjTableInfo",gradeList);
+                List name = this.convert(gradeList.toArray(), "name", true);
+                List newName = new ArrayList();
+                for (Object o : name) {
+                    newName.add("'"+o+"'");
+                }
+                model.addAttribute("name",newName);
+                model.addAttribute("list",toJson);
+                model.addAttribute("yydjTableInfo",gradeList);
 				return "modules/home/grade";
 			}else {//调解数量分析
 				//案件数量统计
@@ -691,10 +820,11 @@ public class ComplaintMainController extends BaseController {
 				}
 
 				System.out.println(areaList);
-				model.addAttribute("city",newName);
+                System.out.println(newName);
+                model.addAttribute("city",newName);
 				model.addAttribute("areaList", JsonUtil.toJson(areaList));
 				model.addAttribute("areaTableInfo", areaList);
-				if ("ts".equals(type)){
+                if ("ts".equals(type)){
                     return "modules/home/number";
                 }else {
                     return "modules/home/numberMediate";

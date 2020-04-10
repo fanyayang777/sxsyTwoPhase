@@ -117,7 +117,7 @@
 						${reachMediate.complaintMain.hospital.name}
 				</td>
 				<td style="text-align: center;">
-						${reachMediate.auditAcceptance.insuranceCompany}
+						${fns:getDictLabel(reachMediate.auditAcceptance.insuranceCompany, 'sys_office_form',reachMediate.auditAcceptance.insuranceCompany)}
 				</td>
 				<td style="text-align: center;">
 						${reachMediate.auditAcceptance.treatmentOutcome}

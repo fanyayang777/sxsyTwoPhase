@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sayee.sxsy.newModules.filepathutils.dao.TAccessoriesMapper" >
+  <resultMap id="BaseResultMap" type="com.sayee.sxsy.newModules.filepathutils.entity.TAccessories" >
+    <id column="ACCE_ID" property="acceId" jdbcType="VARCHAR" />
+    <result column="ITEM_ID" property="itemId" jdbcType="VARCHAR" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+    <result column="FILE_SIZE" property="fileSize" jdbcType="REAL" />
+    <result column="UPLOAD_DATE" property="uploadDate" jdbcType="VARCHAR" />
+    <result column="SHOW_AS_IMAGE" property="showAsImage" jdbcType="INTEGER" />
+    <result column="EMPLOYEEID" property="employeeid" jdbcType="VARCHAR" />
+    <result column="EMPLOYEENAME" property="employeename" jdbcType="VARCHAR" />
+    <result column="FILETYPE" property="filetype" jdbcType="VARCHAR" />
+    <result column="REALPATH" property="realpath" jdbcType="VARCHAR" />
+    <result column="CHOOSEFILE" property="choosefile" jdbcType="VARCHAR" />
+    <result column="THUMB_PATH" property="thumbPath" jdbcType="VARCHAR" />
+    <result column="IS_PIC" property="isPic" jdbcType="INTEGER" />
+    <result column="FJTYPE" property="fjtype" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.sayee.sxsy.newModules.filepathutils.entity.TAccessories" extends="BaseResultMap" >
+    <result column="FILE_PATH" property="filePath" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ACCE_ID, ITEM_ID, FILE_NAME, FILE_SIZE, UPLOAD_DATE, SHOW_AS_IMAGE, EMPLOYEEID, EMPLOYEENAME, 
+    FILETYPE, REALPATH, CHOOSEFILE, THUMB_PATH, IS_PIC, FJTYPE
+  </sql>
+  <sql id="Blob_Column_List" >
+    FILE_PATH
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.sayee.sxsy.newModules.filepathutils.entity.TAccessoriesExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from T_ACCESSORIES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sayee.sxsy.newModules.filepathutils.entity.TAccessoriesExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from T_ACCESSORIES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from T_ACCESSORIES
+    where ACCE_ID = #{acceId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_ACCESSORIES
+    where ACCE_ID = #{acceId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sayee.sxsy.newModules.filepathutils.entity.TAccessoriesExample" >
+    delete from T_ACCESSORIES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sayee.sxsy.newModules.filepathutils.entity.TAccessories" >
+    insert into T_ACCESSORIES (ACCE_ID, ITEM_ID, FILE_NAME, 
+      FILE_SIZE, UPLOAD_DATE, SHOW_AS_IMAGE, 
+      EMPLOYEEID, EMPLOYEENAME, FILETYPE, 
+      REALPATH, CHOOSEFILE, THUMB_PATH, 
+      IS_PIC, FJTYPE, FILE_PATH
+      )
+    values (#{acceId,jdbcType=VARCHAR}, #{itemId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
+      #{fileSize,jdbcType=REAL}, #{uploadDate,jdbcType=VARCHAR}, #{showAsImage,jdbcType=INTEGER}, 
+      #{employeeid,jdbcType=VARCHAR}, #{employeename,jdbcType=VARCHAR}, #{filetype,jdbcType=VARCHAR}, 
+      #{realpath,jdbcType=VARCHAR}, #{choosefile,jdbcType=VARCHAR}, #{thumbPath,jdbcType=VARCHAR}, 
+      #{isPic,jdbcType=INTEGER}, #{fjtype,jdbcType=VARCHAR}, #{filePath,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sayee.sxsy.newModules.filepathutils.entity.TAccessories" >
+    insert into T_ACCESSORIES
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="acceId != null" >
+        ACCE_ID,
+      </if>
+      <if test="itemId != null" >
+        ITEM_ID,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="fileSize != null" >
+        FILE_SIZE,
+      </if>
+      <if test="uploadDate != null" >
+        UPLOAD_DATE,
+      </if>
+      <if test="showAsImage != null" >
+        SHOW_AS_IMAGE,
+      </if>
+      <if test="employeeid != null" >
+        EMPLOYEEID,
+      </if>
+      <if test="employeename != null" >
+        EMPLOYEENAME,
+      </if>
+      <if test="filetype != null" >
+        FILETYPE,
+      </if>
+      <if test="realpath != null" >
+        REALPATH,
+      </if>
+      <if test="choosefile != null" >
+        CHOOSEFILE,
+      </if>
+      <if test="thumbPath != null" >
+        THUMB_PATH,
+      </if>
+      <if test="isPic != null" >
+        IS_PIC,
+      </if>
+      <if test="fjtype != null" >
+        FJTYPE,
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="acceId != null" >
+        #{acceId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        #{fileSize,jdbcType=REAL},
+      </if>
+      <if test="uploadDate != null" >
+        #{uploadDate,jdbcType=VARCHAR},
+      </if>
+      <if test="showAsImage != null" >
+        #{showAsImage,jdbcType=INTEGER},
+      </if>
+      <if test="employeeid != null" >
+        #{employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeename != null" >
+        #{employeename,jdbcType=VARCHAR},
+      </if>
+      <if test="filetype != null" >
+        #{filetype,jdbcType=VARCHAR},
+      </if>
+      <if test="realpath != null" >
+        #{realpath,jdbcType=VARCHAR},
+      </if>
+      <if test="choosefile != null" >
+        #{choosefile,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbPath != null" >
+        #{thumbPath,jdbcType=VARCHAR},
+      </if>
+      <if test="isPic != null" >
+        #{isPic,jdbcType=INTEGER},
+      </if>
+      <if test="fjtype != null" >
+        #{fjtype,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sayee.sxsy.newModules.filepathutils.entity.TAccessoriesExample" resultType="java.lang.Integer" >
+    select count(*) from T_ACCESSORIES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update T_ACCESSORIES
+    <set >
+      <if test="record.acceId != null" >
+        ACCE_ID = #{record.acceId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.itemId != null" >
+        ITEM_ID = #{record.itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileName != null" >
+        FILE_NAME = #{record.fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileSize != null" >
+        FILE_SIZE = #{record.fileSize,jdbcType=REAL},
+      </if>
+      <if test="record.uploadDate != null" >
+        UPLOAD_DATE = #{record.uploadDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showAsImage != null" >
+        SHOW_AS_IMAGE = #{record.showAsImage,jdbcType=INTEGER},
+      </if>
+      <if test="record.employeeid != null" >
+        EMPLOYEEID = #{record.employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeename != null" >
+        EMPLOYEENAME = #{record.employeename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filetype != null" >
+        FILETYPE = #{record.filetype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.realpath != null" >
+        REALPATH = #{record.realpath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.choosefile != null" >
+        CHOOSEFILE = #{record.choosefile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thumbPath != null" >
+        THUMB_PATH = #{record.thumbPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isPic != null" >
+        IS_PIC = #{record.isPic,jdbcType=INTEGER},
+      </if>
+      <if test="record.fjtype != null" >
+        FJTYPE = #{record.fjtype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filePath != null" >
+        FILE_PATH = #{record.filePath,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update T_ACCESSORIES
+    set ACCE_ID = #{record.acceId,jdbcType=VARCHAR},
+      ITEM_ID = #{record.itemId,jdbcType=VARCHAR},
+      FILE_NAME = #{record.fileName,jdbcType=VARCHAR},
+      FILE_SIZE = #{record.fileSize,jdbcType=REAL},
+      UPLOAD_DATE = #{record.uploadDate,jdbcType=VARCHAR},
+      SHOW_AS_IMAGE = #{record.showAsImage,jdbcType=INTEGER},
+      EMPLOYEEID = #{record.employeeid,jdbcType=VARCHAR},
+      EMPLOYEENAME = #{record.employeename,jdbcType=VARCHAR},
+      FILETYPE = #{record.filetype,jdbcType=VARCHAR},
+      REALPATH = #{record.realpath,jdbcType=VARCHAR},
+      CHOOSEFILE = #{record.choosefile,jdbcType=VARCHAR},
+      THUMB_PATH = #{record.thumbPath,jdbcType=VARCHAR},
+      IS_PIC = #{record.isPic,jdbcType=INTEGER},
+      FJTYPE = #{record.fjtype,jdbcType=VARCHAR},
+      FILE_PATH = #{record.filePath,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update T_ACCESSORIES
+    set ACCE_ID = #{record.acceId,jdbcType=VARCHAR},
+      ITEM_ID = #{record.itemId,jdbcType=VARCHAR},
+      FILE_NAME = #{record.fileName,jdbcType=VARCHAR},
+      FILE_SIZE = #{record.fileSize,jdbcType=REAL},
+      UPLOAD_DATE = #{record.uploadDate,jdbcType=VARCHAR},
+      SHOW_AS_IMAGE = #{record.showAsImage,jdbcType=INTEGER},
+      EMPLOYEEID = #{record.employeeid,jdbcType=VARCHAR},
+      EMPLOYEENAME = #{record.employeename,jdbcType=VARCHAR},
+      FILETYPE = #{record.filetype,jdbcType=VARCHAR},
+      REALPATH = #{record.realpath,jdbcType=VARCHAR},
+      CHOOSEFILE = #{record.choosefile,jdbcType=VARCHAR},
+      THUMB_PATH = #{record.thumbPath,jdbcType=VARCHAR},
+      IS_PIC = #{record.isPic,jdbcType=INTEGER},
+      FJTYPE = #{record.fjtype,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sayee.sxsy.newModules.filepathutils.entity.TAccessories" >
+    update T_ACCESSORIES
+    <set >
+      <if test="itemId != null" >
+        ITEM_ID = #{itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        FILE_SIZE = #{fileSize,jdbcType=REAL},
+      </if>
+      <if test="uploadDate != null" >
+        UPLOAD_DATE = #{uploadDate,jdbcType=VARCHAR},
+      </if>
+      <if test="showAsImage != null" >
+        SHOW_AS_IMAGE = #{showAsImage,jdbcType=INTEGER},
+      </if>
+      <if test="employeeid != null" >
+        EMPLOYEEID = #{employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeename != null" >
+        EMPLOYEENAME = #{employeename,jdbcType=VARCHAR},
+      </if>
+      <if test="filetype != null" >
+        FILETYPE = #{filetype,jdbcType=VARCHAR},
+      </if>
+      <if test="realpath != null" >
+        REALPATH = #{realpath,jdbcType=VARCHAR},
+      </if>
+      <if test="choosefile != null" >
+        CHOOSEFILE = #{choosefile,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbPath != null" >
+        THUMB_PATH = #{thumbPath,jdbcType=VARCHAR},
+      </if>
+      <if test="isPic != null" >
+        IS_PIC = #{isPic,jdbcType=INTEGER},
+      </if>
+      <if test="fjtype != null" >
+        FJTYPE = #{fjtype,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH = #{filePath,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ACCE_ID = #{acceId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sayee.sxsy.newModules.filepathutils.entity.TAccessories" >
+    update T_ACCESSORIES
+    set ITEM_ID = #{itemId,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      FILE_SIZE = #{fileSize,jdbcType=REAL},
+      UPLOAD_DATE = #{uploadDate,jdbcType=VARCHAR},
+      SHOW_AS_IMAGE = #{showAsImage,jdbcType=INTEGER},
+      EMPLOYEEID = #{employeeid,jdbcType=VARCHAR},
+      EMPLOYEENAME = #{employeename,jdbcType=VARCHAR},
+      FILETYPE = #{filetype,jdbcType=VARCHAR},
+      REALPATH = #{realpath,jdbcType=VARCHAR},
+      CHOOSEFILE = #{choosefile,jdbcType=VARCHAR},
+      THUMB_PATH = #{thumbPath,jdbcType=VARCHAR},
+      IS_PIC = #{isPic,jdbcType=INTEGER},
+      FJTYPE = #{fjtype,jdbcType=VARCHAR},
+      FILE_PATH = #{filePath,jdbcType=LONGVARCHAR}
+    where ACCE_ID = #{acceId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sayee.sxsy.newModules.filepathutils.entity.TAccessories" >
+    update T_ACCESSORIES
+    set ITEM_ID = #{itemId,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      FILE_SIZE = #{fileSize,jdbcType=REAL},
+      UPLOAD_DATE = #{uploadDate,jdbcType=VARCHAR},
+      SHOW_AS_IMAGE = #{showAsImage,jdbcType=INTEGER},
+      EMPLOYEEID = #{employeeid,jdbcType=VARCHAR},
+      EMPLOYEENAME = #{employeename,jdbcType=VARCHAR},
+      FILETYPE = #{filetype,jdbcType=VARCHAR},
+      REALPATH = #{realpath,jdbcType=VARCHAR},
+      CHOOSEFILE = #{choosefile,jdbcType=VARCHAR},
+      THUMB_PATH = #{thumbPath,jdbcType=VARCHAR},
+      IS_PIC = #{isPic,jdbcType=INTEGER},
+      FJTYPE = #{fjtype,jdbcType=VARCHAR}
+    where ACCE_ID = #{acceId,jdbcType=VARCHAR}
+  </update>
+</mapper>

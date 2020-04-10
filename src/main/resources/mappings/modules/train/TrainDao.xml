@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sayee.sxsy.modules.train.dao.TrainDao">
+    
+	<sql id="trainColumns">
+		a.train_id AS "trainId",
+		a.title AS "title",
+		a.vidio_type AS "vidioType",
+		a.department AS "department",
+		a.path AS "path",
+		a.send AS "send",
+		a.introduce AS "introduce",
+		a.score AS "score",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.picture_path AS "picturePath",
+		a.payment AS "payment",
+		a.course_chapter AS "courseChapter",
+		a.buy_number AS "buyNumber",
+		a.video_price AS "videoPrice",
+		a.intended_for AS "intendedFor",
+		a.preknowledge AS "preknowledge",
+		a.lecturer_name AS "lecturerName",
+		a.lecturer_company AS "lecturerCompany"
+	</sql>
+	
+	<sql id="trainJoins">
+	</sql>
+    
+	<select id="get" resultType="Train">
+		SELECT 
+			<include refid="trainColumns"/>
+		FROM TRAIN a
+		<include refid="trainJoins"/>
+		WHERE a.train_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Train">
+		SELECT 
+			<include refid="trainColumns"/>
+		FROM TRAIN a
+		<include refid="trainJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="payment != null and payment != ''">
+				AND a.payment LIKE 
+					<if test="dbName == 'oracle'">'%'||#{payment}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{payment}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{payment},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Train">
+		SELECT 
+			<include refid="trainColumns"/>
+		FROM TRAIN a
+		<include refid="trainJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO TRAIN(
+			train_id,
+			title,
+			vidio_type,
+			department,
+			path,
+			send,
+			introduce,
+			score,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag,
+			picture_path,
+			payment,
+			course_chapter,
+			buy_number,
+			video_price,
+			intended_for,
+			preknowledge,
+			lecturer_name,
+			lecturer_company
+		) VALUES (
+			#{trainId},
+			#{title},
+			#{vidioType},
+			#{department},
+			#{path},
+			#{send},
+			#{introduce},
+			#{score},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag},
+			#{picturePath},
+			#{payment},
+			#{courseChapter},
+			#{buyNumber},
+			#{videoPrice},
+			#{intendedFor},
+			#{preknowledge},
+			#{lecturerName},
+			#{lecturerCompany}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE TRAIN SET
+			train_id = #{trainId},
+			title = #{title},
+			vidio_type = #{vidioType},
+			department = #{department},
+			path = #{path},
+			send = #{send},
+			introduce = #{introduce},
+			score = #{score},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			picture_path = #{picturePath},
+			payment = #{payment},
+			course_chapter = #{courseChapter},
+			buy_number = #{buyNumber},
+			video_price = #{videoPrice},
+			intended_for = #{intendedFor},
+			preknowledge = #{preknowledge},
+			lecturer_name = #{lecturerName},
+			lecturer_company = #{lecturerCompany}
+		WHERE train_id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE TRAIN SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE train_id = #{id}
+	</update>
+	
+</mapper>

@@ -103,7 +103,22 @@ public class AssessAppraisalService extends CrudService<AssessAppraisalDao, Asse
 		User user=UserUtils.getUser();
 		if (user.isAdmin() || aa.contains("quanshengtiaojiebuzhuren") || aa.contains("yitiaoweizhuren")
 				|| aa.contains("yitiaoweifuzhuren")|| aa.contains("shengzhitiaojiebuzhuren/fuzhuren")|| aa.contains("yitiaoweizhuren")
-		){	//!aa.contains("dept") &&
+		){
+			//最大权限的人员 也看 区域
+			if (!"山西省".equals(user.getAreaName())){
+				//工作站 主任 副主任 看自己 的员工
+				List<String> list=new ArrayList<String>();
+				List<User> listUser=UserUtils.getUserByOffice(user.getOffice().getId());
+				for (User people:listUser) {
+					list.add(people.getLoginName());
+				}
+				if (list.size()>0){
+					assessAppraisal.setList(list);
+				}else {
+					list.add(user.getLoginName());
+					assessAppraisal.setList(list);
+				}
+			}
 		}else if((  aa.contains("gongzuozhanzhuren/fuzhuren")) ){
 			//工作站 主任 副主任 看自己 的员工
 			List<String> list=new ArrayList<String>();
@@ -386,6 +401,13 @@ public class AssessAppraisalService extends CrudService<AssessAppraisalDao, Asse
 		String savaPath=path;
 		String pdfPath=path;
 		Map<String, Object> params = new HashMap<String, Object>();
+		String area="";
+		User user=UserUtils.getUser();
+		if ("广东省".equals(user.getAreaName())){
+			params.put("area",user.getCompany().getName().substring(0,3));
+		}else {
+			params.put("area",user.getAreaName());
+		}
 		//判断有无案件编号
 		String num=null;
 		if(assessAppraisal.getComplaintMain()!=null){
@@ -619,19 +641,19 @@ public class AssessAppraisalService extends CrudService<AssessAppraisalDao, Asse
 		//患方调解笔录
 		if("content".equals(export)){
 			//开始时间
-			if(assessAppraisal.getRecordInfo1().getStartTime()!=null){
+			if(assessAppraisal.getRecordInfo1()!=null && assessAppraisal.getRecordInfo1().getStartTime()!=null){
 				params.put("date",assessAppraisal.getRecordInfo1().getStartTime()==null?"":assessAppraisal.getRecordInfo1().getStartTime());
 			}else{
                 params.put("date","");
             }
 			//结束时间
-			if(assessAppraisal.getRecordInfo1().getEndTime()!=null){
+			if(assessAppraisal.getRecordInfo1()!=null && assessAppraisal.getRecordInfo1().getEndTime()!=null){
 				params.put("time",assessAppraisal.getRecordInfo1().getEndTime()==null?"":assessAppraisal.getRecordInfo1().getEndTime());
 			}else{
                 params.put("time","");
             }
 			//地点
-			if(assessAppraisal.getRecordInfo1().getRecordAddress()!=null){
+			if(assessAppraisal.getRecordInfo1()!=null && assessAppraisal.getRecordInfo1().getRecordAddress()!=null){
 				params.put("address",assessAppraisal.getRecordInfo1().getRecordAddress()==null?"":assessAppraisal.getRecordInfo1().getRecordAddress());
 			}else{
                 params.put("address","");
@@ -649,7 +671,7 @@ public class AssessAppraisalService extends CrudService<AssessAppraisalDao, Asse
                 params.put("note","");
             }
 			//患方
-			if(assessAppraisal.getRecordInfo1().getPatient()!=null){
+			if(assessAppraisal.getRecordInfo1()!=null && assessAppraisal.getRecordInfo1().getPatient()!=null){
 				params.put("patient",assessAppraisal.getRecordInfo1().getPatient()==null?"":assessAppraisal.getRecordInfo1().getPatient());
 			}else{
                 params.put("patient","");
@@ -667,7 +689,7 @@ public class AssessAppraisalService extends CrudService<AssessAppraisalDao, Asse
                 params.put("other","");
             }
 			//笔录内容
-			if(assessAppraisal.getRecordInfo1().getRecordContent()!=null){
+			if(assessAppraisal.getRecordInfo1()!=null && assessAppraisal.getRecordInfo1().getRecordContent()!=null){
 				params.put("content",assessAppraisal.getRecordInfo1().getRecordContent()==null?"":assessAppraisal.getRecordInfo1().getRecordContent());
 			}else{
                 params.put("content","");

@@ -84,7 +84,22 @@ public class AuditAcceptanceService extends CrudService<AuditAcceptanceDao, Audi
 		User user=UserUtils.getUser();
 		if (user.isAdmin() || aa.contains("quanshengtiaojiebuzhuren") || aa.contains("yitiaoweizhuren")
 				|| aa.contains("yitiaoweifuzhuren")|| aa.contains("shengzhitiaojiebuzhuren/fuzhuren")|| aa.contains("yitiaoweizhuren")
-		){	//!aa.contains("dept") &&
+		){
+			//最大权限的人员 也看 区域
+			if (!"山西省".equals(user.getAreaName())){
+				//工作站 主任 副主任 看自己 的员工
+				List<String> list=new ArrayList<String>();
+				List<User> listUser=UserUtils.getUserByOffice(user.getOffice().getId());
+				for (User people:listUser) {
+					list.add(people.getLoginName());
+				}
+				if (list.size()>0){
+					auditAcceptance.setList(list);
+				}else {
+					list.add(user.getLoginName());
+					auditAcceptance.setList(list);
+				}
+			}
 		}else if((  aa.contains("gongzuozhanzhuren/fuzhuren")) ){
 			//工作站 主任 副主任 看自己 的员工
 			List<String> list=new ArrayList<String>();
@@ -495,6 +510,13 @@ public class AuditAcceptanceService extends CrudService<AuditAcceptanceDao, Audi
 		String savaPath=path;
 		String pdfPath=path;
 		Map<String, Object> params = new HashMap<String, Object>();
+		String area="";
+		User user=UserUtils.getUser();
+		if ("广东省".equals(user.getAreaName())){
+			params.put("area",user.getCompany().getName().substring(0,3));
+		}else {
+			params.put("area",user.getAreaName());
+		}
 		//判断有无案件编号
 		String num=null;
 		if(auditAcceptance.getComplaintMain()!=null){

@@ -11,6 +11,8 @@ import com.sayee.sxsy.modules.sys.entity.User;
 
 import com.sayee.sxsy.common.persistence.DataEntity;
 
+import java.util.List;
+
 /**
  * 纠纷调解Entity
  * @author lyt
@@ -47,6 +49,15 @@ public class ComplaintMain extends ActEntity<ComplaintMain> {
 	private String source;		//案子的来源  1医调委录入 2 医院录入 默认是1
 	private String testTree;//涉及科室
 	private String isMajor;//是否重大 主表为主
+	private List<String> list;//工作站人员list
+
+	public List<String> getList() {
+		return list;
+	}
+
+	public void setList(List<String> list) {
+		this.list = list;
+	}
 
 	public String getAssignee() {
 		return assignee;
